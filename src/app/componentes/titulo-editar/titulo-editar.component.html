@@ -1,0 +1,46 @@
+<h1 mat-dialog-title>Editando Título de Videojuego</h1>
+<div mat-dialog-content>
+    <p>{{datos.encabezado}}</p>
+    <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="datos.titulo.nombre">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Año</mat-label>
+        <input type="number" matInput [(ngModel)]="datos.titulo.ano">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Protagonistas</mat-label>
+        <textarea matInput [(ngModel)]="datos.titulo.protagonistas"></textarea>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Empresa</mat-label>
+        <mat-select [(value)]="datos.titulo.empresa!.id">
+            <mat-option *ngFor="let p of datos.empresas" [value]="p.id">
+                {{p.nombre}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Productor</mat-label>
+        <input matInput [(ngModel)]="datos.titulo.productor">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Director</mat-label>
+        <input matInput [(ngModel)]="datos.titulo.director">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Precio</mat-label>
+        <input type="number" matInput [(ngModel)]="datos.titulo.precio">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="datos" cdkFocusInitial>Aceptar</button>
+</div>

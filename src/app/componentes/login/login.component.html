@@ -1,0 +1,15 @@
+<h1 mat-dialog-tittle>Login</h1>
+<div mat-dialog-content>
+    <p>Credenciales de acceso</p>
+    <mat-form-field>
+        <mat-label>Usuario</mat-label>
+        <input matInput [(ngModel)]="datos.usuario">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Clave</mat-label>
+        <input type="password" matInput [(ngModel)]="datos.clave">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" [mat-dialog-close]="datos" cdkFocusInitial>Ingresar</button>
+</div>
