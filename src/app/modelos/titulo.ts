@@ -4,8 +4,8 @@ export class Titulo {
 
     public id: number;
     public nombre: string;
-    public año: number;
-    public ano: number;
+    public año: String;
+    public ano: String;
     public protagonistas: string;
     public productor: string;
     public director: string;
@@ -14,7 +14,7 @@ export class Titulo {
 
     constructor(id: number,
         nombre: string,
-        año: number,
+        año: String,
         protagonistas: string,
         productor: string,
         director: string,

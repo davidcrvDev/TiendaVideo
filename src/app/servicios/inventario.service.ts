@@ -1,21 +1,21 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Globales } from '../modelos/globales';
-import { Pais } from '../modelos/pais';
+import { Observable } from 'rxjs';
+import { Inventario } from '../modelos/inventario';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PaisService {
-
+export class InventarioService {
+  
   url: string;
 
   constructor(
     private http: HttpClient
-  ) {
-    this.url = `${environment.urlBase}paises`;
+  ) { 
+    this.url = `${environment.urlBase}inventarios`;
   }
 
   public obtenerHeader() {
@@ -30,24 +30,23 @@ export class PaisService {
     return this.http.get<any[]>(urlT, this.obtenerHeader());
   }
 
-  public buscar(nombre: string): Observable<any> {
-    let urlT = `${this.url}/buscar/${nombre}`;
+  public buscar(id: number): Observable<any> {
+    let urlT = `${this.url}/buscar/${id}`;
     return this.http.get<any[]>(urlT, this.obtenerHeader());
   }
 
-  public agregar(pais: Pais): Observable<any> {
+  public agregar(inventario: Inventario): Observable<any> {
     let urlT = this.url + "/agregar";
-    return this.http.post<any>(urlT, pais, this.obtenerHeader());
+    return this.http.post<any>(urlT, inventario, this.obtenerHeader());
   }
 
-  public actualizar(pais: Pais): Observable<any> {
+  public actualizar(inventario: Inventario): Observable<any> {
     let urlT = this.url + "/modificar";
-    return this.http.put<any>(urlT, pais, this.obtenerHeader());
+    return this.http.put<any>(urlT, inventario, this.obtenerHeader());
   }
-  
+
   public eliminar(id: number): Observable<any> {
     let urlT = `${this.url}/eliminar/${id}`;
     return this.http.delete<any>(urlT, this.obtenerHeader());
   }
-
 }

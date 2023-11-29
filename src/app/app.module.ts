@@ -14,6 +14,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { TituloEditarComponent } from './componentes/titulo-editar/titulo-editar.component';
 import { DecidirComponent } from './componentes/decidir/decidir.component';
 import { EmpresaEditarComponent } from './componentes/empresa-editar/empresa-editar.component';
+import { AlquilerComponent } from './componentes/alquiler/alquiler.component';
+import { AlquilerEditarComponent } from './componentes/alquiler-editar/alquiler-editar.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { EmpresaEditarComponent } from './componentes/empresa-editar/empresa-edi
     TituloComponent,
     TituloEditarComponent,
     DecidirComponent,
+    AlquilerComponent,
+    AlquilerEditarComponent,
   ],
   imports: [
     BrowserModule,

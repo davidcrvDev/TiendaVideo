@@ -3,20 +3,19 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Globales } from '../modelos/globales';
-import { Pais } from '../modelos/pais';
+import { Alquiler } from '../modelos/alquiler';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PaisService {
+export class AlquilerService {
 
-  url: string;
+  url:string;
 
-  constructor(
-    private http: HttpClient
-  ) {
-    this.url = `${environment.urlBase}paises`;
-  }
+  constructor(private http: HttpClient
+    ) {
+      this.url = `${environment.urlBase}alquileres`;
+    }
 
   public obtenerHeader() {
     const headers = new HttpHeaders({
@@ -30,24 +29,23 @@ export class PaisService {
     return this.http.get<any[]>(urlT, this.obtenerHeader());
   }
 
-  public buscar(nombre: string): Observable<any> {
-    let urlT = `${this.url}/buscar/${nombre}`;
+  public buscar(id: number): Observable<any> {
+    let urlT = `${this.url}/buscar/${id}`;
     return this.http.get<any[]>(urlT, this.obtenerHeader());
   }
 
-  public agregar(pais: Pais): Observable<any> {
+  public agregar(alquiler: Alquiler): Observable<any> {
     let urlT = this.url + "/agregar";
-    return this.http.post<any>(urlT, pais, this.obtenerHeader());
+    return this.http.post<any>(urlT, alquiler, this.obtenerHeader());
   }
 
-  public actualizar(pais: Pais): Observable<any> {
+  public actualizar(alquiler: Alquiler): Observable<any> {
     let urlT = this.url + "/modificar";
-    return this.http.put<any>(urlT, pais, this.obtenerHeader());
+    return this.http.put<any>(urlT, alquiler, this.obtenerHeader());
   }
   
   public eliminar(id: number): Observable<any> {
     let urlT = `${this.url}/eliminar/${id}`;
     return this.http.delete<any>(urlT, this.obtenerHeader());
   }
-
 }

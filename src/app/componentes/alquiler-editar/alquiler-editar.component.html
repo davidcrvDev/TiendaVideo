@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>Editando Alquiler de Videojuego</h1>
+<div mat-dialog-content>
+    <p>{{datos.encabezado}}</p>
+    <mat-form-field appearance="fill">
+        <mat-label>Inventario</mat-label>
+        <input type="number" matInput [(ngModel)]="datos.alquiler.inventario">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Clientes</mat-label>
+        <mat-select [(value)]="datos.alquiler.tercero!.id">
+            <mat-option *ngFor="let p of datos.terceros" [value]="p.id">
+                {{p.nombre}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Fecha de prestamo</mat-label>
+        <input type="date" matInput [(ngModel)]="datos.alquiler.fechaPrestamo">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Plazo</mat-label>
+        <input type="number" matInput [(ngModel)]="datos.alquiler.plazo">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Fecha de devolución</mat-label>
+        <input type="date" matInput [(ngModel)]="datos.alquiler.fechaDevolucion">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Precio de alquiler</mat-label>
+        <input type="number" matInput [(ngModel)]="datos.alquiler.precio">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="datos" cdkFocusInitial>Aceptar</button>
+</div>

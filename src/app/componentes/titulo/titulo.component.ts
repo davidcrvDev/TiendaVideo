@@ -105,7 +105,7 @@ export class TituloComponent implements OnInit {
       height: '500px',
       data: {
         encabezado: `Agregando nuevo Título de Videojuego`,
-        titulo: new Titulo(0, "", 0, "", "", "", new Empresa(0, "", new Pais(0, "", "", "")), 0),
+        titulo: new Titulo(0, "", "", "", "", "", new Empresa(0, "", new Pais(0, "", "", "")), 0),
         empresas: this.empresas,
       }
     });

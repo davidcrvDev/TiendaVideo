@@ -20,6 +20,7 @@ export class AppComponent {
     { titulo: "Países", url: "pais", icono: "assets/iconos/Pais.png" },
     { titulo: "Empresas", url: "empresa", icono: "assets/iconos/Empresa.png" },
     { titulo: "Títulos", url: "titulo", icono: "assets/iconos/Titulo.png" },
+    { titulo: "Alquileres", url: "alquiler", icono: "assets/iconos/Titulo.png" },
   ]
 
   constructor(public dialog: MatDialog,
@@ -38,7 +39,7 @@ export class AppComponent {
 
     dialogRef.afterClosed().subscribe(data => {
       this.usuarioService.login(data.usuario, data.clave).subscribe(response => {
-        this.usuarioActual = new usuario(response.usuario, response.token);
+        this.usuarioActual = new usuario(response.usuario); //response.token
         Globales.usuario = this.usuarioActual;
       });
     });

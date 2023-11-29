@@ -20,7 +20,7 @@ export class EmpresaService {
 
   public obtenerHeader() {
     const headers = new HttpHeaders({
-      'Authorization': Globales.usuario!.token,
+      'Authorization': Globales.usuario!.usuario,//.token
     });
     return { headers: headers };
   }
