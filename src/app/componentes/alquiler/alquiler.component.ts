@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Alquiler } from 'src/app/modelos/alquiler';
 import { MatDialog } from '@angular/material/dialog';
-import { Inventario } from 'src/app/modelos/inventario';
+//import { Inventario } from 'src/app/modelos/inventario';
 import { Tercero } from 'src/app/modelos/tercero';
 import { AlquilerService } from 'src/app/servicios/alquiler.service';
-import { InventarioService } from 'src/app/servicios/inventario.service';
+import { TituloService } from 'src/app/servicios/titulo.service';
 import { Router } from '@angular/router';
 import { Globales } from 'src/app/modelos/globales';
 import { TerceroService } from 'src/app/servicios/tercero.service';
@@ -12,6 +12,12 @@ import { DecidirComponent } from '../decidir/decidir.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AlquilerEditarComponent } from '../alquiler-editar/alquiler-editar.component';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
+import { Tipodocumento } from 'src/app/modelos/tipodocumento';
+import { Ciudad } from 'src/app/modelos/ciudad';
+import { Region } from 'src/app/modelos/region';
+import { Pais } from 'src/app/modelos/pais';
+import { Titulo } from 'src/app/modelos/titulo';
+import { Empresa } from 'src/app/modelos/empresa';
 
 @Component({
   selector: 'app-alquiler',
@@ -21,11 +27,11 @@ import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 export class AlquilerComponent implements OnInit {
 
   public alquileres: Alquiler[] = [];
-  public inventarios: Inventario[] = [];
+  public titulos: Titulo[] = [];
   public terceros: Tercero[] = [];
   public columnas = [
     { name: 'Codigo', prop: 'id' },
-    { name: '#Inventario', prop: 'inventario.id' },
+    { name: '#Titulos', prop: 'titulo.nombre' },
     { name: '#Cliente', prop: 'tercero.nombre' },
     { name: 'Fecha prestamo', prop: 'fechaPrestamo' },
     { name: 'Plazo', prop: 'plazo' },
@@ -42,7 +48,7 @@ export class AlquilerComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     private alquilerService: AlquilerService,
-    private inventarioService: InventarioService,
+    private tituloService: TituloService,
     private terceroService: TerceroService,
     private router: Router
   ){ }
@@ -51,7 +57,7 @@ export class AlquilerComponent implements OnInit {
     if (Globales.usuario) {
       this.listar();
       this.listarClientes();
-      this.listarInventarios();
+      this.listarTitulos();
     }
     else {
       this.router.navigate(["inicio"]);
@@ -75,10 +81,10 @@ export class AlquilerComponent implements OnInit {
   }
 
   //Lista inventarios cuando se crea una nuevo alquiler
-  public listarInventarios() {
-    this.inventarioService.listar()
+  public listarTitulos() {
+    this.tituloService.listar()
       .subscribe(data => {
-        this.inventarios = data;
+        this.titulos = data;
       },
         err => {
           window.alert(err.message)
@@ -119,14 +125,16 @@ export class AlquilerComponent implements OnInit {
         encabezado: "Agregando Alquiler:",
         alquiler: new Alquiler(
           0, //Id
-          new Inventario(0, 0, 0, 0, new Date(), ""), //Inventario
-          new Tercero(0, 0, "", "", "", 0, "", ""),
+          new Titulo(0, "", "", "", "", "", new Empresa(0, "", new Pais(0, "", "", "")), 0),
+          // new Inventario(0, 0, 0, 0, new Date(), ""), //Inventario
+          new Tercero(0, new Tipodocumento(0, "", "", ""), "", "", "", new Ciudad(0, "", new Region(0, "", new Pais(0, "", "", ""))), "", ""),
           new Date(),
           0,
           new Date(),
-          0
+          0,
+          
         ),
-        inventarios: this.inventarios,
+        titulos: this.titulos,
         terceros: this.terceros,
       }
     });
@@ -149,7 +157,7 @@ export class AlquilerComponent implements OnInit {
         data: {
           encabezado: `Editando a datos del alquiler [${this.alquilerSeleccion.id}]`,
           alquiler: this.alquilerSeleccion,
-          inventarios: this.inventarios,
+          titulos: this.titulos,
           terceros: this.terceros,
           fechaPrestamo: this.columnas,
         }
