@@ -18,6 +18,7 @@ import { Region } from 'src/app/modelos/region';
 import { Pais } from 'src/app/modelos/pais';
 import { Titulo } from 'src/app/modelos/titulo';
 import { Empresa } from 'src/app/modelos/empresa';
+import { Inventario } from 'src/app/modelos/inventario';
 
 @Component({
   selector: 'app-alquiler',
@@ -27,12 +28,14 @@ import { Empresa } from 'src/app/modelos/empresa';
 export class AlquilerComponent implements OnInit {
 
   public alquileres: Alquiler[] = [];
+  public inventarios: Inventario[] = [];
   public titulos: Titulo[] = [];
   public terceros: Tercero[] = [];
   public columnas = [
     { name: 'Codigo', prop: 'id' },
-    { name: '#Titulos', prop: 'titulo.nombre' },
-    { name: '#Cliente', prop: 'tercero.nombre' },
+    { name: '#Titulos', prop: 'inventario.titulo.nombre' },
+    { name: '#Cliente', prop: 'tercero.id' },
+    { name: 'Cliente', prop: 'tercero.nombre'},
     { name: 'Fecha prestamo', prop: 'fechaPrestamo' },
     { name: 'Plazo', prop: 'plazo' },
     { name: 'Fecha devolucion', prop: 'fechaDevolucion' },
@@ -48,6 +51,7 @@ export class AlquilerComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     private alquilerService: AlquilerService,
+    //private inventarioService: inventarioService,
     private tituloService: TituloService,
     private terceroService: TerceroService,
     private router: Router
@@ -125,8 +129,8 @@ export class AlquilerComponent implements OnInit {
         encabezado: "Agregando Alquiler:",
         alquiler: new Alquiler(
           0, //Id
+          new Inventario(0, 0, 0, 1, new Date(), "S"), //Inventario
           new Titulo(0, "", "", "", "", "", new Empresa(0, "", new Pais(0, "", "", "")), 0),
-          // new Inventario(0, 0, 0, 0, new Date(), ""), //Inventario
           new Tercero(0, new Tipodocumento(0, "", "", ""), "", "", "", new Ciudad(0, "", new Region(0, "", new Pais(0, "", "", ""))), "", ""),
           new Date(),
           0,

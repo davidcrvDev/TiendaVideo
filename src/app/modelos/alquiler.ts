@@ -1,9 +1,11 @@
 import { Titulo } from "./titulo";
 import { Tercero } from "./tercero";
+import { Inventario } from "./inventario";
 
 export class Alquiler {
 
     public id: number;
+    public inventario: Inventario;
     public titulo: Titulo;
     public tercero: Tercero;
     public fechaPrestamo: Date;
@@ -14,6 +16,7 @@ export class Alquiler {
 
     constructor(
         id: number,
+        inventario: Inventario,
         titulo: Titulo,
         tercero: Tercero,
         fechaPrestamo: Date,
@@ -24,6 +27,7 @@ export class Alquiler {
     ){
 
         this.id = id;
+        this.inventario = inventario;
         this.titulo = titulo;
         this.tercero = tercero;
         this.fechaPrestamo = fechaPrestamo;

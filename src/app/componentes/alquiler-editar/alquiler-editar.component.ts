@@ -1,6 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Alquiler } from 'src/app/modelos/alquiler';
+import { Inventario } from 'src/app/modelos/inventario';
 //import { Inventario } from 'src/app/modelos/inventario';
 import { Tercero } from 'src/app/modelos/tercero';
 import { Titulo } from 'src/app/modelos/titulo';
@@ -8,6 +9,7 @@ import { Titulo } from 'src/app/modelos/titulo';
 export interface DatosAlquiler {
   encabezado: string;
   alquiler: Alquiler;
+  inventario: Inventario[];
   titulos: Titulo[];
   terceros: Tercero[];
   fechaPrestamo: Date;
