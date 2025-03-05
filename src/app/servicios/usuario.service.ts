@@ -17,8 +17,13 @@ export class UsuarioService {
   }
 
   public login(usuario: string, clave: string): Observable<any> {
-    let urlT =`${this.url}/login?usuario=${usuario}&clave=${clave}`;
-    return this.http.get(urlT);
+    // let urlT =`${this.url}/login?usuario=${usuario}&clave=${clave}`;
+    // return this.http.get(urlT);
+
+    return new Observable(observer => {
+      observer.next({ usuario: 'bypass-user' }); // Usuario simulado
+      observer.complete();
+  });
   }
 
 }

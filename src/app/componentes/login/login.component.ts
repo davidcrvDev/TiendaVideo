@@ -19,7 +19,14 @@ export class LoginComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public datos: DatosLogin
   ) {
-
+      // Inicializar con datos simulados
+      this.datos.usuario = "bypass";
+      this.datos.clave = "bypass";
   }
+
+  // // Al cerrar el diálogo, devuelve los datos predefinidos
+  // cerrarDialogo() {
+  //   this.dialogRef.close(this.datos);
+  // }
   
 }

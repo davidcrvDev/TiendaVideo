@@ -3,14 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { Globales } from 'src/app/modelos/globales';
-import { Empresa } from 'src/app/modelos/empresa';
 import { Titulo } from 'src/app/modelos/titulo';
-import { EmpresaService } from 'src/app/servicios/empresa.service';
 import { TituloService } from 'src/app/servicios/titulo.service';
 import { TituloEditarComponent } from '../titulo-editar/titulo-editar.component';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Pais } from 'src/app/modelos/pais';
 import { DecidirComponent } from '../decidir/decidir.component';
+import { Categoria } from 'src/app/modelos/categoria';
+import { CategoriaService } from 'src/app/servicios/categoria.service';
 
 @Component({
   selector: 'app-titulo',
@@ -21,23 +20,20 @@ export class TituloComponent implements OnInit {
 
   public textoBusqueda: string = "";
   public titulos: Titulo[] = [];
-  public empresas: Empresa[] = [];
+  public categorias: Categoria[] = [];
   public tituloSeleccion: Titulo | undefined;
 
   public columnas = [
     { name: 'Nombre', prop: 'nombre' },
-    { name: 'Año publ.', prop: 'año' },
-    { name: 'Protagonistas', prop: 'protagonistas' },
-    { name: 'Productor', prop: 'productor' },
+    { name: 'Año publ.', prop: 'ano' },
     { name: 'Director', prop: 'director' },
-    { name: 'Empresa', prop: 'empresa.nombre' },
-    { name: 'Precio', prop: 'precio' },
+    { name: 'Categoria', prop: 'categoria.nombre' },
   ];
   public modoColumna = ColumnMode;
   public tipoSeleccion = SelectionType;
 
   public constructor(private tituloService: TituloService,
-    private empresaService: EmpresaService,
+    private categoriaService: CategoriaService,
     private router: Router,
     public dialog: MatDialog,) {
 
@@ -46,7 +42,7 @@ export class TituloComponent implements OnInit {
   ngOnInit(): void {
     if (Globales.usuario != null) {
       this.listar();
-      this.listarEmpresas();
+      this.listarCategorias();
     }
     else {
       this.router.navigate(["inicio"]);
@@ -60,12 +56,13 @@ export class TituloComponent implements OnInit {
   }
 
   public listar() {
+    debugger;
     this.tituloService.listar()
       .subscribe(data => {
         this.titulos = data;
 
         this.titulos.forEach(titulo => {
-          titulo.ano = titulo.año;
+          titulo.ano = titulo.ano;
         });
 
       },
@@ -74,10 +71,10 @@ export class TituloComponent implements OnInit {
         });
   }
 
-  public listarEmpresas() {
-    this.empresaService.listar()
+  public listarCategorias() {
+    this.categoriaService.listar()
       .subscribe(data => {
-        this.empresas = data;
+        this.categorias = data;
       },
         err => {
           window.alert(err.message)
@@ -105,8 +102,8 @@ export class TituloComponent implements OnInit {
       height: '500px',
       data: {
         encabezado: `Agregando nuevo Título de Videojuego`,
-        titulo: new Titulo(0, "", "", "", "", "", new Empresa(0, "", new Pais(0, "", "", "")), 0),
-        empresas: this.empresas,
+        titulo: new Titulo(0, "", 0, "", new Categoria(0, "")),
+        categorias: this.categorias,
       }
     });
 
@@ -126,7 +123,7 @@ export class TituloComponent implements OnInit {
         data: {
           encabezado: `Editando a datos del título [${this.tituloSeleccion.nombre}]`,
           titulo: this.tituloSeleccion,
-          empresas: this.empresas,
+          categorias: this.categorias,
         }
       });
 
@@ -144,7 +141,7 @@ export class TituloComponent implements OnInit {
   }
 
   private guardar(titulo: Titulo) {
-    titulo.año = titulo.ano;
+    titulo.ano = titulo.ano;
     if (titulo.id == 0) {
       this.tituloService.agregar(titulo).subscribe(tituloActualizado => {
         this.listar();

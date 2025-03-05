@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Editando Categoria</h1>
+<div>
+    <p>{{datos.encabezado}}</p>
+    <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="datos.categoria.nombre"
+            (input)="validarFormulario()" required>
+        <mat-error *ngIf="!datos.categoria.nombre || datos.categoria.nombre.trim() === ''">
+            El nombre es obligatorio.
+        </mat-error>
+    </mat-form-field>
+    <br>
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="datos" 
+        [disabled]="botonAceptarDeshabilitado" cdkFocusInitial>
+            Aceptar
+    </button>
+</div>

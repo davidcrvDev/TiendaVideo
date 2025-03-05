@@ -17,9 +17,11 @@ export class AppComponent {
   public usuarioActual: usuario | null = null;
 
   public opciones = [
-    { titulo: "Países", url: "pais", icono: "assets/iconos/Pais.png" },
-    { titulo: "Empresas", url: "empresa", icono: "assets/iconos/Empresa.png" },
+    { titulo: "Categorias", url: "categoria", icono: "assets/iconos/Pais.png" },
+    { titulo: "Inventarios", url: "inventario", icono: "assets/iconos/Pais.png" },
+    { titulo: "Tecnologias", url: "tecnologia", icono: "assets/iconos/Empresa.png" },
     { titulo: "Títulos", url: "titulo", icono: "assets/iconos/Titulo.png" },
+    { titulo: "Clientes", url: "cliente", icono: "assets/iconos/Titulo.png" },
     { titulo: "Alquileres", url: "alquiler", icono: "assets/iconos/Titulo.png" },
   ]
 
@@ -34,15 +36,25 @@ export class AppComponent {
     const dialogRef = this.dialog.open(LoginComponent, {
       width: "400px",
       height: "400px",
-      data: { usuario: "", clave: "" }
+      data: { usuario: "bypass", clave: "bypass" }
     });
 
-    dialogRef.afterClosed().subscribe(data => {
-      this.usuarioService.login(data.usuario, data.clave).subscribe(response => {
-        this.usuarioActual = new usuario(response.usuario); //response.token
-        Globales.usuario = this.usuarioActual;
-      });
-    });
+    // dialogRef.afterClosed().subscribe(data => {
+    //   this.usuarioService.login(data.usuario, data.clave).subscribe(response => {
+    //     this.usuarioActual = new usuario(response.usuario); //response.token
+    //     Globales.usuario = this.usuarioActual;
+    //   });
+    // });
+
+
+    dialogRef.afterClosed().subscribe(() => {
+      // Simular un usuario siempre autenticado
+      this.usuarioActual = new usuario("bypass-user");
+      Globales.usuario = this.usuarioActual;
+
+      // Opcionalmente, redirigir a una página predeterminada
+      this.router.navigate(["inicio"]); 
+  });
   }
 
   cerrar() {
