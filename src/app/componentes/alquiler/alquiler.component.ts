@@ -2,22 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { Alquiler } from 'src/app/modelos/alquiler';
 import { MatDialog } from '@angular/material/dialog';
 //import { Inventario } from 'src/app/modelos/inventario';
-import { Tercero } from 'src/app/modelos/tercero';
+import { Cliente } from 'src/app/modelos/cliente';
 import { AlquilerService } from 'src/app/servicios/alquiler.service';
 import { TituloService } from 'src/app/servicios/titulo.service';
 import { Router } from '@angular/router';
 import { Globales } from 'src/app/modelos/globales';
-import { TerceroService } from 'src/app/servicios/tercero.service';
+import { ClienteService } from 'src/app/servicios/cliente.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AlquilerEditarComponent } from '../alquiler-editar/alquiler-editar.component';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { Tipodocumento } from 'src/app/modelos/tipodocumento';
-import { Ciudad } from 'src/app/modelos/ciudad';
-import { Region } from 'src/app/modelos/region';
-import { Pais } from 'src/app/modelos/pais';
 import { Titulo } from 'src/app/modelos/titulo';
-import { Empresa } from 'src/app/modelos/empresa';
 import { Inventario } from 'src/app/modelos/inventario';
 
 @Component({
@@ -30,12 +26,12 @@ export class AlquilerComponent implements OnInit {
   public alquileres: Alquiler[] = [];
   public inventarios: Inventario[] = [];
   public titulos: Titulo[] = [];
-  public terceros: Tercero[] = [];
+  public clientes: Cliente[] = [];
   public columnas = [
     { name: 'Codigo', prop: 'id' },
     { name: '#Titulos', prop: 'inventario.titulo.nombre' },
-    { name: '#Cliente', prop: 'tercero.id' },
-    { name: 'Cliente', prop: 'tercero.nombre'},
+    { name: '#Cliente', prop: 'cliente.id' },
+    { name: 'Cliente', prop: 'cliente.nombre'},
     { name: 'Fecha prestamo', prop: 'fechaPrestamo' },
     { name: 'Plazo', prop: 'plazo' },
     { name: 'Fecha devolucion', prop: 'fechaDevolucion' },
@@ -53,7 +49,7 @@ export class AlquilerComponent implements OnInit {
     private alquilerService: AlquilerService,
     //private inventarioService: inventarioService,
     private tituloService: TituloService,
-    private terceroService: TerceroService,
+    private clienteService: ClienteService,
     private router: Router
   ){ }
 
@@ -97,9 +93,9 @@ export class AlquilerComponent implements OnInit {
 
   //Lista clientes cuando se crea una nuevo alquiler
   public listarClientes() {
-    this.terceroService.listar()
+    this.clienteService.listar()
       .subscribe(data => {
-        this.terceros = data;
+        this.clientes = data;
       },
         err => {
           window.alert(err.message)
@@ -129,17 +125,14 @@ export class AlquilerComponent implements OnInit {
         encabezado: "Agregando Alquiler:",
         alquiler: new Alquiler(
           0, //Id
-          new Inventario(0, 0, 0, 1, new Date(), "S"), //Inventario
-          new Titulo(0, "", "", "", "", "", new Empresa(0, "", new Pais(0, "", "", "")), 0),
-          new Tercero(0, new Tipodocumento(0, "", "", ""), "", "", "", new Ciudad(0, "", new Region(0, "", new Pais(0, "", "", ""))), "", ""),
+          new Cliente(0, new Tipodocumento(0, "", ""), "", "", "", "", "", "", "", "", false, true),
           new Date(),
           0,
           new Date(),
           0,
-          
         ),
         titulos: this.titulos,
-        terceros: this.terceros,
+        clientes: this.clientes,
       }
     });
 
@@ -162,7 +155,7 @@ export class AlquilerComponent implements OnInit {
           encabezado: `Editando a datos del alquiler [${this.alquilerSeleccion.id}]`,
           alquiler: this.alquilerSeleccion,
           titulos: this.titulos,
-          terceros: this.terceros,
+          clientes: this.clientes,
           fechaPrestamo: this.columnas,
         }
       });

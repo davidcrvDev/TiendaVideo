@@ -1,13 +1,9 @@
-import { Titulo } from "./titulo";
-import { Tercero } from "./tercero";
-import { Inventario } from "./inventario";
+import { Cliente } from "./cliente";
 
 export class Alquiler {
 
     public id: number;
-    public inventario: Inventario;
-    public titulo: Titulo;
-    public tercero: Tercero;
+    public cliente: Cliente;
     public fechaPrestamo: Date;
     public plazo: number;
     public fechaDevolucion: Date;
@@ -16,9 +12,7 @@ export class Alquiler {
 
     constructor(
         id: number,
-        inventario: Inventario,
-        titulo: Titulo,
-        tercero: Tercero,
+        cliente: Cliente,
         fechaPrestamo: Date,
         plazo: number,
         fechaDevolucion: Date,
@@ -27,9 +21,7 @@ export class Alquiler {
     ){
 
         this.id = id;
-        this.inventario = inventario;
-        this.titulo = titulo;
-        this.tercero = tercero;
+        this.cliente = cliente;
         this.fechaPrestamo = fechaPrestamo;
         this.plazo = plazo;
         this.fechaDevolucion = fechaDevolucion;

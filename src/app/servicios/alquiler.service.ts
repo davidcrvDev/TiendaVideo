@@ -13,9 +13,9 @@ export class AlquilerService {
   url:string;
 
   constructor(private http: HttpClient
-    ) {
-      this.url = `${environment.urlBase}alquileres`;
-    }
+  ) {
+    this.url = `${environment.urlBase}alquileres`;
+  }
 
   public obtenerHeader() {
     const headers = new HttpHeaders({

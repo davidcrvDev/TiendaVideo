@@ -2,19 +2,9 @@
 <div mat-dialog-content>
     <p>{{datos.encabezado}}</p>
     <mat-form-field appearance="fill">
-        <mat-label>Titulo</mat-label>
-        <!-- <input type="number" matInput [(ngModel)]="datos.alquiler.titulo"> -->
-        <mat-select [(value)]="datos.alquiler.titulo!.id">
-            <mat-option *ngFor="let p of datos.titulos" [value]="p.id">
-                {{p.nombre}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
         <mat-label>Clientes</mat-label>
-        <mat-select [(value)]="datos.alquiler.tercero!.id">
-            <mat-option *ngFor="let p of datos.terceros" [value]="p.id">
+        <mat-select [(value)]="datos.alquiler.cliente!.id">
+            <mat-option *ngFor="let p of datos.clientes" [value]="p.id">
                 {{p.nombre}}
             </mat-option>
         </mat-select>

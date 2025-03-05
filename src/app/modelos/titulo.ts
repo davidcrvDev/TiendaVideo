@@ -1,34 +1,27 @@
-import { Empresa } from "./empresa";
+import { Categoria } from "./categoria";
 
 export class Titulo {
 
     public id: number;
     public nombre: string;
-    public año: String;
-    public ano: String;
-    public protagonistas: string;
-    public productor: string;
+    public ano: number;
     public director: string;
-    public empresa: Empresa | null;
-    public precio: number;
+    public categoria: Categoria;
 
-    constructor(id: number,
+    constructor(
+        id: number,
         nombre: string,
-        año: String,
-        protagonistas: string,
-        productor: string,
+        ano: number,
         director: string,
-        empresa: Empresa | null,
-        precio: number) {
+        categoria: Categoria,
+        
+    ) {
         this.id = id;
         this.nombre = nombre;
-        this.año = año;
-        this.ano = año;
-        this.protagonistas = protagonistas;
-        this.productor = productor;
+        this.ano = ano;
         this.director = director;
-        this.empresa = empresa;
-        this.precio = precio;
+        this.categoria = categoria;
+        
     }
     
 }

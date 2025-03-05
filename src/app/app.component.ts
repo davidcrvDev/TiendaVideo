@@ -17,9 +17,11 @@ export class AppComponent {
   public usuarioActual: usuario | null = null;
 
   public opciones = [
-    { titulo: "Países", url: "pais", icono: "assets/iconos/Pais.png" },
-    { titulo: "Empresas", url: "empresa", icono: "assets/iconos/Empresa.png" },
+    { titulo: "Categorias", url: "categoria", icono: "assets/iconos/Pais.png" },
+    { titulo: "Inventarios", url: "inventario", icono: "assets/iconos/Pais.png" },
+    { titulo: "Tecnologias", url: "tecnologia", icono: "assets/iconos/Empresa.png" },
     { titulo: "Títulos", url: "titulo", icono: "assets/iconos/Titulo.png" },
+    { titulo: "Clientes", url: "cliente", icono: "assets/iconos/Titulo.png" },
     { titulo: "Alquileres", url: "alquiler", icono: "assets/iconos/Titulo.png" },
   ]
 
