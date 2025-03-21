@@ -10,6 +10,7 @@ import { TipodocumentoService } from 'src/app/servicios/tipodocumento.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { ClienteEditarComponent } from '../cliente-editar/cliente-editar.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cliente',
@@ -17,7 +18,6 @@ import { ClienteEditarComponent } from '../cliente-editar/cliente-editar.compone
   styleUrls: ['./cliente.component.css']
 })
 export class ClienteComponent implements OnInit {
-
   public textoBusqueda: string = "";
   public clientes: Cliente[] = [];
   public tipoDocumentos: Tipodocumento[] = [];
@@ -44,168 +44,156 @@ export class ClienteComponent implements OnInit {
     private tipoDocumentoService: TipodocumentoService,
     private router: Router,
     public dialog: MatDialog,
-  ){
-
-  }
+  ) {}
 
   ngOnInit(): void {
-      if (Globales.usuario != null){
-        this.listar();
-        this.listarTipoDocumentos();
-      }
-      else{
-        this.router.navigate(["inicio"]);
-      }
+    if (Globales.usuario != null) {
+      this.listar();
+      this.listarTipoDocumentos();
+    } else {
+      this.router.navigate(["inicio"]);
+    }
   }
 
-  public onActivate(event: any){
-    if (event.type == 'click'){
+  public onActivate(event: any) {
+    if (event.type == 'click') {
       this.clienteSeleccion = event.row;
     }
   }
 
-  public listar(){
-    debugger;
-    this.clienteService.listar()
-     .subscribe(data => {
+  public listar() {
+    this.clienteService.listar().subscribe(
+      data => {
         this.clientes = data;
-
       },
       error => {
-        window.alert(error.message);
-      });
+        Swal.fire('Error', error.message, 'error');
+      }
+    );
   }
 
-  public listarTipoDocumentos(){
-    this.tipoDocumentoService.listar()
-     .subscribe(data => {
+  public listarTipoDocumentos() {
+    this.tipoDocumentoService.listar().subscribe(
+      data => {
         this.tipoDocumentos = data;
       },
       error => {
-        window.alert(error.message);
-      });
+        Swal.fire('Error', error.message, 'error');
+      }
+    );
   }
 
-  public buscar(){
-    if (this.textoBusqueda.length > 0){
-      this.clienteService.buscar(this.textoBusqueda)
-       .subscribe(data => {
+  public buscar() {
+    if (this.textoBusqueda.length > 0) {
+      this.clienteService.buscar(this.textoBusqueda).subscribe(
+        data => {
           this.clientes = data;
         },
         error => {
-          window.alert(error.message);
-        });
-    }
-    else{
+          Swal.fire('Error', error.message, 'error');
+        }
+      );
+    } else {
       this.listar();
     }
   }
 
-  public agregar(){
+  public agregar() {
     const dialogRef = this.dialog.open(ClienteEditarComponent, {
       width: '600px',
       height: '500px',
-      data: { 
+      data: {
         encabezado: "Agregando Nuevo Cliente:",
         cliente: new Cliente(0, new Tipodocumento(0, "", ""), "", "", "", "", "", "", "", "", false, false),
         tipoDocumentos: this.tipoDocumentos,
       }
     });
 
-    dialogRef.afterClosed().subscribe((datos) => {
+    dialogRef.afterClosed().subscribe(datos => {
       this.guardar(datos.cliente);
-    },
-  err => {
-      window.alert(err.message)
-  });
+    });
   }
 
-  public modificar(){
-    if (this.clienteSeleccion!= undefined){
+  public modificar() {
+    if (this.clienteSeleccion) {
       const dialogRef = this.dialog.open(ClienteEditarComponent, {
         width: '600px',
         height: '500px',
-        data: { 
+        data: {
           encabezado: `Modificando Cliente: [${this.clienteSeleccion.nombre}] [${this.clienteSeleccion.apellido}]`,
           cliente: this.clienteSeleccion,
           tipoDocumentos: this.tipoDocumentos,
         }
       });
 
-      dialogRef.afterClosed().subscribe((datos) => {
+      dialogRef.afterClosed().subscribe(datos => {
         this.guardar(datos.cliente);
-      },
-      err => {
-        window.alert(err.message)
       });
-    }
-    else{
-      window.alert("Debe seleccionar un cliente para modificar.");
+    } else {
+      Swal.fire('Atención', 'Debe seleccionar un cliente para modificar.', 'warning');
     }
   }
 
   private guardar(cliente: Cliente) {
-    if(cliente.id == 0){
-      this.clienteService.agregar(cliente).subscribe(clienteActualizado => {
+    this.clienteService.listar().subscribe(clientesActualizados => {
+      const nombreNormalizado = cliente.nombre.trim().toLowerCase();
+      const apellidoNormalizado = cliente.apellido.trim().toLowerCase();
+      
+      const clienteExiste = clientesActualizados.some((c: Cliente) =>
+        c.id !== cliente.id &&
+        c.nombre.trim().toLowerCase() === nombreNormalizado &&
+        c.apellido.trim().toLowerCase() === apellidoNormalizado
+      );
+      
+      if (clienteExiste) {
+        Swal.fire('Error', 'El cliente ya existe.', 'error');
+        return;
+      }
+      
+      if (cliente.id == 0) {
+        this.clienteService.agregar(cliente).subscribe(() => {
           this.listar();
-          window.alert("Cliente agregado correctamente.");
-        },
-        (error: HttpErrorResponse) => {
-          window.alert(`Error agregando el Cliente: [${error.message}]`);
+          Swal.fire('Éxito', 'Cliente agregado correctamente.', 'success');
         });
-    }
-    else {
-      this.clienteService.actualizar(cliente).subscribe(clienteActualizado => {
+      } else {
+        this.clienteService.actualizar(cliente).subscribe(() => {
           this.listar();
-          window.alert("Cliente modificado correctamente.");
-        },
-        (error: HttpErrorResponse) => {
-          window.alert(`Error modificando el Cliente: [${error.message}]`);
+          Swal.fire('Éxito', 'Cliente actualizado correctamente.', 'success');
         });
-    }
+      }
+    });
   }
 
-  public verificarEliminar(){
-    if (this.clienteSeleccion != null && this.clienteSeleccion.id >=0) {
+  public verificarEliminar() {
+    if (this.clienteSeleccion) {
       const dialogRef = this.dialog.open(DecidirComponent, {
         width: '400px',
         height: '200px',
-        data: { 
-          titulo: `Eliminando registro del cliente [${this.clienteSeleccion.nombre}]`,
+        data: {
+          titulo: `Eliminando Cliente [${this.clienteSeleccion.nombre}]`,
           mensaje: "¿Está seguro de eliminar este cliente?",
           id: this.clienteSeleccion.id,
         }
       });
 
       dialogRef.afterClosed().subscribe(datos => {
-        if (datos){
+        if (datos) {
           this.eliminar(datos.id);
         }
-      },
-    err => {
-        window.alert(err.message)
       });
-    }
-    else{
-      window.alert("Debe seleccionar un cliente para eliminar.");
+    } else {
+      Swal.fire('Atención', 'Debe seleccionar un cliente para eliminar.', 'warning');
     }
   }
 
-  public eliminar(id: number){
+  private eliminar(id: number) {
     this.clienteService.eliminar(id).subscribe(response => {
-      if (response == true){
+      if (response) {
         this.listar();
-        window.alert("Cliente eliminado correctamente.");
+        Swal.fire('Eliminado', 'Cliente eliminado correctamente.', 'success');
+      } else {
+        Swal.fire('Error', 'No se pudo eliminar el cliente.', 'error');
       }
-      else {
-        window.alert("No se pudo eliminar el cliente.");
-      }
-    },
-    error => {
-      window.alert(error.message)
     });
   }
-
-  
-
 }

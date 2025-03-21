@@ -8,13 +8,14 @@ import { Tecnologia } from 'src/app/modelos/tecnologia';
 import { TecnologiaService } from 'src/app/servicios/tecnologia.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { TecnologiaEditarComponent } from '../tecnologia-editar/tecnologia-editar.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tecnologia',
   templateUrl: './tecnologia.component.html',
   styleUrls: ['./tecnologia.component.css']
 })
-export class TecnologiaComponent implements OnInit  {
+export class TecnologiaComponent implements OnInit {
 
   public textoBusqueda: string = "";
   public tecnologias: Tecnologia[] = [];
@@ -31,16 +32,12 @@ export class TecnologiaComponent implements OnInit  {
     private tecnologiaService: TecnologiaService,
     private router: Router,
     public dialog: MatDialog,
-  ) { 
-    
-  }
+  ) {}
 
   ngOnInit(): void {
-    if (Globales.usuario != null) {
+    if (Globales.usuario) {
       this.listar();
-      this.listarTecnologias();
-    }
-    else {
+    } else {
       this.router.navigate(["inicio"]);
     }
   }
@@ -52,40 +49,19 @@ export class TecnologiaComponent implements OnInit  {
   }
 
   public listar() {
-    this.tecnologiaService.listar()
-     .subscribe(data => {
-        this.tecnologias = data;
-
-        this.tecnologias.forEach(tecnologia => {
-          tecnologia.nombre = tecnologia.nombre;
-        });
-      },
-        err => {
-          window.alert(err.message)
-        });
-  }
-
-  public listarTecnologias() {
-    this.tecnologiaService.listar()
-     .subscribe(data => {
-        this.tecnologias = data;
-      },
-        err => {
-          window.alert(err.message)
-        });
+    this.tecnologiaService.listar().subscribe(
+      data => this.tecnologias = data,
+      err => Swal.fire('Error', err.message, 'error')
+    );
   }
 
   public buscar() {
     if (this.textoBusqueda.length > 0) {
-      this.tecnologiaService.buscar(this.textoBusqueda)
-       .subscribe(data => {
-          this.tecnologias = data;
-        },
-          err => {
-            window.alert(err.message)
-          });
-    }
-    else {
+      this.tecnologiaService.buscar(this.textoBusqueda).subscribe(
+        data => this.tecnologias = data,
+        err => Swal.fire('Error', err.message, 'error')
+      );
+    } else {
       this.listar();
     }
   }
@@ -98,96 +74,83 @@ export class TecnologiaComponent implements OnInit  {
         encabezado: "Agregando Nueva Tecnología:",
         tecnologia: new Tecnologia(0, ""),
       }
-  });
+    });
 
-  dialogRef.afterClosed().subscribe((datos) => {
-    this.guardar(datos.tecnologia);
-    }, err => {
-      window.alert(err.message)
-  });
+    dialogRef.afterClosed().subscribe(datos => {
+      if (datos && datos.tecnologia) {
+        this.guardar(datos.tecnologia);
+      }
+    });
   }
 
   public modificar() {
-    if (this.tecnologiaSeleccion!= null && this.tecnologiaSeleccion.id >= 0) {
+    if (this.tecnologiaSeleccion) {
       const dialogRef = this.dialog.open(TecnologiaEditarComponent, {
         width: '600px',
         height: '500px',
         data: {
-          encabezado: `Editando a datos de la tecnologia [${this.tecnologiaSeleccion.nombre}]`,
+          encabezado: `Editando Tecnología: ${this.tecnologiaSeleccion.nombre}`,
           tecnologia: this.tecnologiaSeleccion,
         }
       });
 
-      dialogRef.afterClosed().subscribe((datos) => {
-        this.guardar(datos.tecnologia);
-      }, err => {
-        window.alert(err.message)
+      dialogRef.afterClosed().subscribe(datos => {
+        if (datos && datos.tecnologia) {
+          this.guardar(datos.tecnologia);
+        }
       });
-    }
-    else {
-      window.alert("Debe seleccionar una Tecnología");
+    } else {
+      Swal.fire('Atención', 'Debe seleccionar una Tecnología', 'warning');
     }
   }
 
   private guardar(tecnologia: Tecnologia) {
     if (tecnologia.id == 0) {
-      this.tecnologiaService.agregar(tecnologia).subscribe(tecnologiaActualizado => {
+      this.tecnologiaService.agregar(tecnologia).subscribe(
+        tecnologiaActualizada => {
+          this.tecnologias.push(tecnologiaActualizada);
+          Swal.fire('Éxito', 'Tecnología agregada correctamente.', 'success');
+        },
+        err => Swal.fire('Error', `Error al agregar: ${err.message}`, 'error')
+      );
+    } else {
+      this.tecnologiaService.actualizar(tecnologia).subscribe(() => {
         this.listar();
-        window.alert("Los datos de la Tecnología fueron agregados");
-      },
-        (err: HttpErrorResponse) => {
-          window.alert(`Error agregando la Tecnología: [${err.message}]`);
-        });
-    }
-    else {
-      this.tecnologiaService.actualizar(tecnologia).subscribe(tecnologiaActualizado => {
-        this.listar();
-        window.alert("Los datos de la Tecnología fueron actualizados");
-      },
-        (err: HttpErrorResponse) => {
-          window.alert(`Error actualizando Tecnología: [${err.message}]`);
-        });
+        Swal.fire('Actualizado', 'Tecnología modificada correctamente.', 'success');
+      });
     }
   }
 
   public verificarEliminar() {
-    if (this.tecnologiaSeleccion!= null && this.tecnologiaSeleccion.id >= 0) {
+    if (this.tecnologiaSeleccion) {
       const dialogRef = this.dialog.open(DecidirComponent, {
         width: '400px',
-        height: '200px',
         data: {
-          encabezado: "¿Está seguro que desea eliminar la Tecnología?",
-          mensaje: `La Tecnología: [${this.tecnologiaSeleccion.nombre}]`,
+          encabezado: "¿Está seguro de eliminar la Tecnología?",
+          mensaje: `La Tecnología: ${this.tecnologiaSeleccion.nombre}`,
           id: this.tecnologiaSeleccion.id,
         }
       });
 
       dialogRef.afterClosed().subscribe(datos => {
-        if (datos) {
-          this.eliminar(datos.id);
-        }
-      },
-        err => {
-          window.alert(err.message);
-        });
-    }
-    else {
-      window.alert("Debe seleccionar una Tecnología");
+        if (datos) this.eliminar(datos.id);
+      });
+    } else {
+      Swal.fire('Atención', 'Debe seleccionar una Tecnología', 'warning');
     }
   }
 
   private eliminar(id: number) {
-   this.tecnologiaService.eliminar(id).subscribe(response => {
-    if (response == true) {
-      this.listar();
-      window.alert("El registro de la Tecnología fue eliminado");
-    }
-    else {
-      window.alert("No se puede eliminar la Tecnología seleccionada");
-    }
-   },
-   error => {
-     window.alert(error.message);
-   });
+    this.tecnologiaService.eliminar(id).subscribe(
+      response => {
+        if (response) {
+          this.listar();
+          Swal.fire('Eliminado', 'Tecnología eliminada correctamente.', 'success');
+        } else {
+          Swal.fire('Error', 'No se pudo eliminar la Tecnología.', 'error');
+        }
+      },
+      error => Swal.fire('Error', error.message, 'error')
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { TituloService } from 'src/app/servicios/titulo.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { InventarioEditarComponent } from '../inventario-editar/inventario-editar.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-inventario',
@@ -39,22 +40,18 @@ export class InventarioComponent implements OnInit {
   public modoColumna = ColumnMode;
   public tipoSeleccion = SelectionType;
 
-  public constructor(private inventarioService: InventarioService,
+  public constructor(
+    private inventarioService: InventarioService,
     private tituloService: TituloService,
     private tecnologiaService: TecnologiaService,
     private router: Router,
     public dialog: MatDialog,
-  ) { 
-
-  }
+  ) {}
 
   ngOnInit(): void {
-    if (Globales.usuario != null) {
+    if (Globales.usuario) {
       this.listar();
-      this.listarTitulos();
-      this.listarTecnologias();
-    }
-    else {
+    } else {
       this.router.navigate(["inicio"]);
     }
   }
@@ -66,52 +63,27 @@ export class InventarioComponent implements OnInit {
   }
 
   public listar() {
-    debugger;
-    this.inventarioService.listar()
-     .subscribe(data => {
-      console.log("Datos recibidos", data)
-        this.inventarios = data
-
-      },
-        err => {
-          window.alert(err.message)
-        });
-  }
-
-  public listarTitulos() {
-    this.tituloService.listar()
-     .subscribe(data => {
-        this.titulos = data;
-
-      },
-        err => {
-          window.alert(err.message)
-        });
-  }
-
-  public listarTecnologias() {
-    this.tecnologiaService.listar()
-     .subscribe(data => {
-        this.tecnologias = data;
-
-      },
-        err => {
-          window.alert(err.message)
-        });
+    this.inventarioService.listar().subscribe(
+      data => this.inventarios = data,
+      err => Swal.fire('Error', err.message, 'error')
+    );
+    this.tituloService.listar().subscribe(
+      data => this.titulos = data,
+      err => Swal.fire('Error', err.message, 'error')
+    );
+    this.tecnologiaService.listar().subscribe(
+      data => this.tecnologias = data,
+      err => Swal.fire('Error', err.message, 'error')
+    );
   }
 
   public buscar() {
     if (this.textoBusqueda.length > 0) {
-      this.inventarioService.buscar(this.textoBusqueda)
-       .subscribe(data => {
-          this.inventarios = data;
-
-        },
-          err => {
-            window.alert(err.message)
-          });
-    }
-    else {
+      this.inventarioService.buscar(this.textoBusqueda).subscribe(
+        data => this.inventarios = data,
+        err => Swal.fire('Error', err.message, 'error')
+      );
+    } else {
       this.listar();
     }
   }
@@ -128,16 +100,15 @@ export class InventarioComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe((datos) => {
-      this.guardar(datos.inventario);
-    }, err => {
-      window.alert(err.message)
-    }
-  );
+    dialogRef.afterClosed().subscribe(datos => {
+      if (datos && datos.inventario) {
+        this.guardar(datos.inventario);
+      }
+    });
   }
 
   public modificar() {
-    if (this.inventarioSeleccion != null && this.inventarioSeleccion.id > 0) {
+    if (this.inventarioSeleccion) {
       const dialogRef = this.dialog.open(InventarioEditarComponent, {
         width: '600px',
         height: '500px',
@@ -149,42 +120,34 @@ export class InventarioComponent implements OnInit {
         }
       });
 
-      dialogRef.afterClosed().subscribe((datos) => {
-        this.guardar(datos.inventario);
-      }, err => {
-        window.alert(err.message)
-      }
-    );
-    }
-    else {
-      window.alert("Debe seleccionar un Inventario para modificar.");
+      dialogRef.afterClosed().subscribe(datos => {
+        if (datos && datos.inventario) {
+          this.guardar(datos.inventario);
+        }
+      });
+    } else {
+      Swal.fire('Atención', 'Debe seleccionar un Inventario', 'warning');
     }
   }
 
   private guardar(inventario: Inventario) {
-
     if (inventario.id == 0) {
       this.inventarioService.agregar(inventario).subscribe(inventarioActualizado => {
-          this.listar();
-          window.alert("Inventario agregado correctamente.");
-        },
-          (err: HttpErrorResponse) => {
-            window.alert(`Èrror al agregar el inventario: ${err.message}`);
-          });
-    }
-    else {
-      this.inventarioService.actualizar(inventario).subscribe(inventarioActualizado => {
-          this.listar();
-          window.alert("Inventario modificado correctamente.");
-        },
-          (err: HttpErrorResponse) => {
-            window.alert(`Error al actualizar el inventario: ${err.message}`);
-          });
+        this.inventarios.push(inventarioActualizado);
+        Swal.fire('Éxito', 'Inventario agregado correctamente.', 'success');
+      }, err => {
+        Swal.fire('Error', `Error al agregar: ${err.message}`, 'error');
+      });
+    } else {
+      this.inventarioService.actualizar(inventario).subscribe(() => {
+        this.listar();
+        Swal.fire('Actualizado', 'Inventario modificado correctamente.', 'success');
+      });
     }
   }
 
   public verificarEliminar() {
-    if (this.inventarioSeleccion != null && this.inventarioSeleccion.id > 0) {
+    if (this.inventarioSeleccion) {
       const dialogRef = this.dialog.open(DecidirComponent, {
         width: '400px',
         data: {
@@ -195,32 +158,22 @@ export class InventarioComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(datos => {
-        if (datos) {
-          this.eliminar(datos.id);
-        }
-      },
-    err => {
-      window.alert(err.message)
-    });
-    }
-    else {
-      window.alert("Debe seleccionar un Inventario para eliminar.");
+        if (datos) this.eliminar(datos.id);
+      });
+    } else {
+      Swal.fire('Atención', 'Debe seleccionar un Inventario', 'warning');
     }
   }
 
   private eliminar(id: number) {
     this.inventarioService.eliminar(id).subscribe(response => {
-      if (response == true) {
+      if (response) {
         this.listar();
-        window.alert("Inventario eliminado correctamente.");
-      }
-      else {
-        window.alert("No se pudo eliminar el inventario.");
+        Swal.fire('Eliminado', 'Inventario eliminado correctamente.', 'success');
+      } else {
+        Swal.fire('Error', 'No se pudo eliminar el inventario.', 'error');
       }
     },
-  error => {
-    window.alert(error.message)
-  });
+    error => Swal.fire('Error', error.message, 'error'));
   }
 }
-
