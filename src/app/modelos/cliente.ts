@@ -2,7 +2,7 @@ import { Tipodocumento } from "./tipodocumento";
 
 export class Cliente {
 
-    public id: number;
+    public id: string;
     public tipoDocumento: Tipodocumento;
     public nombre: string;
     public apellido: string;
@@ -16,7 +16,7 @@ export class Cliente {
     public activo: boolean;
 
     constructor(
-        id: number,
+        id: string,
         tipoDocumento: Tipodocumento,
         nombre: string,
         apellido: string,

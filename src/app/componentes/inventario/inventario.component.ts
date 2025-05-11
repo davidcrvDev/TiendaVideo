@@ -74,7 +74,7 @@ export class InventarioComponent implements OnInit {
 
       },
         err => {
-          window.alert(err.message)
+          window.alert("Error al obtener los datos.")
         });
   }
 
@@ -85,7 +85,7 @@ export class InventarioComponent implements OnInit {
 
       },
         err => {
-          window.alert(err.message)
+          window.alert("Error al obtener los datos de los titulos.")
         });
   }
 
@@ -96,7 +96,7 @@ export class InventarioComponent implements OnInit {
 
       },
         err => {
-          window.alert(err.message)
+          window.alert("Error al obtener los datos de los dispositivos.")
         });
   }
 
@@ -200,7 +200,7 @@ export class InventarioComponent implements OnInit {
         }
       },
     err => {
-      window.alert(err.message)
+      window.alert("Error al eliminar, vuelve a intentar.")
     });
     }
     else {

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +23,9 @@ import { CategoriaEditarComponent } from './componentes/categoria-editar/categor
 import { CategoriaComponent } from './componentes/categoria/categoria.component';
 import { ClienteComponent } from './componentes/cliente/cliente.component';
 import { ClienteEditarComponent } from './componentes/cliente-editar/cliente-editar.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -49,6 +53,10 @@ import { ClienteEditarComponent } from './componentes/cliente-editar/cliente-edi
     FormsModule,
     HttpClientModule,
     NgxDatatableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatCheckboxModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

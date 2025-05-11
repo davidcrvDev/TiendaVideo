@@ -61,7 +61,7 @@ export class TecnologiaComponent implements OnInit  {
         });
       },
         err => {
-          window.alert(err.message)
+          window.alert("Error al obtener los datos.")
         });
   }
 
@@ -71,7 +71,7 @@ export class TecnologiaComponent implements OnInit  {
         this.tecnologias = data;
       },
         err => {
-          window.alert(err.message)
+          window.alert("Error al obtener los datos de las tecnologias. ")
         });
   }
 
@@ -130,24 +130,46 @@ export class TecnologiaComponent implements OnInit  {
   }
 
   private guardar(tecnologia: Tecnologia) {
-    if (tecnologia.id == 0) {
-      this.tecnologiaService.agregar(tecnologia).subscribe(tecnologiaActualizado => {
-        this.listar();
-        window.alert("Los datos de la Tecnología fueron agregados");
-      },
-        (err: HttpErrorResponse) => {
-          window.alert(`Error agregando la Tecnología: [${err.message}]`);
-        });
+    debugger;
+    if (!tecnologia.nombre || tecnologia.nombre.trim() === ''){
+      window.alert('El nombre de la categoria no puede estar vacío');
+      return;
     }
-    else {
-      this.tecnologiaService.actualizar(tecnologia).subscribe(tecnologiaActualizado => {
-        this.listar();
-        window.alert("Los datos de la Tecnología fueron actualizados");
+
+    const nombreNormalizado = tecnologia.nombre.trim().toLowerCase();
+
+    this.tecnologiaService.existeTecnologia(nombreNormalizado).subscribe(
+      (existe) => {
+        if (existe){
+          window.alert(`La tecnologia "${tecnologia.nombre}" ya existe. `)
+          return;
+        }
+
+        if (tecnologia.id == 0) {
+          this.tecnologiaService.agregar(tecnologia).subscribe(tecnologiaActualizado => {
+            this.listar();
+            window.alert("Los datos de la Tecnología fueron agregados");
+          },
+            (err: HttpErrorResponse) => {
+              window.alert(`Error agregando la Tecnología: [${err.message}]`);
+            });
+        }
+        else {
+          this.tecnologiaService.actualizar(tecnologia).subscribe(tecnologiaActualizado => {
+            this.listar();
+            window.alert("Los datos de la Tecnología fueron actualizados");
+          },
+            (err: HttpErrorResponse) => {
+              window.alert(`Error actualizando Tecnología: [${err.message}]`);
+            });
+        }
       },
-        (err: HttpErrorResponse) => {
-          window.alert(`Error actualizando Tecnología: [${err.message}]`);
-        });
-    }
+      (err) => {
+        window.alert(
+          `Error verificando existencia de tecnologia: ${err.message}`
+        );
+      }
+    );
   }
 
   public verificarEliminar() {
@@ -168,7 +190,7 @@ export class TecnologiaComponent implements OnInit  {
         }
       },
         err => {
-          window.alert(err.message);
+          window.alert("Error al eliminar, vuelve a intentar.");
         });
     }
     else {

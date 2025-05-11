@@ -13,11 +13,10 @@ import { CategoriaEditarComponent } from '../categoria-editar/categoria-editar.c
 @Component({
   selector: 'app-categoria',
   templateUrl: './categoria.component.html',
-  styleUrls: ['./categoria.component.css']
+  styleUrls: ['./categoria.component.css'],
 })
 export class CategoriaComponent implements OnInit {
-
-  public textoBusqueda: string = "";
+  public textoBusqueda: string = '';
   public categorias: Categoria[] = [];
   public categoriaSeleccion: Categoria | undefined;
 
@@ -31,18 +30,15 @@ export class CategoriaComponent implements OnInit {
   public constructor(
     private categoriaService: CategoriaService,
     private router: Router,
-    public dialog: MatDialog,
-  ){
-
-  }
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     if (Globales.usuario != null) {
       this.listar();
       this.listarCategorias();
-    }
-    else {
-      this.router.navigate(["inicio"]);
+    } else {
+      this.router.navigate(['inicio']);
     }
   }
 
@@ -53,41 +49,42 @@ export class CategoriaComponent implements OnInit {
   }
 
   public listar() {
-    this.categoriaService.listar()
-     .subscribe(data => {
-      this.categorias = data;
+    this.categoriaService.listar().subscribe(
+      (data) => {
+        this.categorias = data;
 
-      this.categorias.forEach(categoria => {
-        categoria.nombre = categoria.nombre;
-      });
-     },
-     err => {
-       window.alert(err.message)
-     });
+        this.categorias.forEach((categoria) => {
+          categoria.nombre = categoria.nombre;
+        });
+      },
+      (err) => {
+        window.alert("Error al obtener los datos.");
+      }
+    );
   }
 
   public listarCategorias() {
-    this.categoriaService.listar()
-     .subscribe(data => {
+    this.categoriaService.listar().subscribe(
+      (data) => {
         this.categorias = data;
-
       },
-        err => {
-          window.alert(err.message)
-        });
+      (err) => {
+        window.alert("Error al obtener los datos de las categorias.");
+      }
+    );
   }
 
   public buscar() {
     if (this.textoBusqueda.length > 0) {
-      this.categoriaService.buscar(this.textoBusqueda)
-       .subscribe(data => {
+      this.categoriaService.buscar(this.textoBusqueda).subscribe(
+        (data) => {
           this.categorias = data;
         },
-          err => {
-            window.alert(err.message)
-          });
-    }
-    else {
+        (err) => {
+          window.alert(err.message);
+        }
+      );
+    } else {
       this.listar();
     }
   }
@@ -97,98 +94,131 @@ export class CategoriaComponent implements OnInit {
       width: '600px',
       height: '500px',
       data: {
-        encabezado: "Agregando Nueva Categoría:",
-        categoria: new Categoria(0, ""),
-      }
+        encabezado: 'Agregando Nueva Categoría:',
+        categoria: new Categoria(0, ''),
+      },
     });
 
-    dialogRef.afterClosed().subscribe(datos => {
+    dialogRef.afterClosed().subscribe((datos) => {
       this.guardar(datos.categoria);
     });
   }
 
   public modificar() {
-    if (this.categoriaSeleccion!= null && this.categoriaSeleccion.id > 0) {
+    if (this.categoriaSeleccion != null && this.categoriaSeleccion.id > 0) {
       const dialogRef = this.dialog.open(CategoriaEditarComponent, {
         width: '600px',
         height: '500px',
         data: {
           encabezado: `Editando datos de la categoría: [${this.categoriaSeleccion.nombre}]`,
           categoria: this.categoriaSeleccion,
-        }
+        },
       });
 
-      dialogRef.afterClosed().subscribe(datos => {
-        this.guardar(datos.categoria);
-      },
-    err => {
-      window.alert(err.message)
-    });
-    }
-    else {
-      window.alert("Debe seleccionar una Categoría");
+      dialogRef.afterClosed().subscribe(
+        (datos) => {
+          this.guardar(datos.categoria);
+        },
+        (err) => {
+          window.alert(err.message);
+        }
+      );
+    } else {
+      window.alert('Debe seleccionar una Categoría');
     }
   }
 
   private guardar(categoria: Categoria) {
-    if (categoria.id == 0) {
-      this.categoriaService.agregar(categoria).subscribe(categoriaActualizado => {
-        this.listar();
-        window.alert("Los datos de la Categoría fueron agregada correctamente.");
-      },
-        (err: HttpErrorResponse) => {
-          window.alert(`Error agregando la Categoria: [${err.message}]`)
-        });
+    debugger;
+    if (!categoria.nombre || categoria.nombre.trim() === '') {
+      window.alert('El nombre de la categoría no puede estar vacío.');
+      return;
     }
-    else {
-      this.categoriaService.actualizar(categoria).subscribe(categoriaActualizado => {
-        this.listar();
-        window.alert("Los datos de la Categoría fueron actualizados correctamente.");
+
+    // Normalizar el nombre para validación (sin espacios y en minúsculas)
+    const nombreNormalizado = categoria.nombre.trim().toLowerCase();
+
+    this.categoriaService.existeCategoria(nombreNormalizado).subscribe(
+      (existe) => {
+        if (existe) {
+          window.alert(`La categoría "${categoria.nombre}" ya existe.`);
+          return;
+        }
+
+        if (categoria.id == 0) {
+          this.categoriaService.agregar(categoria).subscribe(
+            (categoriaActualizado) => {
+              this.listar();
+              window.alert(
+                'Los datos de la Categoría fueron agregada correctamente.'
+              );
+            },
+            (err: HttpErrorResponse) => {
+              window.alert(`Error agregando la Categoria: [${err.message}]`);
+            }
+          );
+        } else {
+          this.categoriaService.actualizar(categoria).subscribe(
+            (categoriaActualizado) => {
+              this.listar();
+              window.alert(
+                'Los datos de la Categoría fueron actualizados correctamente.'
+              );
+            },
+            (err: HttpErrorResponse) => {
+              window.alert(`Error actualizando Categoria: [${err.message}]`);
+            }
+          );
+        }
       },
-        (err: HttpErrorResponse) => {
-          window.alert(`Error actualizando Categoria: [${err.message}]`)
-        });
-    }
+      (err) => {
+        window.alert(
+          `Error verificando existencia de categoría: ${err.message}`
+        );
+      }
+    );
   }
 
   public verificarEliminar() {
-    if (this.categoriaSeleccion!= null && this.categoriaSeleccion.id > 0) {
+    if (this.categoriaSeleccion != null && this.categoriaSeleccion.id > 0) {
       const dialogRef = this.dialog.open(DecidirComponent, {
         width: '400px',
         height: '200px',
         data: {
-          encabezado: "¿Está seguro que desea eliminar la Categoría?",
+          encabezado: '¿Está seguro que desea eliminar la Categoría?',
           mensaje: `La Categoría: [${this.categoriaSeleccion.nombre}]`,
           id: this.categoriaSeleccion.id,
-        }
+        },
       });
 
-      dialogRef.afterClosed().subscribe(datos => {
-        if (datos) {
-          this.eliminar(datos.id);
+      dialogRef.afterClosed().subscribe(
+        (datos) => {
+          if (datos) {
+            this.eliminar(datos.id);
+          }
+        },
+        (err) => {
+          window.alert("Error al eliminar, vuelve a intentar.");
         }
-      },
-      err => {
-        window.alert(err.message)
-      });
-    }
-    else {
-      window.alert("Debe seleccionar una Categoría");
+      );
+    } else {
+      window.alert('Debe seleccionar una Categoría');
     }
   }
 
   private eliminar(id: number) {
-    this.categoriaService.eliminar(id).subscribe(response => {
-      if (response == true){
-        this.listar();
-        window.alert("Categoría eliminada correctamente.");
+    this.categoriaService.eliminar(id).subscribe(
+      (response) => {
+        if (response == true) {
+          this.listar();
+          window.alert('Categoría eliminada correctamente.');
+        } else {
+          window.alert('No se pudo eliminar la Categoría.');
+        }
+      },
+      (error) => {
+        window.alert(error.message);
       }
-      else {
-        window.alert("No se pudo eliminar la Categoría.");
-      }
-    },
-    error => {
-      window.alert(error.message)
-    });
+    );
   }
 }

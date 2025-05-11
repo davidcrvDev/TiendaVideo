@@ -27,7 +27,7 @@ export class ClienteComponent implements OnInit {
     { name: 'ID', prop: 'id' },
     { name: 'Nombre', prop: 'nombre' },
     { name: 'Apellido', prop: 'apellido' },
-    { name: 'Tipo Documento', prop: 'tipoDocumento.tipo' },
+    { name: 'Tipo Documento', prop: 'tipodocumento.tipo' },
     { name: 'Dirección', prop: 'direccion' },
     { name: 'Teléfono', prop: 'telefono' },
     { name: 'Correo', prop: 'correo' },
@@ -72,7 +72,7 @@ export class ClienteComponent implements OnInit {
 
       },
       error => {
-        window.alert(error.message);
+        window.alert("Error al obtener los datos.");
       });
   }
 
@@ -82,7 +82,7 @@ export class ClienteComponent implements OnInit {
         this.tipoDocumentos = data;
       },
       error => {
-        window.alert(error.message);
+        window.alert("Error al obtener los datos de los tipos de documentos.");
       });
   }
 
@@ -107,7 +107,7 @@ export class ClienteComponent implements OnInit {
       height: '500px',
       data: { 
         encabezado: "Agregando Nuevo Cliente:",
-        cliente: new Cliente(0, new Tipodocumento(0, "", ""), "", "", "", "", "", "", "", "", false, false),
+        cliente: new Cliente("", new Tipodocumento(0, "", ""), "", "", "", "", "", "", "12345", "", false, true),
         tipoDocumentos: this.tipoDocumentos,
       }
     });
@@ -145,7 +145,8 @@ export class ClienteComponent implements OnInit {
   }
 
   private guardar(cliente: Cliente) {
-    if(cliente.id == 0){
+    debugger;
+    if(cliente.id){
       this.clienteService.agregar(cliente).subscribe(clienteActualizado => {
           this.listar();
           window.alert("Cliente agregado correctamente.");
@@ -166,7 +167,7 @@ export class ClienteComponent implements OnInit {
   }
 
   public verificarEliminar(){
-    if (this.clienteSeleccion != null && this.clienteSeleccion.id >=0) {
+    if (this.clienteSeleccion != null && this.clienteSeleccion.id) {//Por revisar
       const dialogRef = this.dialog.open(DecidirComponent, {
         width: '400px',
         height: '200px',
@@ -183,7 +184,7 @@ export class ClienteComponent implements OnInit {
         }
       },
     err => {
-        window.alert(err.message)
+        window.alert("Error al eliminar, vuelve a intentar.")
       });
     }
     else{
