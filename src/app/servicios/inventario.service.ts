@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Globales } from '../modelos/globales';
 import { Observable } from 'rxjs';
 import { Inventario } from '../modelos/inventario';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -27,11 +28,27 @@ export class InventarioService {
 
   public listar(): Observable<any> {
     let urlT = `${this.url}/listar`;
-    return this.http.get<any[]>(urlT, this.obtenerHeader());
+    return this.http.get<any[]>(urlT, this.obtenerHeader()).pipe(
+      map(inventarios => 
+        inventarios.map(inv => ({
+          ...inv,
+          fechaadquisicion: this.formatearFecha(inv.fechaadquisicion)
+        }))
+      )
+    );
   }
 
-  public buscar(id: number): Observable<any> {
-    let urlT = `${this.url}/buscar/${id}`;
+  private formatearFecha(fecha: string | Date): string {
+    const dateObj = new Date(fecha);
+    dateObj.setDate(dateObj.getDate() + 1);
+    const year = dateObj.getFullYear();
+    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0'); // `MM`
+    const day = dateObj.getDate().toString().padStart(2, '0'); // `dd`
+    return `${year}-${month}-${day}`;
+  }
+
+  public buscar(nombre: string): Observable<any> {
+    let urlT = `${this.url}/buscar/${nombre}`;
     return this.http.get<any[]>(urlT, this.obtenerHeader());
   }
 
