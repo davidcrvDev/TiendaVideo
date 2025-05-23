@@ -27,7 +27,7 @@ export class ClienteComponent implements OnInit {
     { name: 'ID', prop: 'id' },
     { name: 'Nombre', prop: 'nombre' },
     { name: 'Apellido', prop: 'apellido' },
-    { name: 'Tipo Documento', prop: 'tipodocumento.tipo' },
+    { name: 'Tipo Documento', prop: 'tipoDocumento.tipo' },
     { name: 'Dirección', prop: 'direccion' },
     { name: 'Teléfono', prop: 'telefono' },
     { name: 'Correo', prop: 'correo' },
@@ -146,6 +146,8 @@ export class ClienteComponent implements OnInit {
 
   private guardar(cliente: Cliente) {
     debugger;
+    console.log("Cliente a enviar:", JSON.stringify(cliente));
+
     if(cliente.id){
       this.clienteService.agregar(cliente).subscribe(clienteActualizado => {
           this.listar();

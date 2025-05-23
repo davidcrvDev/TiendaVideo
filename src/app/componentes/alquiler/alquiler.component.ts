@@ -130,6 +130,7 @@ export class AlquilerComponent implements OnInit {
           0,
           new Date(),
           0,
+          []
         ),
         titulos: this.titulos,
         clientes: this.clientes,
