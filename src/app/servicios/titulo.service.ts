@@ -49,5 +49,10 @@ export class TituloService {
     let urlT = `${this.url}/eliminar/${id}`;
     return this.http.delete<any>(urlT, this.obtenerHeader());
   }
+
+  public existeTitulo(nombre: string): Observable<boolean>{
+    let urlT = `${this.url}/existe/${encodeURIComponent(nombre.trim().toLowerCase())}`;
+    return this.http.get<boolean>(urlT, this.obtenerHeader());
+  }
   
 }

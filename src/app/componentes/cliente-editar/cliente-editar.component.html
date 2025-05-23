@@ -1,104 +1,171 @@
 <h1 mat-dialog-content>Editando Cliente</h1>
 <div mat-dialog-content>
-    <p>{{datos.encabezado}}</p>
-    <mat-form-field appearance="fill">
-        <mat-label>N° Documento</mat-label>
-        <input [(ngModel)]="datos.cliente.id"
-            (input)="validarFormulario()" required>
-        <mat-error *ngIf="!datos.cliente.id || datos.cliente.nombre.trim() === ''">
-            El número de documento es obligatorio y debe ser único.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Nombre</mat-label>
-        <input matInput [(ngModel)]="datos.cliente.nombre"
-            (input)="validarFormulario()" required>
-        <mat-error *ngIf="!datos.cliente.nombre || datos.cliente.nombre.trim() === ''">
-            El nombre es obligatorio.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Apellido</mat-label>
-        <input matInput [(ngModel)]="datos.cliente.apellido"
-            (input)="validarFormulario()" required>
-        <mat-error *ngIf="!datos.cliente.apellido || datos.cliente.apellido.trim() === ''">
-            El apellido es obligatorio.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Tipo documento</mat-label>
-        <mat-select [(value)]="datos.cliente.tipoDocumento!.id" (selectionChange)="validarFormulario()" required>
-            <mat-option *ngFor="let p of datos.tipoDocumentos" [value]="p.id">
-                {{p.tipo}}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="!datos.cliente.tipoDocumento || datos.cliente.tipoDocumento.id <= 0">
-            Debes seleccionar el tipo de documento.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Direccion</mat-label>
-        <input matInput [(ngModel)]="datos.cliente.direccion"
-            (input)="validarFormulario()" required>
-        <mat-error *ngIf="!datos.cliente.direccion || datos.cliente.direccion.trim() === ''">
-            La dirección es obligatoria.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Telefono</mat-label>
-        <input matInput [(ngModel)]="datos.cliente.telefono"
-            (input)="validarFormulario()" required>
-        <mat-error *ngIf="!datos.cliente.telefono || datos.cliente.telefono.trim() === ''">
-            El teléfono es obligatorio.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Email</mat-label>
-        <input matInput [(ngModel)]="datos.cliente.correo"
-            (input)="validarFormulario()" required="@">
-        <mat-error *ngIf="!datos.cliente.correo || datos.cliente.correo.trim() === ''">
-            El email es obligatorio y debe ser válido.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Movil</mat-label>
-        <input matInput [(ngModel)]="datos.cliente.movil"
-            (input)="validarFormulario()" required>
-        <mat-error *ngIf="!datos.cliente.movil || datos.cliente.movil.trim() === ''">
-            El número de móvil es obligatorio.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Rol</mat-label>
-        <input matInput [(ngModel)]="datos.cliente.rol"
-            (input)="validarFormulario()" required>
-        <mat-error *ngIf="!datos.cliente.rol || datos.cliente.rol.trim() === ''">
-            El rol es obligatorio.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Moroso</mat-label>
-        <input matInput [(ngModel)]="datos.cliente.moroso">
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Activo</mat-label>
-        <input matInput [(ngModel)]="datos.cliente.activo">
-    </mat-form-field>
+  <p>{{ datos.encabezado }}</p>
+  <mat-form-field appearance="fill">
+    <mat-label>N° Documento</mat-label>
+    <input
+      matInput
+      [(ngModel)]="datos.cliente.id"
+      type="text"
+      (input)="validarFormulario()"
+      required
+    />
+    <mat-error *ngIf="!datos.cliente.id || datos.cliente.nombre.trim() === ''">
+      El número de documento es obligatorio y debe ser único.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Nombre</mat-label>
+    <input
+      matInput
+      [(ngModel)]="datos.cliente.nombre"
+      type="text"
+      (input)="validarFormulario()"
+      required
+    />
+    <mat-error
+      *ngIf="!datos.cliente.nombre || datos.cliente.nombre.trim() === ''"
+    >
+      El nombre es obligatorio.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Apellido</mat-label>
+    <input
+      matInput
+      [(ngModel)]="datos.cliente.apellido"
+      type="text"
+      (input)="validarFormulario()"
+      required
+    />
+    <mat-error
+      *ngIf="!datos.cliente.apellido || datos.cliente.apellido.trim() === ''"
+    >
+      El apellido es obligatorio.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Tipo documento</mat-label>
+    <mat-select
+      [(ngModel)]="datos.cliente.tipoDocumento"
+      (selectionChange)="validarFormulario()"
+      required
+    >
+      <mat-option *ngFor="let p of datos.tipoDocumentos" [value]="p">
+        {{ p.tipo }}
+      </mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="
+        !datos.cliente.tipoDocumento || datos.cliente.tipoDocumento.id <= 0
+      "
+    >
+      Debes seleccionar el tipo de documento.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Direccion</mat-label>
+    <input
+      matInput
+      [(ngModel)]="datos.cliente.direccion"
+      type="text"
+      (input)="validarFormulario()"
+      required
+    />
+    <mat-error
+      *ngIf="!datos.cliente.direccion || datos.cliente.direccion.trim() === ''"
+    >
+      La dirección es obligatoria.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Telefono</mat-label>
+    <input
+      matInput
+      [(ngModel)]="datos.cliente.telefono"
+      type="text"
+      (input)="validarFormulario()"
+    />
+    <mat-error
+      *ngIf="!datos.cliente.telefono || datos.cliente.telefono.trim() === ''"
+    >
+      El teléfono es obligatorio.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      [(ngModel)]="datos.cliente.correo"
+      type="email"
+      (input)="validarFormulario()"
+      required="@"
+    />
+    <mat-error
+      *ngIf="!datos.cliente.correo || datos.cliente.correo.trim() === ''"
+    >
+      El email es obligatorio y debe ser válido.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Movil</mat-label>
+    <input
+      matInput
+      [(ngModel)]="datos.cliente.movil"
+      type="text"
+      (input)="validarFormulario()"
+      required
+    />
+    <mat-error
+      *ngIf="!datos.cliente.movil || datos.cliente.movil.trim() === ''"
+    >
+      El número de móvil es obligatorio.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Rol</mat-label>
+    <mat-select
+      [(ngModel)]="datos.cliente.rol"
+      (selectionChange)="validarFormulario()" required>
+      <mat-option value="Administrador">Administrador</mat-option>
+      <mat-option value="Usuario">Usuario</mat-option>
+    </mat-select>
+    <mat-error *ngIf="!datos.cliente.rol || datos.cliente.rol.trim() === ''">
+      El rol es obligatorio.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <div class="form-group">
+    <label>Moroso</label>
+    <mat-slide-toggle [(ngModel)]="datos.cliente.moroso">
+      {{ datos.cliente.moroso ? "Sí" : "No" }}
+    </mat-slide-toggle>
+  </div>
+  <br />
+  <div class="form-group">
+    <label>Activo</label>
+    <mat-checkbox [(ngModel)]="datos.cliente.activo">
+      {{ datos.cliente.activo ? "Activo" : "Inactivo" }}
+    </mat-checkbox>
+  </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-raised-button color="primary" [mat-dialog-close]="datos" 
-        [disabled]="botonAceptarDeshabilitado" cdkFocusInitial>
-            Aceptar
-    </button>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [mat-dialog-close]="datos"
+    [disabled]="botonAceptarDeshabilitado"
+    cdkFocusInitial
+  >
+    Aceptar
+  </button>
 </div>

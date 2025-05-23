@@ -63,18 +63,38 @@ export class InventarioComponent implements OnInit {
   }
 
   public listar() {
-    this.inventarioService.listar().subscribe(
-      data => this.inventarios = data,
-      err => Swal.fire('Error', err.message, 'error')
-    );
-    this.tituloService.listar().subscribe(
-      data => this.titulos = data,
-      err => Swal.fire('Error', err.message, 'error')
-    );
-    this.tecnologiaService.listar().subscribe(
-      data => this.tecnologias = data,
-      err => Swal.fire('Error', err.message, 'error')
-    );
+    debugger;
+    this.inventarioService.listar()
+     .subscribe(data => {
+      console.log("Datos recibidos", data)
+        this.inventarios = data
+
+      },
+        err => {
+          window.alert("Error al obtener los datos.")
+        });
+  }
+
+  public listarTitulos() {
+    this.tituloService.listar()
+     .subscribe(data => {
+        this.titulos = data;
+
+      },
+        err => {
+          window.alert("Error al obtener los datos de los titulos.")
+        });
+  }
+
+  public listarTecnologias() {
+    this.tecnologiaService.listar()
+     .subscribe(data => {
+        this.tecnologias = data;
+
+      },
+        err => {
+          window.alert("Error al obtener los datos de los dispositivos.")
+        });
   }
 
   public buscar() {
@@ -158,10 +178,16 @@ export class InventarioComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(datos => {
-        if (datos) this.eliminar(datos.id);
-      });
-    } else {
-      Swal.fire('Atención', 'Debe seleccionar un Inventario', 'warning');
+        if (datos) {
+          this.eliminar(datos.id);
+        }
+      },
+    err => {
+      window.alert("Error al eliminar, vuelve a intentar.")
+    });
+    }
+    else {
+      window.alert("Debe seleccionar un Inventario para eliminar.");
     }
   }
 

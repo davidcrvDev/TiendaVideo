@@ -13,13 +13,13 @@ export class Inventario {
     
 
     constructor(
-        id: number,
-        titulo: Titulo,
-        disponible: number,
-        tecnologia: Tecnologia,
-        fechaadquisicion: Date,
-        precio: number,
-        activo: string,
+        id: number = 0,
+        titulo: Titulo = new Titulo(),
+        disponible: number = 0,
+        tecnologia: Tecnologia = new Tecnologia(),
+        fechaadquisicion: Date = new Date(),
+        precio: number = 0,
+        activo: string = '',
 
     ){
 

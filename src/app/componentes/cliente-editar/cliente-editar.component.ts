@@ -32,16 +32,16 @@ export class ClienteEditarComponent {
   public validarFormulario(): void {
     const { cliente } = this.datos;
 
-    const idValido = cliente.id && cliente.id.toFixed(10);
+    const idValido = cliente.id && cliente.id.trim() !== "" && cliente.id.length <= 50;
     const tipoDocValido = cliente.tipoDocumento && cliente.tipoDocumento.id > 0;
     const nombreValido = cliente.nombre && cliente.nombre.trim() !== "" && cliente.nombre.length <= 60;
     const apellidoValido = cliente.apellido && cliente.apellido.trim()!== "" && cliente.apellido.length <= 60;
     const direccionValida = cliente.direccion && cliente.direccion.trim()!== "" && cliente.direccion.length <= 50;
-    const telefonoValido = cliente.telefono && cliente.telefono.trim()!== "" && cliente.telefono.length <= 20;
+    //const telefonoValido = cliente.telefono && cliente.telefono.trim()!== "" && cliente.telefono.length <= 20;
     const correoValido = cliente.correo && cliente.correo.trim()!== "" && cliente.correo.length <= 50;
     const movilValido = cliente.movil && cliente.movil.trim()!== "" && cliente.movil.length <= 20;
     const rolValido = cliente.rol && cliente.rol.trim()!== "" && cliente.rol.length <= 20;
 
-    this.botonAceptarDeshabilitado =!(idValido && tipoDocValido && nombreValido && apellidoValido && direccionValida && telefonoValido && correoValido && movilValido && rolValido);
+    this.botonAceptarDeshabilitado =!(idValido && tipoDocValido && nombreValido && apellidoValido && direccionValida && correoValido && movilValido && rolValido);
   }
 }

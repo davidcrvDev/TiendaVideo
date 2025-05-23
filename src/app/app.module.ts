@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReferenciasMaterialModule } from './referencias-material.module';
 import { LoginComponent } from './componentes/login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { TituloComponent } from './componentes/titulo/titulo.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -14,6 +15,8 @@ import { TituloEditarComponent } from './componentes/titulo-editar/titulo-editar
 import { DecidirComponent } from './componentes/decidir/decidir.component';
 import { AlquilerComponent } from './componentes/alquiler/alquiler.component';
 import { AlquilerEditarComponent } from './componentes/alquiler-editar/alquiler-editar.component';
+import { DetalleAlquilerComponent } from './componentes/detallealquiler/detallealquiler.component';
+import { DetallealquilerEditarComponent } from './componentes/detallealquiler-editar/detallealquiler-editar.component';
 import { TecnologiaComponent } from './componentes/tecnologia/tecnologia.component';
 import { TecnologiaEditarComponent } from './componentes/tecnologia-editar/tecnologia-editar.component';
 import { InventarioComponent } from './componentes/inventario/inventario.component';
@@ -22,6 +25,13 @@ import { CategoriaEditarComponent } from './componentes/categoria-editar/categor
 import { CategoriaComponent } from './componentes/categoria/categoria.component';
 import { ClienteComponent } from './componentes/cliente/cliente.component';
 import { ClienteEditarComponent } from './componentes/cliente-editar/cliente-editar.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -40,6 +50,8 @@ import { ClienteEditarComponent } from './componentes/cliente-editar/cliente-edi
     DecidirComponent,
     AlquilerComponent,
     AlquilerEditarComponent,
+    DetalleAlquilerComponent,
+    DetallealquilerEditarComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +61,15 @@ import { ClienteEditarComponent } from './componentes/cliente-editar/cliente-edi
     FormsModule,
     HttpClientModule,
     NgxDatatableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatCheckboxModule,
+    MatTableModule,
+    MatSelectModule,
+    MatIconModule,
+    MatButtonModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

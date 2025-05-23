@@ -67,9 +67,8 @@ export class ClienteComponent implements OnInit {
         this.clientes = data;
       },
       error => {
-        Swal.fire('Error', error.message, 'error');
-      }
-    );
+        window.alert("Error al obtener los datos.");
+      });
   }
 
   public listarTipoDocumentos() {
@@ -78,9 +77,8 @@ export class ClienteComponent implements OnInit {
         this.tipoDocumentos = data;
       },
       error => {
-        Swal.fire('Error', error.message, 'error');
-      }
-    );
+        window.alert("Error al obtener los datos de los tipos de documentos.");
+      });
   }
 
   public buscar() {
@@ -104,7 +102,7 @@ export class ClienteComponent implements OnInit {
       height: '500px',
       data: {
         encabezado: "Agregando Nuevo Cliente:",
-        cliente: new Cliente(0, new Tipodocumento(0, "", ""), "", "", "", "", "", "", "", "", false, false),
+        cliente: new Cliente("", new Tipodocumento(0, "", ""), "", "", "", "", "", "", "12345", "", false, true),
         tipoDocumentos: this.tipoDocumentos,
       }
     });
@@ -135,23 +133,11 @@ export class ClienteComponent implements OnInit {
   }
 
   private guardar(cliente: Cliente) {
-    this.clienteService.listar().subscribe(clientesActualizados => {
-      const nombreNormalizado = cliente.nombre.trim().toLowerCase();
-      const apellidoNormalizado = cliente.apellido.trim().toLowerCase();
-      
-      const clienteExiste = clientesActualizados.some((c: Cliente) =>
-        c.id !== cliente.id &&
-        c.nombre.trim().toLowerCase() === nombreNormalizado &&
-        c.apellido.trim().toLowerCase() === apellidoNormalizado
-      );
-      
-      if (clienteExiste) {
-        Swal.fire('Error', 'El cliente ya existe.', 'error');
-        return;
-      }
-      
-      if (cliente.id == 0) {
-        this.clienteService.agregar(cliente).subscribe(() => {
+    debugger;
+    console.log("Cliente a enviar:", JSON.stringify(cliente));
+
+    if(cliente.id){
+      this.clienteService.agregar(cliente).subscribe(clienteActualizado => {
           this.listar();
           Swal.fire('Éxito', 'Cliente agregado correctamente.', 'success');
         });
@@ -164,8 +150,8 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  public verificarEliminar() {
-    if (this.clienteSeleccion) {
+  public verificarEliminar(){
+    if (this.clienteSeleccion != null && this.clienteSeleccion.id) {//Por revisar
       const dialogRef = this.dialog.open(DecidirComponent, {
         width: '400px',
         height: '200px',
@@ -180,6 +166,9 @@ export class ClienteComponent implements OnInit {
         if (datos) {
           this.eliminar(datos.id);
         }
+      },
+    err => {
+        window.alert("Error al eliminar, vuelve a intentar.")
       });
     } else {
       Swal.fire('Atención', 'Debe seleccionar un cliente para eliminar.', 'warning');
