@@ -8,13 +8,14 @@ import { Tecnologia } from 'src/app/modelos/tecnologia';
 import { TecnologiaService } from 'src/app/servicios/tecnologia.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { TecnologiaEditarComponent } from '../tecnologia-editar/tecnologia-editar.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tecnologia',
   templateUrl: './tecnologia.component.html',
   styleUrls: ['./tecnologia.component.css']
 })
-export class TecnologiaComponent implements OnInit  {
+export class TecnologiaComponent implements OnInit {
 
   public textoBusqueda: string = "";
   public tecnologias: Tecnologia[] = [];
@@ -31,16 +32,12 @@ export class TecnologiaComponent implements OnInit  {
     private tecnologiaService: TecnologiaService,
     private router: Router,
     public dialog: MatDialog,
-  ) { 
-    
-  }
+  ) {}
 
   ngOnInit(): void {
-    if (Globales.usuario != null) {
+    if (Globales.usuario) {
       this.listar();
-      this.listarTecnologias();
-    }
-    else {
+    } else {
       this.router.navigate(["inicio"]);
     }
   }
@@ -77,15 +74,11 @@ export class TecnologiaComponent implements OnInit  {
 
   public buscar() {
     if (this.textoBusqueda.length > 0) {
-      this.tecnologiaService.buscar(this.textoBusqueda)
-       .subscribe(data => {
-          this.tecnologias = data;
-        },
-          err => {
-            window.alert(err.message)
-          });
-    }
-    else {
+      this.tecnologiaService.buscar(this.textoBusqueda).subscribe(
+        data => this.tecnologias = data,
+        err => Swal.fire('Error', err.message, 'error')
+      );
+    } else {
       this.listar();
     }
   }
@@ -98,34 +91,33 @@ export class TecnologiaComponent implements OnInit  {
         encabezado: "Agregando Nueva Tecnología:",
         tecnologia: new Tecnologia(0, ""),
       }
-  });
+    });
 
-  dialogRef.afterClosed().subscribe((datos) => {
-    this.guardar(datos.tecnologia);
-    }, err => {
-      window.alert(err.message)
-  });
+    dialogRef.afterClosed().subscribe(datos => {
+      if (datos && datos.tecnologia) {
+        this.guardar(datos.tecnologia);
+      }
+    });
   }
 
   public modificar() {
-    if (this.tecnologiaSeleccion!= null && this.tecnologiaSeleccion.id >= 0) {
+    if (this.tecnologiaSeleccion) {
       const dialogRef = this.dialog.open(TecnologiaEditarComponent, {
         width: '600px',
         height: '500px',
         data: {
-          encabezado: `Editando a datos de la tecnologia [${this.tecnologiaSeleccion.nombre}]`,
+          encabezado: `Editando Tecnología: ${this.tecnologiaSeleccion.nombre}`,
           tecnologia: this.tecnologiaSeleccion,
         }
       });
 
-      dialogRef.afterClosed().subscribe((datos) => {
-        this.guardar(datos.tecnologia);
-      }, err => {
-        window.alert(err.message)
+      dialogRef.afterClosed().subscribe(datos => {
+        if (datos && datos.tecnologia) {
+          this.guardar(datos.tecnologia);
+        }
       });
-    }
-    else {
-      window.alert("Debe seleccionar una Tecnología");
+    } else {
+      Swal.fire('Atención', 'Debe seleccionar una Tecnología', 'warning');
     }
   }
 
@@ -173,13 +165,12 @@ export class TecnologiaComponent implements OnInit  {
   }
 
   public verificarEliminar() {
-    if (this.tecnologiaSeleccion!= null && this.tecnologiaSeleccion.id >= 0) {
+    if (this.tecnologiaSeleccion) {
       const dialogRef = this.dialog.open(DecidirComponent, {
         width: '400px',
-        height: '200px',
         data: {
-          encabezado: "¿Está seguro que desea eliminar la Tecnología?",
-          mensaje: `La Tecnología: [${this.tecnologiaSeleccion.nombre}]`,
+          encabezado: "¿Está seguro de eliminar la Tecnología?",
+          mensaje: `La Tecnología: ${this.tecnologiaSeleccion.nombre}`,
           id: this.tecnologiaSeleccion.id,
         }
       });
@@ -199,17 +190,16 @@ export class TecnologiaComponent implements OnInit  {
   }
 
   private eliminar(id: number) {
-   this.tecnologiaService.eliminar(id).subscribe(response => {
-    if (response == true) {
-      this.listar();
-      window.alert("El registro de la Tecnología fue eliminado");
-    }
-    else {
-      window.alert("No se puede eliminar la Tecnología seleccionada");
-    }
-   },
-   error => {
-     window.alert(error.message);
-   });
+    this.tecnologiaService.eliminar(id).subscribe(
+      response => {
+        if (response) {
+          this.listar();
+          Swal.fire('Eliminado', 'Tecnología eliminada correctamente.', 'success');
+        } else {
+          Swal.fire('Error', 'No se pudo eliminar la Tecnología.', 'error');
+        }
+      },
+      error => Swal.fire('Error', error.message, 'error')
+    );
   }
 }

@@ -6,9 +6,9 @@ import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { Categoria } from 'src/app/modelos/categoria';
 import { Globales } from 'src/app/modelos/globales';
 import { CategoriaService } from 'src/app/servicios/categoria.service';
-import { TecnologiaService } from 'src/app/servicios/tecnologia.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { CategoriaEditarComponent } from '../categoria-editar/categoria-editar.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-categoria',
@@ -21,7 +21,6 @@ export class CategoriaComponent implements OnInit {
   public categoriaSeleccion: Categoria | undefined;
 
   public columnas = [
-    { name: 'ID', prop: 'id' },
     { name: 'Nombre', prop: 'nombre' },
   ];
   public modoColumna = ColumnMode;
