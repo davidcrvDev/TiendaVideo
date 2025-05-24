@@ -16,18 +16,18 @@ export class Cliente {
     public activo: boolean;
 
     constructor(
-        id: string = '',
-        tipoDocumento: Tipodocumento = new Tipodocumento(),
-        nombre: string = '',
-        apellido: string = '',
-        direccion: string = '',
-        telefono: string = '',
-        correo: string = '',
-        movil: string = '',
-        clave: string = '',
-        rol: string = '',
-        moroso: boolean = false,
-        activo: boolean = true,
+        id: string,
+        tipoDocumento: Tipodocumento,
+        nombre: string,
+        apellido: string,
+        direccion: string,
+        telefono: string,
+        correo: string,
+        movil: string,
+        clave: string,
+        rol: string,
+        moroso: boolean,
+        activo: boolean,
 
     ){
 

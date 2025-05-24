@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -40,22 +40,18 @@ export class InventarioComponent implements OnInit {
   public modoColumna = ColumnMode;
   public tipoSeleccion = SelectionType;
 
-  public constructor(private inventarioService: InventarioService,
+  public constructor(
+    private inventarioService: InventarioService,
     private tituloService: TituloService,
     private tecnologiaService: TecnologiaService,
     private router: Router,
     public dialog: MatDialog,
-  ) { 
-
-  }
+  ) {}
 
   ngOnInit(): void {
-    if (Globales.usuario != null) {
+    if (Globales.usuario) {
       this.listar();
-      this.listarTitulos();
-      this.listarTecnologias();
-    }
-    else {
+    } else {
       this.router.navigate(["inicio"]);
     }
   }
@@ -266,4 +262,3 @@ export class InventarioComponent implements OnInit {
       });
     }
 }
-

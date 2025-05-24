@@ -18,7 +18,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./cliente.component.css']
 })
 export class ClienteComponent implements OnInit {
-
   public textoBusqueda: string = "";
   public clientes: Cliente[] = [];
   public tipoDocumentos: Tipodocumento[] = [];
@@ -28,7 +27,7 @@ export class ClienteComponent implements OnInit {
     { name: 'ID', prop: 'id' },
     { name: 'Nombre', prop: 'nombre' },
     { name: 'Apellido', prop: 'apellido' },
-    { name: 'Tipo Documento', prop: 'tipoDocumento.tipo' },
+    { name: 'Tipo Documento', prop: 'tipodocumento.tipo' },
     { name: 'Dirección', prop: 'direccion' },
     { name: 'Teléfono', prop: 'telefono' },
     { name: 'Correo', prop: 'correo' },
@@ -45,41 +44,36 @@ export class ClienteComponent implements OnInit {
     private tipoDocumentoService: TipodocumentoService,
     private router: Router,
     public dialog: MatDialog,
-  ){
-
-  }
+  ) {}
 
   ngOnInit(): void {
-      if (Globales.usuario != null){
-        this.listar();
-        this.listarTipoDocumentos();
-      }
-      else{
-        this.router.navigate(["inicio"]);
-      }
+    if (Globales.usuario != null) {
+      this.listar();
+      this.listarTipoDocumentos();
+    } else {
+      this.router.navigate(["inicio"]);
+    }
   }
 
-  public onActivate(event: any){
-    if (event.type == 'click'){
+  public onActivate(event: any) {
+    if (event.type == 'click') {
       this.clienteSeleccion = event.row;
     }
   }
 
-  public listar(){
-    debugger;
-    this.clienteService.listar()
-     .subscribe(data => {
+  public listar() {
+    this.clienteService.listar().subscribe(
+      data => {
         this.clientes = data;
-
       },
       error => {
         window.alert("Error al obtener los datos.");
       });
   }
 
-  public listarTipoDocumentos(){
-    this.tipoDocumentoService.listar()
-     .subscribe(data => {
+  public listarTipoDocumentos() {
+    this.tipoDocumentoService.listar().subscribe(
+      data => {
         this.tipoDocumentos = data;
       },
       error => {
@@ -87,61 +81,54 @@ export class ClienteComponent implements OnInit {
       });
   }
 
-  public buscar(){
-    if (this.textoBusqueda.length > 0){
-      this.clienteService.buscar(this.textoBusqueda)
-       .subscribe(data => {
+  public buscar() {
+    if (this.textoBusqueda.length > 0) {
+      this.clienteService.buscar(this.textoBusqueda).subscribe(
+        data => {
           this.clientes = data;
         },
         error => {
-          window.alert(error.message);
-        });
-    }
-    else{
+          Swal.fire('Error', error.message, 'error');
+        }
+      );
+    } else {
       this.listar();
     }
   }
 
-  public agregar(){
+  public agregar() {
     const dialogRef = this.dialog.open(ClienteEditarComponent, {
       width: '600px',
       height: '500px',
-      data: { 
+      data: {
         encabezado: "Agregando Nuevo Cliente:",
         cliente: new Cliente("", new Tipodocumento(0, "", ""), "", "", "", "", "", "", "12345", "", false, true),
         tipoDocumentos: this.tipoDocumentos,
       }
     });
 
-    dialogRef.afterClosed().subscribe((datos) => {
+    dialogRef.afterClosed().subscribe(datos => {
       this.guardar(datos.cliente);
-    },
-  err => {
-      window.alert(err.message)
-  });
+    });
   }
 
-  public modificar(){
-    if (this.clienteSeleccion!= undefined){
+  public modificar() {
+    if (this.clienteSeleccion) {
       const dialogRef = this.dialog.open(ClienteEditarComponent, {
         width: '600px',
         height: '500px',
-        data: { 
+        data: {
           encabezado: `Modificando Cliente: [${this.clienteSeleccion.nombre}] [${this.clienteSeleccion.apellido}]`,
           cliente: this.clienteSeleccion,
           tipoDocumentos: this.tipoDocumentos,
         }
       });
 
-      dialogRef.afterClosed().subscribe((datos) => {
+      dialogRef.afterClosed().subscribe(datos => {
         this.guardar(datos.cliente);
-      },
-      err => {
-        window.alert(err.message)
       });
-    }
-    else{
-      window.alert("Debe seleccionar un cliente para modificar.");
+    } else {
+      Swal.fire('Atención', 'Debe seleccionar un cliente para modificar.', 'warning');
     }
   }
 
@@ -178,7 +165,8 @@ export class ClienteComponent implements OnInit {
             text: `Error actualizando cliente: [${err.message}]`,
           });
         });
-    }
+      }
+    });
   }
 
   public verificarEliminar() {

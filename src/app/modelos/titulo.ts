@@ -9,11 +9,11 @@ export class Titulo {
     public categoria: Categoria;
 
     constructor(
-        id: number = 0,
-        nombre: string = '',
-        ano: number = 0,
-        director: string = '',
-        categoria: Categoria = new Categoria(),
+        id: number,
+        nombre: string,
+        ano: number,
+        director: string,
+        categoria: Categoria,
         
     ) {
         this.id = id;
