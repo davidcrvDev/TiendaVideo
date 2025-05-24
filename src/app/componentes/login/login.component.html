@@ -1,15 +1,20 @@
-<h1 mat-dialog-tittle>Login</h1>
+<h1 mat-dialog-title>Login</h1>
 <div mat-dialog-content>
-    <p>Credenciales de acceso</p>
-    <mat-form-field>
-        <mat-label>Usuario</mat-label>
-        <input matInput [(ngModel)]="datos.usuario">
-    </mat-form-field>
-    <mat-form-field>
-        <mat-label>Clave</mat-label>
-        <input type="password" matInput [(ngModel)]="datos.clave">
-    </mat-form-field>
+  <p>Credenciales de acceso</p>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Usuario</mat-label>
+    <input matInput [(ngModel)]="datos.usuario">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Clave</mat-label>
+    <input type="password" matInput [(ngModel)]="datos.clave">
+  </mat-form-field>
+
+  <p *ngIf="error" style="color:red;">{{ error }}</p>
 </div>
+
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" [mat-dialog-close]="datos" cdkFocusInitial>Ingresar</button>
+  <button mat-raised-button color="primary" (click)="ingresar()" cdkFocusInitial>Ingresar</button>
 </div>
