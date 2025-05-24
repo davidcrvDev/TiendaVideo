@@ -5,8 +5,8 @@ export class Tecnologia {
     public nombre: string;
 
     constructor(
-        id: number = 0,
-        nombre: string = '',
+        id: number,
+        nombre: string,
         
     ) {
 

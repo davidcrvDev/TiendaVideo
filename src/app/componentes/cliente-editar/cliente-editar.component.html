@@ -54,7 +54,7 @@
       (selectionChange)="validarFormulario()"
       required
     >
-      <mat-option *ngFor="let p of datos.tipoDocumentos" [value]="p">
+      <mat-option *ngFor="let p of datos.tipoDocumentos" [value]="p.id">
         {{ p.tipo }}
       </mat-option>
     </mat-select>
@@ -132,12 +132,13 @@
   <br />
   <mat-form-field appearance="fill">
     <mat-label>Rol</mat-label>
-    <mat-select
+    <input
+      matInput
       [(ngModel)]="datos.cliente.rol"
-      (selectionChange)="validarFormulario()" required>
-      <mat-option value="Administrador">Administrador</mat-option>
-      <mat-option value="Usuario">Usuario</mat-option>
-    </mat-select>
+      type="text"
+      (input)="validarFormulario()"
+      required
+    />
     <mat-error *ngIf="!datos.cliente.rol || datos.cliente.rol.trim() === ''">
       El rol es obligatorio.
     </mat-error>
