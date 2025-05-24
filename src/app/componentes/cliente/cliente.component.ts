@@ -165,8 +165,7 @@ export class ClienteComponent implements OnInit {
             text: `Error actualizando cliente: [${err.message}]`,
           });
         });
-      }
-    });
+    }
   }
 
   public verificarEliminar() {
