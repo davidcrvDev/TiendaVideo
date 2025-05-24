@@ -13,6 +13,7 @@ import { TituloService } from 'src/app/servicios/titulo.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { InventarioEditarComponent } from '../inventario-editar/inventario-editar.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-inventario',
@@ -64,86 +65,73 @@ export class InventarioComponent implements OnInit {
       this.inventarioSeleccion = event.row;
     }
   }
-
-  public listar() {
-    debugger;
-    this.inventarioService.listar()
-     .subscribe(data => {
-      console.log("Datos recibidos", data)
-        this.inventarios = data
-
-      },
-        err => {
-          window.alert("Error al obtener los datos.")
-        });
-  }
-
-  public listarTitulos() {
-    this.tituloService.listar()
-     .subscribe(data => {
-        this.titulos = data;
-
-      },
-        err => {
-          window.alert("Error al obtener los datos de los titulos.")
-        });
-  }
-
-  public listarTecnologias() {
-    this.tecnologiaService.listar()
-     .subscribe(data => {
-        this.tecnologias = data;
-
-      },
-        err => {
-          window.alert("Error al obtener los datos de los dispositivos.")
-        });
-  }
-
-  public buscar() {
-    if (this.textoBusqueda.length > 0) {
-      this.inventarioService.buscar(this.textoBusqueda)
-       .subscribe(data => {
+    public listar() {
+      this.inventarioService.listar()
+        .subscribe(data => {
           this.inventarios = data;
-
         },
-          err => {
-            window.alert(err.message)
+        err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudieron obtener los datos del inventario, intente nuevamente.',
           });
+        });
     }
-    else {
-      this.listar();
-    }
-  }
 
-  public agregar() {
-    const dialogRef = this.dialog.open(InventarioEditarComponent, {
-      width: '600px',
-      height: '500px',
-      data: {
-        encabezado: "Agregando nuevo Inventario:",
-        inventario: new Inventario(0, new Titulo(0, "", 0, "", new Categoria(0, "")), 0, new Tecnologia(0, ""), new Date(), 0, ""),
-        titulos: this.titulos,
-        tecnologias: this.tecnologias,
+    public listarTitulos() {
+      this.tituloService.listar()
+        .subscribe(data => {
+          this.titulos = data;
+        },
+        err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudieron obtener los datos de los títulos, intente nuevamente.',
+          });
+        });
+    }
+
+    public listarTecnologias() {
+      this.tecnologiaService.listar()
+        .subscribe(data => {
+          this.tecnologias = data;
+        },
+        err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudieron obtener los datos de las tecnologías, ntente nuevamente.',
+          });
+        });
+    }
+
+    public buscar() {
+      if (this.textoBusqueda.length > 0) {
+        this.inventarioService.buscar(this.textoBusqueda)
+          .subscribe(data => {
+            this.inventarios = data;
+          },
+          err => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se encontraron resultados para la búsqueda, intente con otro criterio.',
+            });
+          });
+      } else {
+        this.listar();
       }
-    });
-
-    dialogRef.afterClosed().subscribe((datos) => {
-      this.guardar(datos.inventario);
-    }, err => {
-      window.alert(err.message)
     }
-  );
-  }
 
-  public modificar() {
-    if (this.inventarioSeleccion != null && this.inventarioSeleccion.id > 0) {
+    public agregar() {
       const dialogRef = this.dialog.open(InventarioEditarComponent, {
         width: '600px',
         height: '500px',
         data: {
-          encabezado: "Modificando Inventario:",
-          inventario: this.inventarioSeleccion,
+          encabezado: "Agregando nuevo Inventario:",
+          inventario: new Inventario(0, new Titulo(0, "", 0, "", new Categoria(0, "")), 0, new Tecnologia(0, ""), new Date(), 0, ""),
           titulos: this.titulos,
           tecnologias: this.tecnologias,
         }
@@ -152,75 +140,130 @@ export class InventarioComponent implements OnInit {
       dialogRef.afterClosed().subscribe((datos) => {
         this.guardar(datos.inventario);
       }, err => {
-        window.alert(err.message)
-      }
-    );
-    }
-    else {
-      window.alert("Debe seleccionar un Inventario para modificar.");
-    }
-  }
-
-  private guardar(inventario: Inventario) {
-
-    if (inventario.id == 0) {
-      this.inventarioService.agregar(inventario).subscribe(inventarioActualizado => {
-          this.listar();
-          window.alert("Inventario agregado correctamente.");
-        },
-          (err: HttpErrorResponse) => {
-            window.alert(`Èrror al agregar el inventario: ${err.message}`);
-          });
-    }
-    else {
-      this.inventarioService.actualizar(inventario).subscribe(inventarioActualizado => {
-          this.listar();
-          window.alert("Inventario modificado correctamente.");
-        },
-          (err: HttpErrorResponse) => {
-            window.alert(`Error al actualizar el inventario: ${err.message}`);
-          });
-    }
-  }
-
-  public verificarEliminar() {
-    if (this.inventarioSeleccion != null && this.inventarioSeleccion.id > 0) {
-      const dialogRef = this.dialog.open(DecidirComponent, {
-        width: '400px',
-        data: {
-          encabezado: "¿Está seguro de eliminar el inventario?",
-          mensaje: `El inventario: ${this.inventarioSeleccion.titulo.nombre}`,
-          id: this.inventarioSeleccion.id,
-        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un problema al intentar agregar el inventario, intente nuevamente.',
+        });
       });
+    }
 
-      dialogRef.afterClosed().subscribe(datos => {
-        if (datos) {
-          this.eliminar(datos.id);
+    public modificar() {
+      if (this.inventarioSeleccion != null && this.inventarioSeleccion.id > 0) {
+        const dialogRef = this.dialog.open(InventarioEditarComponent, {
+          width: '600px',
+          height: '500px',
+          data: {
+            encabezado: "Modificando Inventario:",
+            inventario: this.inventarioSeleccion,
+            titulos: this.titulos,
+            tecnologias: this.tecnologias,
+          }
+        });
+
+        dialogRef.afterClosed().subscribe((datos) => {
+          this.guardar(datos.inventario);
+        }, err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un problema al intentar modificar el inventario, intente nuevamente.',
+          });
+        });
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Atención',
+          text: 'Debe seleccionar un Inventario para modificar.',
+        });
+      }
+    }
+
+    private guardar(inventario: Inventario) {
+      if (inventario.id == 0) {
+        this.inventarioService.agregar(inventario).subscribe(inventarioActualizado => {
+          this.listar();
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Inventario agregado correctamente.',
+          });
+        },
+        (err: HttpErrorResponse) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo agregar el inventario, intente nuevamente.',
+          });
+        });
+      } else {
+        this.inventarioService.actualizar(inventario).subscribe(inventarioActualizado => {
+          this.listar();
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Inventario modificado correctamente.',
+          });
+        },
+        (err: HttpErrorResponse) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo modificar el inventario, intente nuevamente.',
+          });
+        });
+      }
+    }
+
+    public verificarEliminar() {
+      if (this.inventarioSeleccion != null && Number(this.inventarioSeleccion.id) > 0) {
+        Swal.fire({
+          title: `¿Está seguro que desea eliminar el Inventario [${this.inventarioSeleccion.id}]?`,
+          text: 'Esta acción no se puede deshacer.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (this.inventarioSeleccion && this.inventarioSeleccion.id) {
+              this.eliminar(Number(this.inventarioSeleccion.id));
+            }
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Atención',
+          text: 'Debe seleccionar un Inventario.',
+        });
+      }
+    }
+
+    private eliminar(id: number) {
+      this.inventarioService.eliminar(id).subscribe(response => {
+        if (response == true) {
+          this.listar();
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Inventario eliminado correctamente.',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo eliminar el inventario, intente nuevamente.',
+          });
         }
       },
-    err => {
-      window.alert("Error al eliminar, vuelve a intentar.")
-    });
+      error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un problema al intentar eliminar el inventario, intente nuevamente.',
+        });
+      });
     }
-    else {
-      window.alert("Debe seleccionar un Inventario para eliminar.");
-    }
-  }
-
-  private eliminar(id: number) {
-    this.inventarioService.eliminar(id).subscribe(response => {
-      if (response == true) {
-        this.listar();
-        window.alert("Inventario eliminado correctamente.");
-      }
-      else {
-        window.alert("No se pudo eliminar el inventario.");
-      }
-    },
-  error => {
-    window.alert(error.message)
-  });
-  }
 }
 

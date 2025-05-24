@@ -2,12 +2,9 @@
   "name": "tienda-video",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "vercel-build": "ng build --configuration production"
   },
+
   "private": true,
   "dependencies": {
     "@angular/animations": "^16.0.0",
@@ -22,6 +19,7 @@
     "@angular/router": "^16.0.0",
     "@swimlane/ngx-datatable": "^20.1.0",
     "rxjs": "~7.8.0",
+    "sweetalert2": "^11.21.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
   },
