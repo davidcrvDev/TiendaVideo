@@ -29,9 +29,8 @@ export class AlquilerComponent implements OnInit {
   public titulos: Titulo[] = [];
   public clientes: Cliente[] = [];
   public columnas = [
-    { name: 'Codigo', prop: 'id' },
     { name: '#Titulos', prop: 'inventario.titulo.nombre' },
-    { name: '#Cliente', prop: 'cliente.id' },
+    { name: '#Codigo Cliente', prop: 'cliente.id' },
     { name: 'Cliente', prop: 'cliente.nombre'},
     { name: 'Fecha prestamo', prop: 'fechaPrestamo' },
     { name: 'Plazo', prop: 'plazo' },

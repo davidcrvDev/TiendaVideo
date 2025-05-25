@@ -22,8 +22,9 @@ export class TecnologiaComponent implements OnInit {
   public tecnologiaSeleccion: Tecnologia | undefined;
 
   public columnas = [
-    { name: 'ID', prop: 'id' },
-    { name: 'Nombre', prop: 'nombre' },
+  { name: 'Nombre', prop: 'nombre' },
+  { name: 'Fabricante', prop: 'fabricante' },
+  { name: 'Idiomas compatibles', prop: 'idiomas_compatibles' },
   ];
   public modoColumna = ColumnMode;
   public tipoSeleccion = SelectionType;
@@ -52,9 +53,7 @@ export class TecnologiaComponent implements OnInit {
     this.tecnologiaService.listar()
       .subscribe(data => {
         this.tecnologias = data;
-        this.tecnologias.forEach(tecnologia => {
-          tecnologia.nombre = tecnologia.nombre;
-        });
+        console.log(this.tecnologias);
       },
       err => {
         Swal.fire({
@@ -103,7 +102,7 @@ export class TecnologiaComponent implements OnInit {
       height: '500px',
       data: {
         encabezado: "Agregando Nueva Tecnología:",
-        tecnologia: new Tecnologia(0, ""),
+        tecnologia: new Tecnologia(0, ""),        
       }
     });
 

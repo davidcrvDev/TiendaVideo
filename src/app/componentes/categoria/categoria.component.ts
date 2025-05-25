@@ -22,6 +22,8 @@ export class CategoriaComponent implements OnInit {
 
   public columnas = [
     { name: 'Nombre', prop: 'nombre' },
+    { name: 'Descripcion', prop: 'descripcion' },
+    { name: 'Clasificacion Edad', prop: 'clasificacion_edad' },
   ];
   public modoColumna = ColumnMode;
   public tipoSeleccion = SelectionType;
@@ -51,20 +53,18 @@ export class CategoriaComponent implements OnInit {
     this.categoriaService.listar().subscribe(
       (data) => {
         this.categorias = data;
-
-        this.categorias.forEach((categoria) => {
-          categoria.nombre = categoria.nombre;
-        });
+        console.log(this.categorias);
       },
       (err) => {
         Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Error al obtener los datos.'
-      });
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error al obtener los datos.'
+        });
       }
     );
   }
+
 
   public listarCategorias() {
     this.categoriaService.listar().subscribe(
@@ -139,7 +139,11 @@ export class CategoriaComponent implements OnInit {
         }
       );
     } else {
-      window.alert('Debe seleccionar una Categoría');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar una Categoría.',
+      });
     }
   }
 
