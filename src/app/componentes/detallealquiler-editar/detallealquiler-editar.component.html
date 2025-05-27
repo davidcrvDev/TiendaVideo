@@ -5,10 +5,10 @@
   <mat-form-field appearance="fill">
     <mat-label>Inventario</mat-label>
     <mat-select
-      [(ngModel)]="datos.detalleAlquiler.inventario"
+      [(value)]="datos.detalleAlquiler.inventario!.titulo"
       (selectionChange)="actualizarInfoInventario()"
     >
-      <mat-option *ngFor="let inv of datos.inventarios" [value]="inv">
+      <mat-option *ngFor="let inv of datos.inventarios" [value]="inv.titulo">
         {{ inv.titulo.nombre }} (Stock: {{ inv.disponible }})
       </mat-option>
     </mat-select>

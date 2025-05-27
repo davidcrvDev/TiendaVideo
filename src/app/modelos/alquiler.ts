@@ -6,7 +6,7 @@ export class Alquiler {
   public cliente: Cliente;
   public fechaPrestamo: Date;
   public plazo: number;
-  public fechaDevolucion: Date;
+  public fechaDevolucion: string;
   public precio: number;
   public detalles: DetalleAlquiler[];
 
@@ -15,7 +15,7 @@ export class Alquiler {
     cliente: Cliente = new Cliente(),
     fechaPrestamo: Date = new Date(),
     plazo: number = 0,
-    fechaDevolucion: Date = new Date(),
+    fechaDevolucion: string = '',
     precio: number = 0,
     detalles: DetalleAlquiler[] = []
   ) {

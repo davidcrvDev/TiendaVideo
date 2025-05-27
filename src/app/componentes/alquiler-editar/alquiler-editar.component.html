@@ -5,7 +5,7 @@
     <mat-label>Cliente</mat-label>
     <mat-select [(value)]="datos.alquiler.cliente!.id">
       <mat-option *ngFor="let p of datos.clientes" [value]="p.id">
-        {{ p.nombre }}
+        {{ p.id }} - {{ p.nombre }} {{ p.apellido }}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -14,12 +14,7 @@
   <div class="row">
     <mat-form-field appearance="fill" class="half-width">
       <mat-label>Fecha préstamo</mat-label>
-      <input
-        matInput
-        type="date"
-        [(ngModel)]="datos.alquiler.fechaPrestamo"
-        (ngModelChange)="calcularFechaDevolucion()"
-      />
+      <input matInput type="date" [(ngModel)]="datos.alquiler.fechaPrestamo" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="half-width">
@@ -52,8 +47,9 @@
         [(ngModel)]="detalleTemporal.inventario"
         (selectionChange)="actualizarDatosInventario()"
       >
-        <mat-option *ngFor="let inv of datos.inventario" [value]="inv">
-          {{ inv.titulo.nombre }}
+        <mat-option *ngFor="let inv of datos.inventarios" [value]="inv">
+          {{ inv.titulo?.nombre }} ({{ inv.tecnologia?.nombre }}, Stock:
+          {{ inv.disponible }})
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -64,7 +60,7 @@
         matInput
         type="number"
         [(ngModel)]="detalleTemporal.cantidad"
-        (input)="actualizarSubtotal()"
+        (ngModelChange)="actualizarSubtotal()"
       />
     </mat-form-field>
 
@@ -88,30 +84,16 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Precio Unitario</mat-label>
-      <input
-        matInput
-        type="number"
-        [(ngModel)]="detalleTemporal.precioUnitario"
-        readonly
-      />
+      <input matInput [value]="detalleTemporal.precioUnitario" readonly />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Subtotal</mat-label>
-      <input
-        matInput
-        type="number"
-        [(ngModel)]="detalleTemporal.subtotal"
-        readonly
-      />
+      <input matInput [value]="detalleTemporal.subtotal" readonly />
     </mat-form-field>
 
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="agregarODetalle(detalleTemporal)"
-    >
-      + Agregar
+    <button mat-raised-button color="primary" (click)="agregarODetalle()">
+      {{ editando ? "Actualizar" : "+ Agregar" }}
     </button>
   </div>
 
