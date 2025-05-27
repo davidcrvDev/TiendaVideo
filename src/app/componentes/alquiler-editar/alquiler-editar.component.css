@@ -1,0 +1,19 @@
+.row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  flex: 1 1 calc(50% - 8px);
+  min-width: 200px;
+}
+
+.third-width {
+  flex: 1 1 calc(33.333% - 10.6px);
+  min-width: 180px;
+}

@@ -2,7 +2,7 @@ import { Tipodocumento } from "./tipodocumento";
 
 export class Cliente {
 
-    public id: number;
+    public id: string;
     public tipoDocumento: Tipodocumento;
     public nombre: string;
     public apellido: string;
@@ -16,18 +16,18 @@ export class Cliente {
     public activo: boolean;
 
     constructor(
-        id: number,
-        tipoDocumento: Tipodocumento,
-        nombre: string,
-        apellido: string,
-        direccion: string,
-        telefono: string,
-        correo: string,
-        movil: string,
-        clave: string,
-        rol: string,
-        moroso: boolean,
-        activo: boolean,
+        id: string = '',
+        tipoDocumento: Tipodocumento = new Tipodocumento(),
+        nombre: string = '',
+        apellido: string = '',
+        direccion: string = '',
+        telefono: string = '',
+        correo: string = '',
+        movil: string = '',
+        clave: string = '',
+        rol: string = '',
+        moroso: boolean = false,
+        activo: boolean = true,
 
     ){
 

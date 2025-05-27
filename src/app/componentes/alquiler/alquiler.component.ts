@@ -76,7 +76,7 @@ export class AlquilerComponent implements OnInit {
         this.alquileres = data;
       },
         err => {
-          window.alert(err.message)
+          window.alert("Error al obtener los datos.")
         });
   }
 
@@ -87,7 +87,7 @@ export class AlquilerComponent implements OnInit {
         this.titulos = data;
       },
         err => {
-          window.alert(err.message)
+          window.alert("Error al obtener los datos de los titulos")
         });
   }
 
@@ -98,7 +98,7 @@ export class AlquilerComponent implements OnInit {
         this.clientes = data;
       },
         err => {
-          window.alert(err.message)
+          window.alert("Error al obtener los datos de los clientes")
         });
   }
 
@@ -125,11 +125,12 @@ export class AlquilerComponent implements OnInit {
         encabezado: "Agregando Alquiler:",
         alquiler: new Alquiler(
           0, //Id
-          new Cliente(0, new Tipodocumento(0, "", ""), "", "", "", "", "", "", "", "", false, true),
+          new Cliente("", new Tipodocumento(0, "", ""), "", "", "", "", "", "", "", "", false, true),
           new Date(),
           0,
-          new Date(),
+          '',
           0,
+          []
         ),
         titulos: this.titulos,
         clientes: this.clientes,
@@ -214,7 +215,7 @@ export class AlquilerComponent implements OnInit {
         }
       },
         err => {
-          window.alert(err.message)
+          window.alert("Error al eliminar, vuelve a intentar.")
         });
 
     }

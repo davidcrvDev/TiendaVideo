@@ -46,4 +46,9 @@ export class TecnologiaService {
         let urlT = `${this.url}/eliminar/${id}`;
         return this.http.delete<any>(urlT, this.obtenerHeader());
     }
+
+    public existeTecnologia(nombre: string): Observable<boolean> {
+        let urlT = `${this.url}/existe/${encodeURIComponent(nombre.trim().toLowerCase())}`;
+        return this.http.get<boolean>(urlT, this.obtenerHeader());
+    }
 }
