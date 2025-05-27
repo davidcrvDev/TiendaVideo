@@ -1,0 +1,62 @@
+<div mat-dialog-content>
+  <p>{{ datos.encabezado }}</p>
+
+  <!-- Inventario -->
+  <mat-form-field appearance="fill">
+    <mat-label>Inventario</mat-label>
+    <mat-select
+      [(value)]="datos.detalleAlquiler.inventario!.titulo"
+      (selectionChange)="actualizarInfoInventario()"
+    >
+      <mat-option *ngFor="let inv of datos.inventarios" [value]="inv.titulo">
+        {{ inv.titulo.nombre }} (Stock: {{ inv.disponible }})
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Cantidad -->
+  <mat-form-field appearance="fill">
+    <mat-label>Cantidad</mat-label>
+    <input
+      type="number"
+      matInput
+      [(ngModel)]="datos.detalleAlquiler.cantidad"
+      (ngModelChange)="calcularSubtotal()"
+    />
+  </mat-form-field>
+
+  <!-- Precio Unitario (solo lectura) -->
+  <mat-form-field appearance="fill">
+    <mat-label>Precio Unitario</mat-label>
+    <input
+      matInput
+      [value]="datos.detalleAlquiler.precioUnitario"
+      readonly
+    />
+  </mat-form-field>
+
+  <!-- Subtotal (solo lectura) -->
+  <mat-form-field appearance="fill">
+    <mat-label>Subtotal</mat-label>
+    <input
+      matInput
+      [value]="datos.detalleAlquiler.subtotal"
+      readonly
+    />
+  </mat-form-field>
+</div>
+
+<!-- Botones -->
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [mat-dialog-close]="datos"
+    (click)="guardarDetalle()"
+    cdkFocusInitial
+  >
+    Aceptar
+  </button>
+</div>
+

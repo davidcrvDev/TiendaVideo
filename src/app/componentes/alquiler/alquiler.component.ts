@@ -141,7 +141,7 @@ export class AlquilerComponent implements OnInit {
           new Cliente("", new Tipodocumento(0, "", ""), "", "", "", "", "", "", "", "", false, true),
           new Date(),
           0,
-          new Date(),
+          '',
           0,
         ),
         titulos: this.titulos,
