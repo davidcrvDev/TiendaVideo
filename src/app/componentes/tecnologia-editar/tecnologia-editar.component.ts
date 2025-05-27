@@ -17,13 +17,10 @@ export interface DatosTecnolgia {
 export class TecnologiaEditarComponent {
   public botonAceptarDeshabilitado: boolean = true;
 
-  @Input() public dialogRef = MatDialogRef<TecnologiaEditarComponent>;
-
   constructor(
-    @Inject(MAT_DIALOG_DATA) public datos: DatosTecnolgia
-  ) {
-
-  }
+      public dialogRef: MatDialogRef<TecnologiaEditarComponent>,
+      @Inject(MAT_DIALOG_DATA) public datos: DatosTecnolgia
+    ) {}
 
   ngOnInit(): void {
     this.validarFormulario();

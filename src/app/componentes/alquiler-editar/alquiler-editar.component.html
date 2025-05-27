@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>Editando Alquiler de Videojuego</h1>
 <div mat-dialog-content>
-  <!-- Cliente -->
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Cliente</mat-label>
+  <p>{{ datos.encabezado }}</p>
+  <mat-form-field appearance="fill">
+    <mat-label>Clientes</mat-label>
     <mat-select [(value)]="datos.alquiler.cliente!.id">
       <mat-option *ngFor="let p of datos.clientes" [value]="p.id">
         {{ p.id }} - {{ p.nombre }} {{ p.apellido }}
@@ -101,7 +101,7 @@
   <h3>Detalles del alquiler</h3>
   <table
     mat-table
-    [dataSource]="datos.alquiler.detalles"
+    [(ngModel)]="datos.alquiler.detalles"
     class="mat-elevation-z8"
   >
     <ng-container matColumnDef="inventario">
@@ -140,11 +140,9 @@
     <tr mat-row *matRowDef="let row; columns: columnasTabla"></tr>
   </table>
 
-  <!-- Precio Total -->
+  <!-- Precio Total alquiler -->
   <h3>Precio alquiler: {{ calcularPrecioTotal() | currency }}</h3>
 </div>
-
-<!-- Botones -->
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancelar</button>
   <button

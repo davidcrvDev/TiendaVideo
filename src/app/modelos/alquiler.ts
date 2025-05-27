@@ -1,5 +1,6 @@
-import { Cliente } from './cliente';
-import { DetalleAlquiler } from './detallealquiler';
+import { Cliente } from "./cliente";
+import { DetalleAlquiler } from "./detallealquiler";
+import { Tipodocumento } from "./tipodocumento";
 
 export class Alquiler {
   public id: number;
@@ -12,7 +13,7 @@ export class Alquiler {
 
   constructor(
     id: number = 0,
-    cliente: Cliente = new Cliente(),
+    cliente: Cliente = new Cliente('', new Tipodocumento(0, '', ''), '', '', '', '', '', '', '', '', false, true),
     fechaPrestamo: Date = new Date(),
     plazo: number = 0,
     fechaDevolucion: string = '',
