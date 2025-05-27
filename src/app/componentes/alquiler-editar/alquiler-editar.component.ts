@@ -2,9 +2,11 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Alquiler } from 'src/app/modelos/alquiler';
 import { Inventario } from 'src/app/modelos/inventario';
-//import { Inventario } from 'src/app/modelos/inventario';
 import { Cliente } from 'src/app/modelos/cliente';
 import { Titulo } from 'src/app/modelos/titulo';
+import { DetalleAlquiler } from 'src/app/modelos/detallealquiler';
+import { Tecnologia } from 'src/app/modelos/tecnologia';
+import { Categoria } from 'src/app/modelos/categoria';
 
 export interface DatosAlquiler {
   encabezado: string;
@@ -33,7 +35,7 @@ export class AlquilerEditarComponent {
 
 
   alquiler: Alquiler = new Alquiler();
-
+  
   detalleTemporal: DetalleAlquiler = this.nuevoDetalleTemporal();
 
   editando: boolean = false;
@@ -45,7 +47,7 @@ export class AlquilerEditarComponent {
     return {
       id: 0,
       alquiler: new Alquiler(),
-      inventario: new Inventario(),
+      inventario: new Inventario(0, new Titulo(0, '', 0, '', new Categoria(0, '', '', '')), 0, new Tecnologia(0, '', '', ''), new Date(), 0, ''),
       cantidad: 1,
       precioUnitario: 0,
       subtotal: 0,

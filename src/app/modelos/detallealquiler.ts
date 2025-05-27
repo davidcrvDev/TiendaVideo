@@ -11,12 +11,12 @@ export class DetalleAlquiler {
     public subtotal: number;
 
     constructor(
-        id: number,
+        id: number = 0,
         alquiler: Alquiler,
         inventario: Inventario,
-        cantidad: number,
-        precioUnitario: number,
-        subtotal: number,
+        cantidad: number = 0,
+        precioUnitario: number = 0,
+        subtotal: number = 0,
     ) {
         this.id = id;
         this.alquiler = alquiler;
