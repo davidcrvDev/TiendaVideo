@@ -33,7 +33,6 @@ export class ClienteComponent implements OnInit {
     { name: 'Correo', prop: 'correo' },
     { name: 'Móvil', prop: 'movil' },
     { name: 'Rol', prop: 'rol' },
-    { name: 'Moroso', prop: 'moroso' },
     { name: 'Activo', prop: 'activo' },
   ];
   public modoColumna = ColumnMode;
@@ -69,6 +68,42 @@ export class ClienteComponent implements OnInit {
       error => {
         window.alert("Error al obtener los datos.");
       });
+  }
+
+  public cambiarMoroso(cliente: Cliente, nuevoEstado: boolean) {
+    // Si se va a cambiar de false a true, pide confirmación
+    if (!cliente.moroso && nuevoEstado) {
+      Swal.fire({
+        title: '¿Está seguro?',
+        text: '¿Desea marcar este cliente como moroso?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, marcar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.actualizarCheckMoroso(cliente, nuevoEstado);
+        }
+      });
+    } else {
+      // Si es de true a false, o cualquier otro caso, cambia directamente
+      this.actualizarCheckMoroso(cliente, nuevoEstado);
+    }
+  }
+
+  private actualizarCheckMoroso(cliente: Cliente, nuevoEstado: boolean) {
+    this.clienteService.actualizarMoroso(Number(cliente.id), nuevoEstado).subscribe(
+      () => {
+        cliente.moroso = nuevoEstado;
+      },
+      error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo actualizar el estado de moroso.',
+        });
+      }
+    );
   }
 
   public listarTipoDocumentos() {
