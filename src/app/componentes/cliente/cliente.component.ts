@@ -25,9 +25,9 @@ export class ClienteComponent implements OnInit {
 
   public columnas = [
     { name: 'ID', prop: 'id' },
+    { name: 'Tipo Documento', prop: 'tipodocumento.tipo' },
     { name: 'Nombre', prop: 'nombre' },
     { name: 'Apellido', prop: 'apellido' },
-    { name: 'Tipo Documento', prop: 'tipodocumento.tipo' },
     { name: 'Dirección', prop: 'direccion' },
     { name: 'Teléfono', prop: 'telefono' },
     { name: 'Correo', prop: 'correo' },
@@ -70,8 +70,9 @@ export class ClienteComponent implements OnInit {
       });
   }
 
-  public cambiarMoroso(cliente: Cliente, nuevoEstado: boolean) {
-    // Si se va a cambiar de false a true, pide confirmación
+  public cambiarMoroso(cliente: Cliente, event: any) {
+    const nuevoEstado = event.checked;
+  
     if (!cliente.moroso && nuevoEstado) {
       Swal.fire({
         title: '¿Está seguro?',
@@ -82,12 +83,13 @@ export class ClienteComponent implements OnInit {
         cancelButtonText: 'Cancelar'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.actualizarCheckMoroso(cliente, nuevoEstado);
+          this.actualizarCheckMoroso(cliente, true);
+        } else {
+          event.source.checked = false;
         }
       });
-    } else {
-      // Si es de true a false, o cualquier otro caso, cambia directamente
-      this.actualizarCheckMoroso(cliente, nuevoEstado);
+    } else if (cliente.moroso && !nuevoEstado) {
+      this.actualizarCheckMoroso(cliente, false);
     }
   }
 
