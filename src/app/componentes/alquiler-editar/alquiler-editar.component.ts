@@ -27,9 +27,9 @@ export class AlquilerEditarComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public datos: DatosAlquiler) {}
 
   ngOnInit() {
-  console.log('Inventarios disponibles:', this.datos.inventarios);
-}
-
+    console.log('Datos recibidos:', this.datos);
+    console.log('Inventarios disponibles:', this.datos.inventarios);
+  }
 
   alquiler: Alquiler = new Alquiler();
 
@@ -38,7 +38,13 @@ export class AlquilerEditarComponent {
   editando: boolean = false;
   indexEditando: number = -1;
 
-  columnasTabla: string[] = ['inventario', 'cantidad', 'precioUnitario', 'subtotal', 'acciones'];
+  columnasTabla: string[] = [
+    'inventario',
+    'cantidad',
+    'precioUnitario',
+    'subtotal',
+    'acciones',
+  ];
 
   nuevoDetalleTemporal(): DetalleAlquiler {
     return {
@@ -55,20 +61,27 @@ export class AlquilerEditarComponent {
     if (this.datos.alquiler.fechaPrestamo && this.datos.alquiler.plazo) {
       const fechaPrestamo = new Date(this.datos.alquiler.fechaPrestamo);
       const fechaDevolucion = new Date(fechaPrestamo);
-      fechaDevolucion.setDate(fechaPrestamo.getDate() + this.datos.alquiler.plazo);
-      this.datos.alquiler.fechaDevolucion = fechaDevolucion.toISOString().substring(0, 10);
+      fechaDevolucion.setDate(
+        fechaPrestamo.getDate() + this.datos.alquiler.plazo
+      );
+      this.datos.alquiler.fechaDevolucion = fechaDevolucion
+        .toISOString()
+        .substring(0, 10);
     }
   }
 
   actualizarDatosInventario() {
     if (this.detalleTemporal.inventario) {
-      this.detalleTemporal.precioUnitario = this.detalleTemporal.inventario.precio;
+      this.detalleTemporal.precioUnitario =
+        this.detalleTemporal.inventario.precio;
       this.actualizarSubtotal();
     }
   }
 
   actualizarSubtotal() {
-    this.detalleTemporal.subtotal = (this.detalleTemporal.cantidad || 0) * (this.detalleTemporal.precioUnitario || 0);
+    this.detalleTemporal.subtotal =
+      (this.detalleTemporal.cantidad || 0) *
+      (this.detalleTemporal.precioUnitario || 0);
   }
 
   agregarODetalle() {
@@ -77,7 +90,7 @@ export class AlquilerEditarComponent {
     if (!detalle.inventario || detalle.cantidad <= 0) return;
 
     if (detalle.cantidad > detalle.inventario.disponible) {
-      alert("Cantidad excede disponibilidad.");
+      alert('Cantidad excede disponibilidad.');
       return;
     }
 
@@ -87,13 +100,17 @@ export class AlquilerEditarComponent {
       this.datos.alquiler.detalles[this.indexEditando] = detalleClonado;
     } else {
       // Evitar duplicados de inventario
-      const existe = this.datos.alquiler.detalles.find(d => d.inventario?.id === detalleClonado.inventario.id);
+      const existe = this.datos.alquiler.detalles.find(
+        (d) => d.inventario?.id === detalleClonado.inventario.id
+      );
       if (existe) {
-        alert("Este producto ya está agregado.");
+        alert('Este producto ya está agregado.');
         return;
       }
       this.datos.alquiler.detalles.push(detalleClonado);
     }
+
+    this.datos.alquiler.detalles = [...this.datos.alquiler.detalles];
 
     this.resetDetalle();
   }
@@ -106,6 +123,8 @@ export class AlquilerEditarComponent {
 
   eliminarDetalle(index: number) {
     this.datos.alquiler.detalles.splice(index, 1);
+
+    this.datos.alquiler.detalles = [...this.datos.alquiler.detalles];
     this.resetDetalle();
   }
 
@@ -116,6 +135,9 @@ export class AlquilerEditarComponent {
   }
 
   calcularPrecioTotal(): number {
-    return this.datos.alquiler.detalles.reduce((total, d) => total + d.subtotal, 0);
+    return this.datos.alquiler.detalles.reduce(
+      (total, d) => total + d.subtotal,
+      0
+    );
   }
 }

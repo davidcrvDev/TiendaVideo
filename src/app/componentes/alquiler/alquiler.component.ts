@@ -8,6 +8,7 @@ import { TituloService } from 'src/app/servicios/titulo.service';
 import { Router } from '@angular/router';
 import { Globales } from 'src/app/modelos/globales';
 import { ClienteService } from 'src/app/servicios/cliente.service';
+import { InventarioService } from 'src/app/servicios/inventario.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AlquilerEditarComponent } from '../alquiler-editar/alquiler-editar.component';
@@ -29,7 +30,7 @@ export class AlquilerComponent implements OnInit {
   public clientes: Cliente[] = [];
   public columnas = [
     { name: 'Codigo', prop: 'id' },
-    { name: '#Titulos', prop: 'inventario.titulo.nombre' },
+    { name: '#Titulos', prop: 'inventario.titulo?.nombre' },
     { name: '#Cliente', prop: 'cliente.id' },
     { name: 'Cliente', prop: 'cliente.nombre'},
     { name: 'Fecha prestamo', prop: 'fechaPrestamo' },
@@ -47,7 +48,7 @@ export class AlquilerComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     private alquilerService: AlquilerService,
-    //private inventarioService: inventarioService,
+    private inventarioService: InventarioService,
     private tituloService: TituloService,
     private clienteService: ClienteService,
     private router: Router
@@ -58,6 +59,7 @@ export class AlquilerComponent implements OnInit {
       this.listar();
       this.listarClientes();
       this.listarTitulos();
+      this.listarInventarios();
     }
     else {
       this.router.navigate(["inicio"]);
@@ -102,6 +104,16 @@ export class AlquilerComponent implements OnInit {
         });
   }
 
+  public listarInventarios() {
+    this.inventarioService.listar()
+      .subscribe(data => {
+        this.inventarios = data;
+      },
+        err => {
+          window.alert("Error al obtener los datos de los clientes")
+        });
+  }
+
   public buscar() {
     if (this.textoBusqueda > 0) {
       this.alquilerService.buscar(this.textoBusqueda)
@@ -134,6 +146,7 @@ export class AlquilerComponent implements OnInit {
         ),
         titulos: this.titulos,
         clientes: this.clientes,
+        inventarios:this.inventarios,
       }
     });
 
