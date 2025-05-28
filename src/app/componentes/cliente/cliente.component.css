@@ -1,4 +1,12 @@
-.color-barra{
-    background-color: rgb(40, 10, 109);
-    padding: 0 5px;
+.color-barra {
+  background-color: rgb(40, 10, 109);
+  padding: 0 5px;
+}
+
+/* Contorno blanco cuando está desmarcado check(Hover) */
+:host ::ng-deep .check-moroso .mat-checkbox-frame {
+  border-color: #fff !important;
+}
+:host ::view-transition .check-moroso .mat-checkbox-frame {
+  border-color: blue !important;
 }

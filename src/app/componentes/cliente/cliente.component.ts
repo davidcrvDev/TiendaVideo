@@ -33,7 +33,6 @@ export class ClienteComponent implements OnInit {
     { name: 'Correo', prop: 'correo' },
     { name: 'Móvil', prop: 'movil' },
     { name: 'Rol', prop: 'rol' },
-    { name: 'Moroso', prop: 'moroso' },
     { name: 'Activo', prop: 'activo' },
   ];
   public modoColumna = ColumnMode;
@@ -69,6 +68,42 @@ export class ClienteComponent implements OnInit {
       error => {
         window.alert("Error al obtener los datos.");
       });
+  }
+
+  public cambiarMoroso(cliente: Cliente, nuevoEstado: boolean) {
+    // Si se va a cambiar de false a true, pide confirmación
+    if (!cliente.moroso && nuevoEstado) {
+      Swal.fire({
+        title: '¿Está seguro?',
+        text: '¿Desea marcar este cliente como moroso?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, marcar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.actualizarCheckMoroso(cliente, nuevoEstado);
+        }
+      });
+    } else {
+      // Si es de true a false, o cualquier otro caso, cambia directamente
+      this.actualizarCheckMoroso(cliente, nuevoEstado);
+    }
+  }
+
+  private actualizarCheckMoroso(cliente: Cliente, nuevoEstado: boolean) {
+    this.clienteService.actualizarMoroso(Number(cliente.id), nuevoEstado).subscribe(
+      () => {
+        cliente.moroso = nuevoEstado;
+      },
+      error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo actualizar el estado de moroso.',
+        });
+      }
+    );
   }
 
   public listarTipoDocumentos() {
@@ -169,28 +204,37 @@ export class ClienteComponent implements OnInit {
   }
 
   public verificarEliminar() {
-    if (this.clienteSeleccion != null && Number(this.clienteSeleccion.id) >= 0) {
-      Swal.fire({
-        title: `¿Está seguro que desea eliminar el Cliente [${this.clienteSeleccion.id}]?`,
-        text: 'Esta acción no se puede deshacer.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if (this.clienteSeleccion && this.clienteSeleccion.id) {
-            this.eliminar(Number(this.clienteSeleccion.id));
-          }
-        }
-      });
-    } else {
+    if (!this.clienteSeleccion) {
       Swal.fire({
         icon: 'warning',
         title: 'Atención',
-        text: 'Debe seleccionar un Cliente.',
+        text: 'Debe seleccionar un cliente para eliminar.'
       });
+      return;
     }
+  
+    if (this.clienteSeleccion.moroso) {
+      Swal.fire({
+        icon: 'error',
+        title: 'No permitido',
+        text: 'No se puede eliminar un cliente marcado como moroso.'
+      });
+      return;
+    }  
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'Esta acción eliminará el cliente seleccionado.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (this.clienteSeleccion && this.clienteSeleccion.id !== undefined) {
+          this.eliminar(Number(this.clienteSeleccion.id));
+        }
+      }
+    });
   }
 
   private eliminar(id: number) {
