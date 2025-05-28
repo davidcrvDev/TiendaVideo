@@ -52,11 +52,12 @@
     <ngx-datatable-column name="Correo" prop="correo"></ngx-datatable-column>
     <ngx-datatable-column name="Móvil" prop="movil"></ngx-datatable-column>
     <ngx-datatable-column name="Rol" prop="rol"></ngx-datatable-column>
-    <ngx-datatable-column name="Activo" prop="activo"></ngx-datatable-column>
+    <!-- <ngx-datatable-column name="Activo" prop="activo"></ngx-datatable-column> -->
 
     <ngx-datatable-column name="Moroso" prop="moroso">
       <ng-template let-row="row" ngx-datatable-cell-template>
         <mat-checkbox
+          class="check-moroso"
           [checked]="row.moroso"
           [disabled]="!row.activo"
           (change)="cambiarMoroso(row, $event.checked)"

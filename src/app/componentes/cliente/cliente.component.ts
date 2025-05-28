@@ -204,28 +204,37 @@ export class ClienteComponent implements OnInit {
   }
 
   public verificarEliminar() {
-    if (this.clienteSeleccion != null && Number(this.clienteSeleccion.id) >= 0) {
-      Swal.fire({
-        title: `¿Está seguro que desea eliminar el Cliente [${this.clienteSeleccion.id}]?`,
-        text: 'Esta acción no se puede deshacer.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if (this.clienteSeleccion && this.clienteSeleccion.id) {
-            this.eliminar(Number(this.clienteSeleccion.id));
-          }
-        }
-      });
-    } else {
+    if (!this.clienteSeleccion) {
       Swal.fire({
         icon: 'warning',
         title: 'Atención',
-        text: 'Debe seleccionar un Cliente.',
+        text: 'Debe seleccionar un cliente para eliminar.'
       });
+      return;
     }
+  
+    if (this.clienteSeleccion.moroso) {
+      Swal.fire({
+        icon: 'error',
+        title: 'No permitido',
+        text: 'No se puede eliminar un cliente marcado como moroso.'
+      });
+      return;
+    }  
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'Esta acción eliminará el cliente seleccionado.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (this.clienteSeleccion && this.clienteSeleccion.id !== undefined) {
+          this.eliminar(Number(this.clienteSeleccion.id));
+        }
+      }
+    });
   }
 
   private eliminar(id: number) {
