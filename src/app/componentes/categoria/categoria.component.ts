@@ -19,6 +19,8 @@ export class CategoriaComponent implements OnInit {
   public textoBusqueda: string = '';
   public categorias: Categoria[] = [];
   public categoriaSeleccion: Categoria | undefined;
+    public categoriasOriginales: Categoria[] = [];
+  
 
   public columnas = [
     { name: 'Nombre', prop: 'nombre' },
@@ -51,18 +53,13 @@ export class CategoriaComponent implements OnInit {
 
   public listar() {
     this.categoriaService.listar().subscribe(
-      (data) => {
-        this.categorias = data;
-        console.log(this.categorias);
+      data => {
+        this.categoriasOriginales = data;
+        this.categorias = [...data];
       },
-      (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Error al obtener los datos.'
-        });
-      }
-    );
+      error => {
+        window.alert("Error al obtener los datos.");
+      });
   }
 
 
@@ -82,21 +79,24 @@ export class CategoriaComponent implements OnInit {
   }
 
   public buscar() {
-    if (this.textoBusqueda.length > 0) {
-      this.categoriaService.buscar(this.textoBusqueda).subscribe(
-        (data) => {
-          this.categorias = data;
-        },
-        (err) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Ocurrió un error al buscar',
-            text: err.message
-          });
-        }
+    const texto = this.textoBusqueda.trim().toLowerCase();
+    if (texto.length > 0) {
+      const resultados = this.categoriasOriginales.filter(categoria =>
+        categoria.nombre.toLowerCase().includes(texto) ||
+        categoria.clasificacion_edad?.toString().toLowerCase().includes(texto)
       );
+      if (resultados.length === 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Categoria no encontrada',
+          text: 'No se encontró ninguna categoria.'
+        });
+        this.categorias = [];
+      } else {
+        this.categorias = resultados;
+      }
     } else {
-      this.listar();
+      this.categorias = [...this.categoriasOriginales];
     }
   }
 

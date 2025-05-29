@@ -5,12 +5,31 @@
   Titulos
 </mat-toolbar>
 
-<div>
-  <mat-form-field appearance="fill">
-    <mat-label>Buscar</mat-label>
-    <input matInput [(ngModel)]="textoBusqueda" />
-  </mat-form-field>
-  <button mat-stroked-button color="primary" (click)="buscar()">Buscar</button>
+<div style="width: 100%; display: flex; justify-content: flex-end">
+  <div style="width: 70%; max-width: 300px; position: relative">
+    <input
+      type="text"
+      class="form-control"
+      style="width: 85%; padding-right: 40px; height: 35px; font-size: 1.1rem"
+      placeholder="Titulo por Nombre o Director"
+      [(ngModel)]="textoBusqueda"
+      (input)="buscar()"
+      aria-label="Buscar"
+    />
+    <span
+      class="material-icons"
+      style="
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none;
+        font-size: 28px;
+      "
+      >search</span
+    >
+  </div>
 </div>
 <div>
   <button mat-raised-button color="primary" (click)="agregar()">Agregar</button>
