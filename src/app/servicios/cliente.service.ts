@@ -54,4 +54,16 @@ export class ClienteService {
     let urlT = `${this.url}/eliminar/${id}`;
     return this.http.delete<any>(urlT, this.obtenerHeader());
   }
+
+  public descargarReporteClientes() {
+    this.http.get('http://localhost:8080/clientes/reporte', { responseType: 'blob' })
+      .subscribe(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'clientes_reporte.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+  }
 }

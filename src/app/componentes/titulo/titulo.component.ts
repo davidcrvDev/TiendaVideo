@@ -288,4 +288,8 @@ export class TituloComponent implements OnInit {
       }
     );
   }
+
+  descargarReporteTitulos() {
+    this.tituloService.descargarReporteTitulos();
+  }
 }

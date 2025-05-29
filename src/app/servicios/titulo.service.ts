@@ -54,5 +54,17 @@ export class TituloService {
     let urlT = `${this.url}/existe/${encodeURIComponent(nombre.trim().toLowerCase())}`;
     return this.http.get<boolean>(urlT, this.obtenerHeader());
   }
+
+  public descargarReporteTitulos() {
+    this.http.get('http://localhost:8080/titulos/reporte', { responseType: 'blob' })
+      .subscribe(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'titulos_reporte.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+  }
   
 }
