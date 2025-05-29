@@ -264,4 +264,8 @@ export class ClienteComponent implements OnInit {
         });
       });
   }
+
+  descargarReporteClientes() {
+    this.clienteService.descargarReporteClientes();
+  }
 }

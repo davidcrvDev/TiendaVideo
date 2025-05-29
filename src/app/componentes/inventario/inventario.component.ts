@@ -261,4 +261,8 @@ export class InventarioComponent implements OnInit {
         });
       });
     }
+
+    descargarReporteInventarios() {
+      this.inventarioService.descargarReporteInventarios();
+    }
 }

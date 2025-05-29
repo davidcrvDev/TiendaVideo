@@ -20,6 +20,13 @@
   <button mat-raised-button color="warn" (click)="verificarEliminar()">
     Eliminar
   </button>
+  <button
+  mat-raised-button
+  color="primary"
+  (click)="descargarReporteClientes()"
+>
+  Reporte Clientes
+</button>
   <ngx-datatable
     class="dark"
     [headerHeight]="50"
@@ -58,7 +65,13 @@
       <ng-template let-row="row" ngx-datatable-cell-template>
         <mat-icon
           [style.color]="row.moroso ? '#FF4786' : 'black'"
-          style="cursor:pointer; font-size: 24px; border: 1px solid white; border-radius: 3px; background: transparent;"
+          style="
+            cursor: pointer;
+            font-size: 24px;
+            border: 1px solid white;
+            border-radius: 3px;
+            background: transparent;
+          "
           (click)="row.activo && cambiarMoroso(row, { checked: !row.moroso })"
           [ngClass]="{ 'disabled-icon': !row.activo }"
         >
