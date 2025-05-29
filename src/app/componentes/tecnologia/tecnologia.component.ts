@@ -20,6 +20,8 @@ export class TecnologiaComponent implements OnInit {
   public textoBusqueda: string = "";
   public tecnologias: Tecnologia[] = [];
   public tecnologiaSeleccion: Tecnologia | undefined;
+  public tecnologiaOriginal: Tecnologia[] = [];
+  
 
   public columnas = [
   { name: 'Nombre', prop: 'nombre' },
@@ -50,17 +52,13 @@ export class TecnologiaComponent implements OnInit {
   }
   
   public listar() {
-    this.tecnologiaService.listar()
-      .subscribe(data => {
-        this.tecnologias = data;
-        console.log(this.tecnologias);
+    this.tecnologiaService.listar().subscribe(
+      data => {
+        this.tecnologiaOriginal = data;
+        this.tecnologias = [...data];
       },
-      err => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error al obtener los datos.',
-        });
+      error => {
+        window.alert("Error al obtener los datos.");
       });
   }
 
@@ -79,22 +77,25 @@ export class TecnologiaComponent implements OnInit {
   }
 
   public buscar() {
-    if (this.textoBusqueda.length > 0) {
-      this.tecnologiaService.buscar(this.textoBusqueda)
-        .subscribe(data => {
-          this.tecnologias = data;
-        },
-        err => {
+      const texto = this.textoBusqueda.trim().toLowerCase();
+      if (texto.length > 0) {
+        const resultados = this.tecnologiaOriginal.filter(tecnologias =>
+          tecnologias.nombre.toLowerCase().includes(texto)
+        );
+        if (resultados.length === 0) {
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se encontraron resultados para la búsqueda.',
+            icon: 'warning',
+            title: 'Tecnologia no encontrada',
+            text: 'No se encontró ninguna tecnologia con ese nombre.'
           });
-        });
-    } else {
-      this.listar();
+          this.tecnologias = [];
+        } else {
+          this.tecnologias = resultados;
+        }
+      } else {
+        this.tecnologias = [...this.tecnologiaOriginal];
+      }
     }
-  }
 
   public agregar() {
     const dialogRef = this.dialog.open(TecnologiaEditarComponent, {

@@ -22,6 +22,8 @@ export class TituloComponent implements OnInit {
   public titulos: Titulo[] = [];
   public categorias: Categoria[] = [];
   public tituloSeleccion: Titulo | undefined;
+  public titulosOriginal: Titulo[] = [];
+  
 
   public columnas = [
     { name: 'Nombre', prop: 'nombre' },
@@ -56,20 +58,13 @@ export class TituloComponent implements OnInit {
 
   public listar() {
     this.tituloService.listar().subscribe(
-      (data) => {
-        this.titulos = data;
-        this.titulos.forEach((titulo) => {
-          titulo.ano = titulo.ano;
-        });
+      data => {
+        this.titulosOriginal = data;
+        this.titulos = [...data];
       },
-      (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error al obtener los datos.',
-        });
-      }
-    );
+      error => {
+        window.alert("Error al obtener los datos.");
+      });
   }
 
   public listarCategorias() {
@@ -88,23 +83,26 @@ export class TituloComponent implements OnInit {
   }
 
   public buscar() {
-    if (this.textoBusqueda.length > 0) {
-      this.tituloService.buscar(this.textoBusqueda).subscribe(
-        (data) => {
-          this.titulos = data;
-        },
-        (err) => {
+      const texto = this.textoBusqueda.trim().toLowerCase();
+      if (texto.length > 0) {
+        const resultados = this.titulosOriginal.filter(titulo =>
+          titulo.nombre.toLowerCase().includes(texto) ||
+          titulo.director.toLowerCase().includes(texto)
+        );
+        if (resultados.length === 0) {
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se encontraron resultados para la búsqueda.',
+            icon: 'warning',
+            title: 'Titulo no encontrado',
+            text: 'No se encontró ningún titulo con ese nombre o director.'
           });
+          this.titulos = [];
+        } else {
+          this.titulos = resultados;
         }
-      );
-    } else {
-      this.listar();
+      } else {
+        this.titulos = [...this.titulosOriginal];
+      }
     }
-  }
 
   public agregar() {
     const dialogRef = this.dialog.open(TituloEditarComponent, {

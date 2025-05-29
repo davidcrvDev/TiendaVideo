@@ -28,6 +28,7 @@ export class AlquilerComponent implements OnInit {
   public inventarios: Inventario[] = [];
   public titulos: Titulo[] = [];
   public clientes: Cliente[] = [];
+  public alquileresOriginales: Alquiler[] = [];
   public columnas = [
     { name: '#Titulos', prop: 'inventario.titulo.nombre' },
     { name: '#Codigo Cliente', prop: 'cliente.id' },
@@ -71,17 +72,14 @@ export class AlquilerComponent implements OnInit {
   }
 
   public listar() {
-    this.alquilerService.listar()
-      .subscribe(data => {
-        this.alquileres = data;
+    this.alquilerService.listar().subscribe(
+      data => {
+        this.alquileresOriginales = data;
+        this.alquileres = [...data];
       },
-        err => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error al obtener los datos.',
-          });
-        });
+      error => {
+        window.alert("Error al obtener los datos.");
+      });
   }
 
   public listarTitulos() {
@@ -113,22 +111,26 @@ export class AlquilerComponent implements OnInit {
   }
 
   public buscarAlquiler() {
-    if (this.textoBusqueda.trim().length > 0) {
-      this.alquilerService.buscar(Number(this.textoBusqueda))
-        .subscribe(data => {
-          this.alquileres = data;
-        },
-        error => {
+      const texto = this.textoBusqueda.trim().toLowerCase();
+      if (texto.length > 0) {
+        const resultados = this.alquileresOriginales.filter(alquiler =>
+          alquiler.cliente.nombre.toLowerCase().includes(texto) ||
+          alquiler.precio.toString().toLowerCase().includes(texto)
+        );
+        if (resultados.length === 0) {
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error al obtener la busqueda.',
+            icon: 'warning',
+            title: 'Alquiler no encontrado',
+            text: 'No se encontró ningún Alquiler.'
           });
-        });
-    } else {
-      this.listar();
+          this.alquileres = [];
+        } else {
+          this.alquileres = resultados;
+        }
+      } else {
+        this.alquileres = [...this.alquileresOriginales];
+      }
     }
-  }
 
   public agregar() {
     const dialogRef = this.dialog.open(AlquilerEditarComponent, {

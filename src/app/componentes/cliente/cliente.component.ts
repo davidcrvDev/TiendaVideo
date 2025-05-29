@@ -22,6 +22,7 @@ export class ClienteComponent implements OnInit {
   public clientes: Cliente[] = [];
   public tipoDocumentos: Tipodocumento[] = [];
   public clienteSeleccion: Cliente | undefined;
+  public clientesOriginales: Cliente[] = [];
 
   public columnas = [
     { name: 'ID', prop: 'id' },
@@ -63,7 +64,8 @@ export class ClienteComponent implements OnInit {
   public listar() {
     this.clienteService.listar().subscribe(
       data => {
-        this.clientes = data;
+        this.clientesOriginales = data;
+        this.clientes = [...data];
       },
       error => {
         window.alert("Error al obtener los datos.");
@@ -119,17 +121,24 @@ export class ClienteComponent implements OnInit {
   }
 
   public buscar() {
-    if (this.textoBusqueda.length > 0) {
-      this.clienteService.buscar(this.textoBusqueda).subscribe(
-        data => {
-          this.clientes = data;
-        },
-        error => {
-          Swal.fire('Error', error.message, 'error');
-        }
+    const texto = this.textoBusqueda.trim().toLowerCase();
+    if (texto.length > 0) {
+      const resultados = this.clientesOriginales.filter(cliente =>
+        cliente.nombre.toLowerCase().includes(texto) ||
+        cliente.apellido.toLowerCase().includes(texto)
       );
+      if (resultados.length === 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Cliente no encontrado',
+          text: 'No se encontró ningún cliente con ese nombre o apellido.'
+        });
+        this.clientes = [];
+      } else {
+        this.clientes = resultados;
+      }
     } else {
-      this.listar();
+      this.clientes = [...this.clientesOriginales];
     }
   }
 
