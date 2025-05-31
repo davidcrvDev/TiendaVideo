@@ -30,6 +30,10 @@ export class ClienteService {
     return this.http.get<any[]>(urlT, this.obtenerHeader());
   }
 
+  actualizarMoroso(id: number, moroso: boolean) {
+    return this.http.patch(`${this.url}/${id}/moroso`, { moroso });
+}
+
   public buscar(nombre: string): Observable<any> {
     let urlT = `${this.url}/buscar/${nombre}`;
     return this.http.get<any[]>(urlT, this.obtenerHeader());
@@ -48,5 +52,17 @@ export class ClienteService {
   public eliminar(id: number): Observable<any> {
     let urlT = `${this.url}/eliminar/${id}`;
     return this.http.delete<any>(urlT, this.obtenerHeader());
+  }
+
+  public descargarReporteClientes() {
+    this.http.get('http://localhost:8080/clientes/reporte', { responseType: 'blob' })
+      .subscribe(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'clientes_reporte.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
   }
 }

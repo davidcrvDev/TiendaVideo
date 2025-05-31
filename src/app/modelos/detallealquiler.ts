@@ -14,7 +14,7 @@ export class DetalleAlquiler {
     constructor(
         id: number = 0,
         alquiler: Alquiler | number = 0,
-        inventario: Inventario = new Inventario(),
+        inventario: Inventario,
         cantidad: number = 0,
         precioUnitario: number = 0,
         subtotal: number = 0,

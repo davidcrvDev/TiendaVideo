@@ -17,9 +17,12 @@ export interface DatosCategoria {
 export class CategoriaEditarComponent {
   public botonAceptarDeshabilitado: boolean = true;
 
-  @Input() public dialogRef = MatDialogRef<CategoriaEditarComponent>;
+  //@Input() public dialogRef = MatDialogRef<CategoriaEditarComponent>;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public datos: DatosCategoria) {}
+  constructor(
+    public dialogRef: MatDialogRef<CategoriaEditarComponent>,
+    @Inject(MAT_DIALOG_DATA) public datos: DatosCategoria
+  ) {}
 
   ngOnInit(): void {
     this.validarFormulario();
@@ -43,7 +46,7 @@ export class CategoriaEditarComponent {
       (existe) => {
         this.botonAceptarDeshabilitado = existe;
       },
-      err => {
+      (err) => {
         console.error('Error validando categoría:', err);
         this.botonAceptarDeshabilitado = true;
       }

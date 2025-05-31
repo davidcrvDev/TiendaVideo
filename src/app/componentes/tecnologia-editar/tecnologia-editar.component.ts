@@ -17,9 +17,10 @@ export interface DatosTecnolgia {
 export class TecnologiaEditarComponent {
   public botonAceptarDeshabilitado: boolean = true;
 
-  @Input() public dialogRef = MatDialogRef<TecnologiaEditarComponent>;
+  //@Input() public dialogRef = MatDialogRef<TecnologiaEditarComponent>;
 
   constructor(
+    public dialogRef: MatDialogRef<TecnologiaEditarComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: DatosTecnolgia
   ) {
 

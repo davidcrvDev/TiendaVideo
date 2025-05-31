@@ -14,12 +14,17 @@ export interface DatosDecision {
 })
 export class DecidirComponent {
   
-  @Input() public dialogRef = MatDialogRef<DecidirComponent>;
-
   constructor(
+    public dialogRef: MatDialogRef<DecidirComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: DatosDecision
-  ) {
+  ) {}
 
+  onConfirm(): void {
+    this.dialogRef.close({ id: this.datos.id });
+  }
+
+  onCancel(): void {
+    this.dialogRef.close();
   }
   
 }

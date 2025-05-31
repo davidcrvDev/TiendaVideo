@@ -9,6 +9,7 @@ import { CategoriaService } from 'src/app/servicios/categoria.service';
 import { TecnologiaService } from 'src/app/servicios/tecnologia.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { CategoriaEditarComponent } from '../categoria-editar/categoria-editar.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-categoria',
@@ -19,11 +20,9 @@ export class CategoriaComponent implements OnInit {
   public textoBusqueda: string = '';
   public categorias: Categoria[] = [];
   public categoriaSeleccion: Categoria | undefined;
+  public categoriasOriginales: Categoria[] = [];
 
-  public columnas = [
-    { name: 'ID', prop: 'id' },
-    { name: 'Nombre', prop: 'nombre' },
-  ];
+  public columnas = [{ name: 'Nombre', prop: 'nombre' }];
   public modoColumna = ColumnMode;
   public tipoSeleccion = SelectionType;
 
@@ -52,13 +51,15 @@ export class CategoriaComponent implements OnInit {
     this.categoriaService.listar().subscribe(
       (data) => {
         this.categorias = data;
+        this.categoriasOriginales = data;
+        //this.categorias = [...data];
 
         this.categorias.forEach((categoria) => {
           categoria.nombre = categoria.nombre;
         });
       },
       (err) => {
-        window.alert("Error al obtener los datos.");
+        window.alert('Error al obtener los datos.');
       }
     );
   }
@@ -69,23 +70,33 @@ export class CategoriaComponent implements OnInit {
         this.categorias = data;
       },
       (err) => {
-        window.alert("Error al obtener los datos de las categorias.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error al obtener los datos de las categorias.',
+        });
       }
     );
   }
 
   public buscar() {
-    if (this.textoBusqueda.length > 0) {
-      this.categoriaService.buscar(this.textoBusqueda).subscribe(
-        (data) => {
-          this.categorias = data;
-        },
-        (err) => {
-          window.alert(err.message);
-        }
+    const texto = this.textoBusqueda.trim().toLowerCase();
+    if (texto.length > 0) {
+      const resultados = this.categoriasOriginales.filter((categoria) =>
+        categoria.nombre.toLowerCase().includes(texto)
       );
+      if (resultados.length === 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Categoria no encontrada',
+          text: 'No se encontró ninguna categoria.',
+        });
+        this.categorias = [];
+      } else {
+        this.categorias = resultados;
+      }
     } else {
-      this.listar();
+      this.categorias = [...this.categoriasOriginales];
     }
   }
 
@@ -120,18 +131,29 @@ export class CategoriaComponent implements OnInit {
           this.guardar(datos.categoria);
         },
         (err) => {
-          window.alert(err.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Ocurrió un error al guardar los datos',
+            text: err.message,
+          });
         }
       );
     } else {
-      window.alert('Debe seleccionar una Categoría');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar una Categoría.',
+      });
     }
   }
 
   private guardar(categoria: Categoria) {
-    debugger;
     if (!categoria.nombre || categoria.nombre.trim() === '') {
-      window.alert('El nombre de la categoría no puede estar vacío.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'El nombre de la categoría no puede estar vacío.',
+      });
       return;
     }
 
@@ -141,7 +163,11 @@ export class CategoriaComponent implements OnInit {
     this.categoriaService.existeCategoria(nombreNormalizado).subscribe(
       (existe) => {
         if (existe) {
-          window.alert(`La categoría "${categoria.nombre}" ya existe.`);
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: `La categoría "${categoria.nombre}" ya existe.`,
+          });
           return;
         }
 
@@ -149,60 +175,75 @@ export class CategoriaComponent implements OnInit {
           this.categoriaService.agregar(categoria).subscribe(
             (categoriaActualizado) => {
               this.listar();
-              window.alert(
-                'Los datos de la Categoría fueron agregada correctamente.'
-              );
+              Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: `Los datos de la Categoría "${categoria.nombre}" fueron agregada correctamente.`,
+              });
             },
             (err: HttpErrorResponse) => {
-              window.alert(`Error agregando la Categoria: [${err.message}]`);
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: `Error agregando la Categoria: [${err.message}]`,
+              });
             }
           );
         } else {
           this.categoriaService.actualizar(categoria).subscribe(
             (categoriaActualizado) => {
               this.listar();
-              window.alert(
-                'Los datos de la Categoría fueron actualizados correctamente.'
-              );
+              Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'Los datos de la Categoría fueron actualizados correctamente.',
+              });
             },
             (err: HttpErrorResponse) => {
-              window.alert(`Error actualizando Categoria: [${err.message}]`);
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: `Error actualizando la Categoria: [${err.message}]`,
+              });
             }
           );
         }
       },
       (err) => {
-        window.alert(
-          `Error verificando existencia de categoría: ${err.message}`
-        );
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: `Error verificando existencia: [${err.message}]`,
+        });
       }
     );
   }
 
   public verificarEliminar() {
-    if (this.categoriaSeleccion != null && this.categoriaSeleccion.id > 0) {
-      const dialogRef = this.dialog.open(DecidirComponent, {
-        width: '400px',
-        height: '200px',
-        data: {
-          encabezado: '¿Está seguro que desea eliminar la Categoría?',
-          mensaje: `La Categoría: [${this.categoriaSeleccion.nombre}]`,
-          id: this.categoriaSeleccion.id,
-        },
-      });
-
-      dialogRef.afterClosed().subscribe(
-        (datos) => {
-          if (datos) {
-            this.eliminar(datos.id);
+    if (
+      this.categoriaSeleccion != null &&
+      Number(this.categoriaSeleccion.id) > 0
+    ) {
+      Swal.fire({
+        title: `¿Está seguro que desea eliminar la Categoría [${this.categoriaSeleccion.id}]?`,
+        text: 'Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (this.categoriaSeleccion && this.categoriaSeleccion.id) {
+            this.eliminar(Number(this.categoriaSeleccion.id));
           }
-        },
-        (err) => {
-          window.alert("Error al eliminar, vuelve a intentar.");
         }
-      );
+      });
     } else {
-      window.alert('Debe seleccionar una Categoría');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar una Categoría.',
+      });
     }
   }
 
@@ -211,13 +252,25 @@ export class CategoriaComponent implements OnInit {
       (response) => {
         if (response == true) {
           this.listar();
-          window.alert('Categoría eliminada correctamente.');
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Categoría eliminada correctamente.',
+          });
         } else {
-          window.alert('No se pudo eliminar la Categoría.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo eliminar la Categoría.',
+          });
         }
       },
       (error) => {
-        window.alert(error.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message,
+        });
       }
     );
   }

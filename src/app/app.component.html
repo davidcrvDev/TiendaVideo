@@ -1,36 +1,48 @@
 <mat-sidenav-container>
-    <mat-sidenav #menuLateral role="navigation">
-        <mat-nav-list>
-            <div *ngFor="let opcion of opciones;">
-                <button mat-icon-button [routerLink]="opcion.url" (click)="menuLateral.toggle()">
-                    <img [src]="opcion.icono">
-                </button>
-                <span>{{ opcion.titulo }}</span>
-            </div>
-        </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <mat-toolbar class="mat-primary mat-toolbar-single-row mat-elevatmat-z8" color="primary">
-            <div *ngIf="usuarioActual!=null">
-                <button mat-icon-button (click)="menuLateral.toggle()">
-                    <mat-icon>menu</mat-icon>
-                </button>
-            </div>
-            Tienda de Videos Juegos
+  <mat-sidenav #menuLateral role="navigation">
+    <mat-nav-list>
+      <div *ngFor="let opcion of opciones">
+        <button
+          mat-icon-button
+          [routerLink]="opcion.url"
+          (click)="menuLateral.toggle()"
+        >
+          <img [src]="opcion.icono" />
+        </button>
+        <span>{{ opcion.titulo }}</span>
+      </div>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar
+      class="mat-primary mat-toolbar-single-row mat-elevatmat-z8"
+      color="primary"
+    >
+      <div *ngIf="usuarioActual != null">
+        <button mat-icon-button (click)="menuLateral.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      Tienda de Videos Juegos
 
-            <div *ngIf="usuarioActual==null" class="botonesBarra">
-                <button mat-raised-button (click)="login()">
-                    <mat-icon>person</mat-icon>
-                    Login
-                </button>
-            </div>
-            <div *ngIf="usuarioActual!=null" class="botonesBarra">
-                <button mat-raised-button (click)="cerrar()">
-                    <mat-icon>exit_to_app</mat-icon>
-                    salir
-                </button>
-            </div>
-        </mat-toolbar>
-        <router-outlet></router-outlet>
-    </mat-sidenav-content>
+      <div *ngIf="usuarioActual == null" class="botonesBarra">
+        <button mat-raised-button (click)="login()">
+          <mat-icon>person</mat-icon>
+          Login
+        </button>
+      </div>
+      <div *ngIf="usuarioActual != null" class="botonesBarra">
+        <button mat-raised-button (click)="cerrar()">
+          <mat-icon>exit_to_app</mat-icon>
+          salir
+        </button>
+      </div>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+    <footer class="footer">
+      <div class="footer-content">
+        <span>&copy; 2025 TiendaVideo. Todos los derechos reservados.</span>
+      </div>
+    </footer>
+  </mat-sidenav-content>
 </mat-sidenav-container>

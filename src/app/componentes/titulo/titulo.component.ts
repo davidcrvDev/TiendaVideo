@@ -10,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { Categoria } from 'src/app/modelos/categoria';
 import { CategoriaService } from 'src/app/servicios/categoria.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-titulo',
@@ -21,6 +22,7 @@ export class TituloComponent implements OnInit {
   public titulos: Titulo[] = [];
   public categorias: Categoria[] = [];
   public tituloSeleccion: Titulo | undefined;
+  public titulosOriginal: Titulo[] = [];
 
   public columnas = [
     { name: 'Nombre', prop: 'nombre' },
@@ -54,10 +56,11 @@ export class TituloComponent implements OnInit {
   }
 
   public listar() {
-    debugger;
     this.tituloService.listar().subscribe(
       (data) => {
         this.titulos = data;
+        this.titulosOriginal = data;
+        //this.titulos = [...data];
 
         this.titulos.forEach((titulo) => {
           titulo.ano = titulo.ano;
@@ -75,23 +78,35 @@ export class TituloComponent implements OnInit {
         this.categorias = data;
       },
       (err) => {
-        window.alert('Error al obtener los datos de las categorias.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al obtener los datos de las categorías.',
+        });
       }
     );
   }
 
   public buscar() {
-    if (this.textoBusqueda.length > 0) {
-      this.tituloService.buscar(this.textoBusqueda).subscribe(
-        (data) => {
-          this.titulos = data;
-        },
-        (err) => {
-          window.alert(err.message);
-        }
+    const texto = this.textoBusqueda.trim().toLowerCase();
+    if (texto.length > 0) {
+      const resultados = this.titulosOriginal.filter(
+        (titulo) =>
+          titulo.nombre.toLowerCase().includes(texto) ||
+          titulo.director.toLowerCase().includes(texto)
       );
+      if (resultados.length === 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Titulo no encontrado',
+          text: 'No se encontró ningún titulo con ese nombre o director.',
+        });
+        this.titulos = [];
+      } else {
+        this.titulos = resultados;
+      }
     } else {
-      this.listar();
+      this.titulos = [...this.titulosOriginal];
     }
   }
 
@@ -111,7 +126,11 @@ export class TituloComponent implements OnInit {
         this.guardar(datos.titulo);
       },
       (err) => {
-        window.alert(err.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un problema al intentar agregar el título.',
+        });
       }
     );
   }
@@ -133,17 +152,29 @@ export class TituloComponent implements OnInit {
           this.guardar(datos.titulo);
         },
         (err) => {
-          window.alert(err.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un problema al intentar modificar el título.',
+          });
         }
       );
     } else {
-      window.alert('Debe seleccionar un Título');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar un Título.',
+      });
     }
   }
 
   private guardar(titulo: Titulo) {
     if (!titulo.nombre || titulo.nombre.trim() === '') {
-      window.alert('El nombre del titulo no puede estar vacio.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'El nombre del título no puede estar vacío.',
+      });
       return;
     }
 
@@ -152,7 +183,11 @@ export class TituloComponent implements OnInit {
     this.tituloService.existeTitulo(nombreNormalizado).subscribe(
       (existe) => {
         if (existe) {
-          window.alert(`El titulo "${titulo.nombre}" ya existe.`);
+          Swal.fire({
+            icon: 'warning',
+            title: 'Atención',
+            text: `El título "${titulo.nombre}" ya existe.`,
+          });
           return;
         }
 
@@ -161,62 +196,72 @@ export class TituloComponent implements OnInit {
           this.tituloService.agregar(titulo).subscribe(
             (tituloActualizado) => {
               this.listar();
-              window.alert(
-                'Los datos del Título de Videojuego fueron agregados'
-              );
+              Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'Los datos del Título de Videojuego fueron agregados.',
+              });
             },
             (err: HttpErrorResponse) => {
-              window.alert(
-                `Error agregando el Título de Videojuego: [${err.message}]`
-              );
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `Error agregando el Título de Videojuego: ${err.message}`,
+              });
             }
           );
         } else {
           this.tituloService.actualizar(titulo).subscribe(
             (tituloActualizado) => {
               this.listar();
-              window.alert(
-                'Los datos del Título de Videojuego fueron actualizados'
-              );
+              Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'Los datos del Título de Videojuego fueron actualizados.',
+              });
             },
             (err: HttpErrorResponse) => {
-              window.alert(
-                `Error actualizando Título de Videojuego: [${err.message}]`
-              );
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `Error actualizando el Título de Videojuego: ${err.message}`,
+              });
             }
           );
         }
       },
       (err) => {
-        window.alert(`Error verificando existencia del titulo: ${err.message}`);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: `Error verificando existencia del título: ${err.message}`,
+        });
       }
     );
   }
 
   public verificarEliminar() {
     if (this.tituloSeleccion != null && this.tituloSeleccion.id >= 0) {
-      const dialogRef = this.dialog.open(DecidirComponent, {
-        width: '400px',
-        height: '200px',
-        data: {
-          titulo: `Eliminando registro del título [${this.tituloSeleccion.nombre}]`,
-          mensaje: 'Está seguro?',
-          id: this.tituloSeleccion.id,
-        },
-      });
-
-      dialogRef.afterClosed().subscribe(
-        (datos) => {
-          if (datos) {
-            this.eliminar(datos.id);
+      Swal.fire({
+        title: `¿Está seguro que desea eliminar el Título [${this.tituloSeleccion.nombre}]?`,
+        text: 'Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (this.tituloSeleccion && this.tituloSeleccion.id !== undefined) {
+            this.eliminar(this.tituloSeleccion.id);
           }
-        },
-        (err) => {
-          window.alert('Error al eliminar, vuelve a intentar.');
         }
-      );
+      });
     } else {
-      window.alert('Debe seleccionar un Título');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar un Título.',
+      });
     }
   }
 
@@ -225,16 +270,30 @@ export class TituloComponent implements OnInit {
       (response) => {
         if (response == true) {
           this.listar();
-          window.alert('El registro del Título de Videojuego fue eliminado');
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'El registro del Título de Videojuego fue eliminado.',
+          });
         } else {
-          window.alert(
-            'No se pudo eliminar el registro del Título de Videojuego'
-          );
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo eliminar el registro del Título de Videojuego.',
+          });
         }
       },
       (error) => {
-        window.alert(error.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: `Error al eliminar el Título de Videojuego: ${error.message}`,
+        });
       }
     );
+  }
+
+  descargarReporteTitulos() {
+    this.tituloService.descargarReporteTitulos();
   }
 }

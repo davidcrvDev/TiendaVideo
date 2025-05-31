@@ -1,20 +1,26 @@
-<h1 mat-dialog-title>Editando Tecnologia</h1>
-<div mat-dialog-content>
-    <p>{{datos.encabezado}}</p>
-    <mat-form-field appearance="fill">
-        <mat-label>Nombre</mat-label>
-        <input matInput [(ngModel)]="datos.tecnologia.nombre"
-            (input)="validarFormulario()" required>
-        <mat-error *ngIf="!datos.tecnologia.nombre || datos.tecnologia.nombre.trim() === ''">
-            El nombre es obligatorio
-        </mat-error>
+<h2 mat-dialog-title>{{ datos.encabezado }}</h2>
+<mat-dialog-content>
+  <form>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input
+        matInput
+        [(ngModel)]="datos.tecnologia.nombre"
+        name="nombre"
+        required
+        (ngModelChange)="validarFormulario()"
+      />
     </mat-form-field>
-    <br>
-</div>
-<div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-raised-button color="primary" [mat-dialog-close]="datos" 
-        [disabled]="botonAceptarDeshabilitado" cdkFocusInitial>
-            Aceptar
-    </button>
-</div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+  <button
+    mat-button
+    color="primary"
+    [disabled]="botonAceptarDeshabilitado"
+    (click)="dialogRef.close({ tecnologia: datos.tecnologia })"
+  >
+    Aceptar
+  </button>
+</mat-dialog-actions>

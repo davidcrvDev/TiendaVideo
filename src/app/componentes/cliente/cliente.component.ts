@@ -10,6 +10,7 @@ import { TipodocumentoService } from 'src/app/servicios/tipodocumento.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { ClienteEditarComponent } from '../cliente-editar/cliente-editar.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cliente',
@@ -22,6 +23,7 @@ export class ClienteComponent implements OnInit {
   public clientes: Cliente[] = [];
   public tipoDocumentos: Tipodocumento[] = [];
   public clienteSeleccion: Cliente | undefined;
+  public clientesOriginales: Cliente[] = [];
 
   public columnas = [
     { name: 'ID', prop: 'id' },
@@ -69,11 +71,51 @@ export class ClienteComponent implements OnInit {
     this.clienteService.listar()
      .subscribe(data => {
         this.clientes = data;
+        this.clientesOriginales = data;
+        //this.clientes = [...data];
 
       },
       error => {
         window.alert("Error al obtener los datos.");
       });
+  }
+
+  public cambiarMoroso(cliente: Cliente, event: any) {
+    const nuevoEstado = event.checked;
+  
+    if (!cliente.moroso && nuevoEstado) {
+      Swal.fire({
+        title: '¿Está seguro?',
+        text: '¿Desea marcar este cliente como moroso?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, marcar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.actualizarCheckMoroso(cliente, true);
+        } else {
+          event.source.checked = false;
+        }
+      });
+    } else if (cliente.moroso && !nuevoEstado) {
+      this.actualizarCheckMoroso(cliente, false);
+    }
+  }
+
+  private actualizarCheckMoroso(cliente: Cliente, nuevoEstado: boolean) {
+    this.clienteService.actualizarMoroso(Number(cliente.id), nuevoEstado).subscribe(
+      () => {
+        cliente.moroso = nuevoEstado;
+      },
+      error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo actualizar el estado de moroso.',
+        });
+      }
+    );
   }
 
   public listarTipoDocumentos(){
@@ -87,17 +129,24 @@ export class ClienteComponent implements OnInit {
   }
 
   public buscar(){
-    if (this.textoBusqueda.length > 0){
-      this.clienteService.buscar(this.textoBusqueda)
-       .subscribe(data => {
-          this.clientes = data;
-        },
-        error => {
-          window.alert(error.message);
+    const texto = this.textoBusqueda.trim().toLowerCase();
+    if (texto.length > 0) {
+      const resultados = this.clientesOriginales.filter(cliente =>
+        cliente.nombre.toLowerCase().includes(texto) ||
+        cliente.apellido.toLowerCase().includes(texto)
+      );
+      if (resultados.length === 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Cliente no encontrado',
+          text: 'No se encontró ningún cliente con ese nombre o apellido.'
         });
-    }
-    else{
-      this.listar();
+        this.clientes = [];
+      } else {
+        this.clientes = resultados;
+      }
+    } else {
+      this.clientes = [...this.clientesOriginales];
     }
   }
 
@@ -134,81 +183,114 @@ export class ClienteComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe((datos) => {
         this.guardar(datos.cliente);
-      },
-      err => {
-        window.alert(err.message)
       });
     }
     else{
-      window.alert("Debe seleccionar un cliente para modificar.");
+      Swal.fire('Atención', 'Debe seleccionar un cliente para modificar.', 'warning');
     }
   }
 
   private guardar(cliente: Cliente) {
-    debugger;
-    console.log("Cliente a enviar:", JSON.stringify(cliente));
 
     if(cliente.id){
       this.clienteService.agregar(cliente).subscribe(clienteActualizado => {
           this.listar();
-          window.alert("Cliente agregado correctamente.");
+          Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Los datos del cliente fueron agregados.',
+          });
         },
         (error: HttpErrorResponse) => {
-          window.alert(`Error agregando el Cliente: [${error.message}]`);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: `Error agregando el cliente: [${error.message}]`,
+          });
         });
     }
     else {
       this.clienteService.actualizar(cliente).subscribe(clienteActualizado => {
           this.listar();
-          window.alert("Cliente modificado correctamente.");
+          Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Los datos del cliente fueron actualizados.',
+        });
         },
         (error: HttpErrorResponse) => {
-          window.alert(`Error modificando el Cliente: [${error.message}]`);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: `Error actualizando cliente: [${error.message}]`,
+          });
         });
     }
   }
 
   public verificarEliminar(){
-    if (this.clienteSeleccion != null && this.clienteSeleccion.id) {//Por revisar
-      const dialogRef = this.dialog.open(DecidirComponent, {
-        width: '400px',
-        height: '200px',
-        data: { 
-          titulo: `Eliminando registro del cliente [${this.clienteSeleccion.nombre}]`,
-          mensaje: "¿Está seguro de eliminar este cliente?",
-          id: this.clienteSeleccion.id,
-        }
+    if (!this.clienteSeleccion) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar un cliente para eliminar.'
       });
-
-      dialogRef.afterClosed().subscribe(datos => {
-        if (datos){
-          this.eliminar(datos.id);
-        }
-      },
-    err => {
-        window.alert("Error al eliminar, vuelve a intentar.")
+      return;
+    }
+  
+    if (this.clienteSeleccion.moroso) {
+      Swal.fire({
+        icon: 'error',
+        title: 'No permitido',
+        text: 'No se puede eliminar un cliente marcado como moroso.'
       });
-    }
-    else{
-      window.alert("Debe seleccionar un cliente para eliminar.");
-    }
+      return;
+    }  
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'Esta acción eliminará el cliente seleccionado.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (this.clienteSeleccion && this.clienteSeleccion.id !== undefined) {
+          this.eliminar(Number(this.clienteSeleccion.id));
+        }
+      }
+    });
   }
 
   public eliminar(id: number){
     this.clienteService.eliminar(id).subscribe(response => {
       if (response == true){
         this.listar();
-        window.alert("Cliente eliminado correctamente.");
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'El registro del Cliente fue eliminado.',
+        });
       }
       else {
-        window.alert("No se pudo eliminar el cliente.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo eliminar el registro del Cliente.',
+        });
       }
     },
     error => {
-      window.alert(error.message)
+      Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message,
+        });
     });
   }
 
-  
+  descargarReporteClientes() {
+    this.clienteService.descargarReporteClientes();
+  }
 
 }

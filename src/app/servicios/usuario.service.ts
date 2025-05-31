@@ -4,15 +4,12 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class UsuarioService {
   url: string;
 
-  constructor(
-    private http: HttpClient
-  ) {
+  constructor(private http: HttpClient) {
     this.url = `${environment.urlBase}usuarios`;
   }
 
@@ -20,10 +17,17 @@ export class UsuarioService {
     // let urlT =`${this.url}/login?usuario=${usuario}&clave=${clave}`;
     // return this.http.get(urlT);
 
-    return new Observable(observer => {
-      observer.next({ usuario: 'bypass-user' }); // Usuario simulado
-      observer.complete();
-  });
-  }
+    // return new Observable((observer) => {
+    //   observer.next({ usuario: 'bypass-user' }); // Usuario simulado
+    //   observer.complete();
 
+        const loginPayload = {
+        correo: usuario,
+        clave: clave
+      };
+      const urlT = `${environment.urlBase}auth/login`; // Ajusta si tu backend usa otro path
+
+      return this.http.post(urlT, loginPayload);
+    //});
+  }
 }

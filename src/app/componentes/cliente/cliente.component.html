@@ -2,20 +2,98 @@
     Clientes
 </mat-toolbar>
 
-<div>
-    <mat-form-field appearance="fill">
-        <mat-label>Buscar</mat-label>
-        <input matInput [(ngModel)]="textoBusqueda">
-    </mat-form-field>
-    <button mat-stroked-button color="primary" (click)="buscar()" >Buscar</button>
+<div style="width: 100%; display: flex; justify-content: flex-end">
+  <div style="width: 70%; max-width: 300px; position: relative">
+    <input
+      type="text"
+      class="form-control"
+      style="width: 85%; padding-right: 40px; height: 35px; font-size: 1.1rem"
+      placeholder="Cliente por Nombre o Apellido"
+      [(ngModel)]="textoBusqueda"
+      (input)="buscar()"
+      aria-label="Buscar"
+    />
+    <span
+      class="material-icons"
+      style="
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none;
+        font-size: 28px;
+      "
+      >search</span
+    >
+  </div>
 </div>
 <div>
-    <button mat-raised-button color="primary" (click)="agregar()">Agregar</button>
-    <button mat-raised-button color="accent" (click)="modificar()">Modificar</button>
-    <button mat-raised-button color="warn" (click)="verificarEliminar()">Eliminar</button>
-    <ngx-datatable class="dark" [headerHeight]="50" [footerHeight]="50" [rowHeight]="20" [rows]="clientes"
-        [columns]="columnas" [columnMode]="modoColumna.force" [limit]="10" [selectionType]="tipoSeleccion.single"
-        (activate)="onActivate($event)" [rowHeight]="'auto'">
+  <button mat-raised-button color="primary" (click)="agregar()">Agregar</button>
+  <button mat-raised-button color="accent" (click)="modificar()">
+    Modificar
+  </button>
+  <button mat-raised-button color="warn" (click)="verificarEliminar()">
+    Eliminar
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="descargarReporteClientes()"
+  >
+    Reporte Clientes
+  </button>
+  <ngx-datatable
+    class="dark"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rows]="clientes"
+    [columnMode]="modoColumna.force"
+    [limit]="10"
+    [selectionType]="tipoSeleccion.single"
+    (activate)="onActivate($event)"
+    [rowHeight]="'auto'"
+  >
+    <ngx-datatable-column name="ID" prop="id"></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Tipo Documento"
+      prop="tipoDocumento.tipo"
+    ></ngx-datatable-column>
+    <ngx-datatable-column name="Nombre" prop="nombre"></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Apellido"
+      prop="apellido"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Dirección"
+      prop="direccion"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Teléfono"
+      prop="telefono"
+    ></ngx-datatable-column>
+    <ngx-datatable-column name="Correo" prop="correo"></ngx-datatable-column>
+    <ngx-datatable-column name="Móvil" prop="movil"></ngx-datatable-column>
+    <ngx-datatable-column name="Rol" prop="rol"></ngx-datatable-column>
+    <!-- <ngx-datatable-column name="Activo" prop="activo"></ngx-datatable-column> -->
 
-    </ngx-datatable>
+    <ngx-datatable-column name="Moroso" prop="moroso">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <mat-icon
+          [style.color]="row.moroso ? '#FF4786' : 'black'"
+          style="
+            cursor: pointer;
+            font-size: 24px;
+            border: 1px solid white;
+            border-radius: 3px;
+            background: transparent;
+          "
+          (click)="row.activo && cambiarMoroso(row, { checked: !row.moroso })"
+          [ngClass]="{ 'disabled-icon': !row.activo }"
+        >
+          {{ row.moroso ? "check_box" : "check_box_outline_blank" }}
+        </mat-icon>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
 </div>

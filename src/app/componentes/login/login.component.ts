@@ -1,5 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { UsuarioService } from 'src/app/servicios/usuario.service';
 
 export interface DatosLogin {
   usuario: string;
@@ -9,24 +10,37 @@ export interface DatosLogin {
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
-
 export class LoginComponent {
+  datos: DatosLogin = {
+    usuario: '',
+    clave: '',
+  };
 
-  @Input() public dialogRef = MatDialogRef<LoginComponent>;
- 
+  error: string = '';
+
   constructor(
-    @Inject(MAT_DIALOG_DATA) public datos: DatosLogin
+    private usuarioService: UsuarioService,
+    public dialogRef: MatDialogRef<LoginComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-      // Inicializar con datos simulados
-      this.datos.usuario = "bypass";
-      this.datos.clave = "bypass";
+    // Inicializar con datos simulados
+    // this.datos.usuario = "bypass";
+    // this.datos.clave = "bypass";
   }
 
-  // // Al cerrar el diálogo, devuelve los datos predefinidos
-  // cerrarDialogo() {
-  //   this.dialogRef.close(this.datos);
-  // }
-  
+  ingresar(): void {
+    this.error = ''; // Limpia errores anteriores
+    this.usuarioService.login(this.datos.usuario, this.datos.clave).subscribe({
+      next: (respuesta: any) => {
+        // Login exitoso: cierra el diálogo y devuelve los datos del usuario
+        this.dialogRef.close(respuesta);
+      },
+      error: (error: any) => {
+        // Error: muestra mensaje
+        this.error = error.error || 'Credenciales incorrectas';
+      },
+    });
+  }
 }

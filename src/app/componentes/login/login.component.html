@@ -9,7 +9,8 @@
         <mat-label>Clave</mat-label>
         <input type="password" matInput [(ngModel)]="datos.clave">
     </mat-form-field>
+    <p *ngIf="error" style="color:red;">{{ error }}</p>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" [mat-dialog-close]="datos" cdkFocusInitial>Ingresar</button>
+    <button mat-raised-button color="primary" (click)="ingresar()" cdkFocusInitial>Ingresar</button>
 </div>

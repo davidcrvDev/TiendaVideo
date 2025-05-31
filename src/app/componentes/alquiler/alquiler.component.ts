@@ -16,6 +16,7 @@ import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { Tipodocumento } from 'src/app/modelos/tipodocumento';
 import { Titulo } from 'src/app/modelos/titulo';
 import { Inventario } from 'src/app/modelos/inventario';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-alquiler',
@@ -28,6 +29,8 @@ export class AlquilerComponent implements OnInit {
   public inventarios: Inventario[] = [];
   public titulos: Titulo[] = [];
   public clientes: Cliente[] = [];
+  public alquileresOriginales: Alquiler[] = [];
+
   public columnas = [
     { name: 'Codigo', prop: 'id' },
     { name: '#Titulos', prop: 'inventario.titulo?.nombre' },
@@ -39,7 +42,7 @@ export class AlquilerComponent implements OnInit {
     { name: 'Precio', prop: 'precio' },
   ];
 
-  public textoBusqueda: number = 0;
+  public textoBusqueda: string = '';
   public alquilerSeleccion: Alquiler | undefined;
   public tipoSeleccion = SelectionType;
   public modoColumna = ColumnMode;
@@ -76,6 +79,8 @@ export class AlquilerComponent implements OnInit {
     this.alquilerService.listar()
       .subscribe(data => {
         this.alquileres = data;
+        this.alquileresOriginales = data;
+        //this.alquileres = [...data];
       },
         err => {
           window.alert("Error al obtener los datos.")
@@ -89,7 +94,11 @@ export class AlquilerComponent implements OnInit {
         this.titulos = data;
       },
         err => {
-          window.alert("Error al obtener los datos de los titulos")
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al obtener los datos de los títulos.',
+          });
         });
   }
 
@@ -100,7 +109,11 @@ export class AlquilerComponent implements OnInit {
         this.clientes = data;
       },
         err => {
-          window.alert("Error al obtener los datos de los clientes")
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al obtener los datos de los clientes.',
+          });
         });
   }
 
@@ -110,23 +123,34 @@ export class AlquilerComponent implements OnInit {
         this.inventarios = data;
       },
         err => {
-          window.alert("Error al obtener los datos de los clientes")
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al obtener los datos del inventario.',
+          });
         });
   }
 
   public buscar() {
-    if (this.textoBusqueda > 0) {
-      this.alquilerService.buscar(this.textoBusqueda)
-        .subscribe(data => {
-          this.alquileres = data;
-        },
-          err => {
-            window.alert(err.message)
+    const texto = this.textoBusqueda.trim().toLowerCase();
+      if (texto.length > 0) {
+        const resultados = this.alquileresOriginales.filter(alquiler =>
+          alquiler.cliente.nombre.toLowerCase().includes(texto) ||
+          alquiler.precio.toString().toLowerCase().includes(texto)
+        );
+        if (resultados.length === 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Alquiler no encontrado',
+            text: 'No se encontró ningún Alquiler.'
           });
-    }
-    else {
-      this.listar();
-    }
+          this.alquileres = [];
+        } else {
+          this.alquileres = resultados;
+        }
+      } else {
+        this.alquileres = [...this.alquileresOriginales];
+      }
   }
 
   public agregar() {
@@ -155,7 +179,11 @@ export class AlquilerComponent implements OnInit {
         this.guardar(datos.alquiler);
       }
     }, err => {
-      window.alert(err.message)
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.message,
+      });
     }
     );
   }
@@ -179,13 +207,21 @@ export class AlquilerComponent implements OnInit {
           this.guardar(datos.alquiler);
         }
       }, err => {
-        window.alert(err.message)
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: err.message,
+        });
       }
       );
 
     }
     else {
-      window.alert("Debe seleccionar un Alquiler");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar un Alquiler.',
+      });
     }
   }
 
@@ -193,47 +229,61 @@ export class AlquilerComponent implements OnInit {
     if (alquiler.id == 0) {
       this.alquilerService.agregar(alquiler).subscribe(alquilerActualizado => {
         this.listar();
-        window.alert("Los datos del alquiler fueron agregados");
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Los datos del alquiler fueron agregados.',
+        });
       },
         (err: HttpErrorResponse) => {
-          window.alert(`Error agregando el alquiler: [${err.message}]`);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: `Error agregando el alquiler: [${err.message}]`,
+          });
         });
     }
     else {
       this.alquilerService.actualizar(alquiler).subscribe(alquilerActualizado => {
         this.listar();
-        window.alert("Los datos del alquiler fueron actualizados");
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Los datos del alquiler fueron actualizados.',
+        });
       },
         (err: HttpErrorResponse) => {
-          window.alert(`Error actualizando alquiler: [${err.message}]`);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: `Error actualizando alquiler: [${err.message}]`,
+          });
         });
     }
   }
 
   public verificarEliminar() {
-    if (this.alquilerSeleccion != null && this.alquilerSeleccion.id >= 0) {
-      const dialogRef = this.dialog.open(DecidirComponent, {
-        width: '400px',
-        height: '200px',
-        data: {
-          titulo: `Eliminar registro del Alquiler [${this.alquilerSeleccion.id}]`,
-          mensaje: "Está seguro?",
-          id: this.alquilerSeleccion.id,
+    if (this.alquilerSeleccion != null && Number(this.alquilerSeleccion.id) > 0) {
+      Swal.fire({
+        title: `¿Está seguro que desea eliminar el Alquiler [${this.alquilerSeleccion.id}]?`,
+        text: 'Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (this.alquilerSeleccion && this.alquilerSeleccion.id) {
+            this.eliminar(Number(this.alquilerSeleccion.id));
+          }
         }
       });
-
-      dialogRef.afterClosed().subscribe(datos => {
-        if (datos) {
-          this.eliminar(datos.id);
-        }
-      },
-        err => {
-          window.alert("Error al eliminar, vuelve a intentar.")
-        });
-
-    }
-    else {
-      window.alert("Debe seleccionar un Alquiler");
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar un Alquiler.',
+      });
     }
   }
 
@@ -241,14 +291,26 @@ export class AlquilerComponent implements OnInit {
     this.alquilerService.eliminar(id).subscribe(response => {
       if (response == true) {
         this.listar();
-        window.alert("El registro del Alquiler fue eliminado");
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'El registro del Alquiler fue eliminado.',
+        });
       }
       else {
-        window.alert("No se pudo eliminar el registro del Alquiler");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo eliminar el registro del Alquiler.',
+        });
       }
     },
       error => {
-        window.alert(error.message)
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message,
+        });
       }
     );
   }

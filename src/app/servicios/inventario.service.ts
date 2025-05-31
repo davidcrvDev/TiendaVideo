@@ -66,4 +66,16 @@ export class InventarioService {
     let urlT = `${this.url}/eliminar/${id}`;
     return this.http.delete<any>(urlT, this.obtenerHeader());
   }
+
+  public descargarReporteInventarios() {
+    this.http.get('http://localhost:8080/inventarios/reporte', { responseType: 'blob' })
+      .subscribe(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'inventarios_reporte.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+  }
 }
