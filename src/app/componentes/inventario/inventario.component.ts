@@ -111,7 +111,8 @@ export class InventarioComponent implements OnInit {
     const texto = this.textoBusqueda.trim().toLowerCase();
     if (texto.length > 0) {
       const resultados = this.inventariosOriginales.filter((inventarios) =>
-        inventarios.titulo.nombre.toLowerCase().includes(texto)
+        inventarios.titulo.nombre.toLowerCase().includes(texto) ||
+        inventarios.tecnologia.nombre.toLowerCase().includes(texto)
       );
       if (resultados.length === 0) {
         Swal.fire({

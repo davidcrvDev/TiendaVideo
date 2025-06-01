@@ -1,73 +1,115 @@
 <h1 mat-dialog-title>Editando Inventario</h1>
 <div mat-dialog-content>
-    <p>{{datos.encabezado}}</p>
-    <mat-form-field appearance="fill">
-        <mat-label>Titulo</mat-label>
-        <mat-select [(value)]="datos.inventario.titulo!.id" (selectionChange)="validarFormulario()" required>
-            <mat-option *ngFor="let p of datos.titulos" [value]="p.id">
-                {{p.nombre}}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="!datos.inventario.titulo || datos.inventario.id <= 0">
-            Debes seleccionar el titulo.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Disponible</mat-label>
-        <input type="number" matInput [(ngModel)]="datos.inventario.disponible"
-            (input)="validarFormulario()" required>
-            <mat-error *ngIf="!datos.inventario.disponible || datos.inventario.disponible > 0">
-                Debe ingresar un número entero.
-            </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Tecnologia</mat-label>
-        <mat-select [(value)]="datos.inventario.tecnologia!.id" (selectionChange)="validarFormulario()" required>
-            <mat-option *ngFor="let p of datos.tecnologias" [value]="p.id">
-                {{p.nombre}}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="!datos.inventario.tecnologia || datos.inventario.tecnologia.id <= 0">
-            Debes seleccionar la tecnología.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Fecha adquisicion</mat-label>
-        <input matInput [matDatepicker]="picker" [(ngModel)]="datos.inventario.fechaadquisicion" required>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Precio</mat-label>
-        <input type="number" matInput [(ngModel)]="datos.inventario.precio"
-            (input)="validarFormulario()" required>
-        <mat-error *ngIf="!datos.inventario.precio || datos.inventario.precio < 1000">
-            Valor debe de ser mayor a 1000.
-        </mat-error>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Activo</mat-label>
-        <!-- <mat-checkbox [(ngModel)]="datos.inventario.activo"></mat-checkbox> -->
-        <mat-select [(ngModel)]="datos.inventario.activo"
-            (selectionChange)="validarFormulario()" required>
-            <mat-option value="S">Si</mat-option>
-            <mat-option value="N">No</mat-option>
-        </mat-select>
-        <mat-error *ngIf="!datos.inventario.activo">
-            Debes seleccionar
-        </mat-error>
-    </mat-form-field>
+  <p>{{ datos.encabezado }}</p>
+  <mat-form-field appearance="fill">
+    <mat-label>TITULO</mat-label>
+    <mat-select
+      [(ngModel)]="datos.inventario.titulo"
+      (selectionChange)="validarFormulario()"
+      required
+    >
+      <mat-option *ngFor="let p of datos.titulos" [value]="p.id">
+        {{ p.id }} -
+        {{ p.nombre }}
+      </mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="!datos.inventario.titulo || datos.inventario.titulo.id <= 0"
+    >
+      Debes seleccionar el título.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Disponible</mat-label>
+    <input
+      type="number"
+      matInput
+      [(ngModel)]="datos.inventario.disponible"
+      (input)="validarFormulario()"
+      required
+      (keypress)="soloNumeros($event)"
+    />
+    <mat-error
+      *ngIf="!datos.inventario.disponible || datos.inventario.disponible > 0"
+    >
+      Debe ingresar un número entero.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Tecnologia</mat-label>
+    <mat-select
+      [(value)]="datos.inventario.tecnologia!.id"
+      (selectionChange)="validarFormulario()"
+      required
+    >
+      <mat-option *ngFor="let p of datos.tecnologias" [value]="p.id">
+        {{ p.nombre }}
+      </mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="
+        !datos.inventario.tecnologia || datos.inventario.tecnologia.id <= 0
+      "
+    >
+      Debes seleccionar la tecnología.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Fecha adquisicion</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [(ngModel)]="datos.inventario.fechaadquisicion"
+      required
+      (keypress)="soloNumeros($event)"
+    />
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Precio</mat-label>
+    <input
+      type="number"
+      matInput
+      [(ngModel)]="datos.inventario.precio"
+      (input)="validarFormulario()"
+      required
+      (keypress)="soloNumeros($event)"
+    />
+    <mat-error
+      *ngIf="!datos.inventario.precio || datos.inventario.precio < 1000"
+    >
+      Valor debe de ser mayor a 1000.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="fill">
+    <mat-label>Activo</mat-label>
+    <!-- <mat-checkbox [(ngModel)]="datos.inventario.activo"></mat-checkbox> -->
+    <mat-select
+      [(ngModel)]="datos.inventario.activo"
+      (selectionChange)="validarFormulario()"
+      required
+    >
+      <mat-option value="S">Si</mat-option>
+      <mat-option value="N">No</mat-option>
+    </mat-select>
+    <mat-error *ngIf="!datos.inventario.activo"> Debes seleccionar </mat-error>
+  </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-raised-button color="primary" [mat-dialog-close]="datos" 
-        [disabled]="botonAceptarDeshabilitado" cdkFocusInitial>
-            Aceptar
-    </button>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [mat-dialog-close]="datos"
+    [disabled]="botonAceptarDeshabilitado"
+    cdkFocusInitial
+  >
+    Aceptar
+  </button>
 </div>
-

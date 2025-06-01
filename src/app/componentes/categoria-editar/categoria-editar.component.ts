@@ -17,8 +17,6 @@ export interface DatosCategoria {
 export class CategoriaEditarComponent {
   public botonAceptarDeshabilitado: boolean = true;
 
-  //@Input() public dialogRef = MatDialogRef<CategoriaEditarComponent>;
-
   constructor(
     public dialogRef: MatDialogRef<CategoriaEditarComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: DatosCategoria
@@ -46,10 +44,22 @@ export class CategoriaEditarComponent {
       (existe) => {
         this.botonAceptarDeshabilitado = existe;
       },
-      (err) => {
+      err => {
         console.error('Error validando categoría:', err);
         this.botonAceptarDeshabilitado = true;
       }
     );
+  }
+
+  public soloNumeros(event: KeyboardEvent) {
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  public soloLetras(event: KeyboardEvent) {
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]$/.test(event.key)) {
+      event.preventDefault();
+    }
   }
 }

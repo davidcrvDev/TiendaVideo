@@ -8,10 +8,10 @@
         [(ngModel)]="datos.categoria.nombre"
         name="nombre"
         required
+        (keypress)="soloLetras($event)"
         (ngModelChange)="validarFormulario()"
       />
     </mat-form-field>
-    
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

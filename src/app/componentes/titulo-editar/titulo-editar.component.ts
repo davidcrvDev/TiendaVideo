@@ -30,7 +30,6 @@ export class TituloEditarComponent {
   public validarFormulario(): void {
     const { titulo } = this.datos;
 
-    // Validaciones de los campos obligatorios
     const nombreValido = titulo.nombre && titulo.nombre.trim() !== '';
     const anoValido = titulo.ano && titulo.ano <= 2025 && titulo.ano > 0;
     const categoriaValida = titulo.categoria && titulo.categoria.id > 0; // La categoría debe estar seleccionada
@@ -59,5 +58,12 @@ export class TituloEditarComponent {
         this.botonAceptarDeshabilitado = true;
       }
     );
+  }
+  
+   public soloNumeros(event: KeyboardEvent) {
+    // Permite solo números
+    if (event.key < '0' || event.key > '9') {
+      event.preventDefault();
+    }
   }
 }

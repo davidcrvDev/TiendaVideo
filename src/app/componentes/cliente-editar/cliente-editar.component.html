@@ -9,6 +9,7 @@
       type="text"
       (input)="validarFormulario()"
       required
+      (keypress)="soloNumeros($event)"
     />
     <mat-error *ngIf="!datos.cliente.id || datos.cliente.nombre.trim() === ''">
       El número de documento es obligatorio y debe ser único.
@@ -23,6 +24,7 @@
       type="text"
       (input)="validarFormulario()"
       required
+      (keypress)="soloLetras($event)"
     />
     <mat-error
       *ngIf="!datos.cliente.nombre || datos.cliente.nombre.trim() === ''"
@@ -39,6 +41,7 @@
       type="text"
       (input)="validarFormulario()"
       required
+      (keypress)="soloLetras($event)"
     />
     <mat-error
       *ngIf="!datos.cliente.apellido || datos.cliente.apellido.trim() === ''"
@@ -54,7 +57,7 @@
       (selectionChange)="validarFormulario()"
       required
     >
-      <mat-option *ngFor="let p of datos.tipoDocumentos" [value]="p.id">
+      <mat-option *ngFor="let p of datos.tipoDocumentos" [value]="p">
         {{ p.tipo }}
       </mat-option>
     </mat-select>
@@ -90,12 +93,8 @@
       [(ngModel)]="datos.cliente.telefono"
       type="text"
       (input)="validarFormulario()"
+      (keypress)="soloNumeros($event)"
     />
-    <mat-error
-      *ngIf="!datos.cliente.telefono || datos.cliente.telefono.trim() === ''"
-    >
-      El teléfono es obligatorio.
-    </mat-error>
   </mat-form-field>
   <br />
   <mat-form-field appearance="fill">
@@ -122,6 +121,7 @@
       type="text"
       (input)="validarFormulario()"
       required
+      (keypress)="soloNumeros($event)"
     />
     <mat-error
       *ngIf="!datos.cliente.movil || datos.cliente.movil.trim() === ''"
@@ -138,6 +138,7 @@
       type="text"
       (input)="validarFormulario()"
       required
+      (keypress)="soloLetras($event)"
     />
     <mat-error *ngIf="!datos.cliente.rol || datos.cliente.rol.trim() === ''">
       El rol es obligatorio.
@@ -150,13 +151,6 @@
       {{ datos.cliente.moroso ? "Sí" : "No" }}
     </mat-slide-toggle>
   </div>
-  <br />
-  <!-- <div class="form-group">
-    <label>Activo</label>
-    <mat-checkbox [(ngModel)]="datos.cliente.activo">
-      {{ datos.cliente.activo ? "Activo" : "Inactivo" }}
-    </mat-checkbox>
-  </div> -->
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancelar</button>

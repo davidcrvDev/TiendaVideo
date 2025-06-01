@@ -43,4 +43,16 @@ export class InventarioEditarComponent {
 
     this.botonAceptarDeshabilitado = !(tituloValido && disponibleValido && tecnologiaValido && precioValido && activoValido);
   }
+
+  public soloNumeros(event: KeyboardEvent) {
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  public soloLetras(event: KeyboardEvent) {
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
 }

@@ -132,6 +132,7 @@ export class ClienteComponent implements OnInit {
     const texto = this.textoBusqueda.trim().toLowerCase();
     if (texto.length > 0) {
       const resultados = this.clientesOriginales.filter(cliente =>
+        cliente.id.toString().includes(texto) ||
         cliente.nombre.toLowerCase().includes(texto) ||
         cliente.apellido.toLowerCase().includes(texto)
       );

@@ -17,17 +17,21 @@ export interface DatosTecnolgia {
 export class TecnologiaEditarComponent {
   public botonAceptarDeshabilitado: boolean = true;
 
-  //@Input() public dialogRef = MatDialogRef<TecnologiaEditarComponent>;
-
   constructor(
-    public dialogRef: MatDialogRef<TecnologiaEditarComponent>,
-    @Inject(MAT_DIALOG_DATA) public datos: DatosTecnolgia
-  ) {
-
-  }
+      public dialogRef: MatDialogRef<TecnologiaEditarComponent>,
+      @Inject(MAT_DIALOG_DATA) public datos: DatosTecnolgia
+    ) {}
 
   ngOnInit(): void {
     this.validarFormulario();
+  }
+
+  public soloLetras(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // Permite solo soloLetras
+    if (!/^[a-zA-Z\s]$/.test(event.key)) {
+      event.preventDefault();
+    }
   }
 
   public validarFormulario(): void {
