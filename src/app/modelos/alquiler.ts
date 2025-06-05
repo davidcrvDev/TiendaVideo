@@ -5,7 +5,7 @@ import { Tipodocumento } from './tipodocumento';
 export class Alquiler {
   public id: number;
   public cliente: Cliente;
-  public fechaPrestamo: Date;
+  public fechaPrestamo: string;
   public plazo: number;
   public fechaDevolucion: string;
   public precio: number;
@@ -14,7 +14,7 @@ export class Alquiler {
   constructor(
     id: number = 0,
     cliente: Cliente = new Cliente('', new Tipodocumento(0, '', ''), '', '', '', '', '', '', '', '', false, true), //('', new Tipodocumento(0, '', ''), '', '', '', '', '', '', '', '', false, true)
-    fechaPrestamo: Date = new Date(),
+    fechaPrestamo: string = '',
     plazo: number = 0,
     fechaDevolucion: string = '',
     precio: number = 0,
