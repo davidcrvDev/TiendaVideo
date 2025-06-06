@@ -9,7 +9,6 @@ import { TecnologiaService } from 'src/app/servicios/tecnologia.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { TecnologiaEditarComponent } from '../tecnologia-editar/tecnologia-editar.component';
 import Swal from 'sweetalert2';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tecnologia',
@@ -126,50 +125,46 @@ export class TecnologiaComponent implements OnInit {
 
   public modificar() {
     if (this.tecnologiaSeleccion != null && this.tecnologiaSeleccion.id >= 0) {
-    if (this.tecnologiaSeleccion != null && this.tecnologiaSeleccion.id >= 0) {
-      const dialogRef = this.dialog.open(TecnologiaEditarComponent, {
-        width: '600px',
-        height: '500px',
-        data: {
-          encabezado: `Editando a datos de la tecnología [${this.tecnologiaSeleccion.nombre}]`,
-          tecnologia: this.tecnologiaSeleccion,
-        },
-      });
+      if (this.tecnologiaSeleccion != null && this.tecnologiaSeleccion.id >= 0) {
+        const dialogRef = this.dialog.open(TecnologiaEditarComponent, {
+          width: '600px',
+          height: '500px',
+          data: {
+            encabezado: `Editando a datos de la tecnología [${this.tecnologiaSeleccion.nombre}]`,
+            tecnologia: this.tecnologiaSeleccion,
+          },
+        });
 
-      dialogRef.afterClosed().subscribe(
-        (datos) => {
-          this.guardar(datos.tecnologia);
-        },
-        (err) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Ocurrió un problema al intentar modificar la tecnología.',
-          });
-        }
-      );
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atención',
-        text: 'Debe seleccionar una Tecnología.',
-      });
-    }
+        dialogRef.afterClosed().subscribe(
+          (datos) => {
+            this.guardar(datos.tecnologia);
+          },
+          (err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ocurrió un problema al intentar modificar la tecnología.',
+            });
+          }
+        );
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Atención',
+          text: 'Debe seleccionar una Tecnología.',
+        });
+      }
+    } 
   }
 
-  private guardar(tecnologia: Tecnologia) {
+  private guardar(tecnologia: Tecnologia) {    
     if (!tecnologia.nombre || tecnologia.nombre.trim() === '') {
       Swal.fire({
         icon: 'warning',
         title: 'Atención',
         text: 'El nombre de la tecnología no puede estar vacío.',
       });
-    if (!tecnologia.nombre || tecnologia.nombre.trim() === '') {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atención',
-        text: 'El nombre de la tecnología no puede estar vacío.',
-      });
+
       return;
     }
 
@@ -177,12 +172,6 @@ export class TecnologiaComponent implements OnInit {
 
     this.tecnologiaService.existeTecnologia(nombreNormalizado).subscribe(
       (existe) => {
-        if (existe) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Atención',
-            text: `La tecnología "${tecnologia.nombre}" ya existe.`,
-          });
         if (existe) {
           Swal.fire({
             icon: 'warning',
@@ -231,11 +220,6 @@ export class TecnologiaComponent implements OnInit {
         }
       },
       (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: `Error verificando existencia de la tecnología: ${err.message}`,
-        });
         Swal.fire({
           icon: 'error',
           title: 'Error',

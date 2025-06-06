@@ -18,11 +18,6 @@ export class LoginComponent {
     clave: '',
   };
 
-  datos: DatosLogin = {
-    usuario: '',
-    clave: ''
-  };
-
   error: string = ''; // Para mostrar errores al usuario
 
   constructor(

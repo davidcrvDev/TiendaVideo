@@ -1,6 +1,6 @@
 import { ChatbotService } from "src/app/servicios/chatbot.service";
 
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-chatbot',
@@ -9,10 +9,21 @@ import { Component } from '@angular/core';
 })
 
 export class ChatbotComponent {
-
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
   ngOnInit() {
   this.list_msg.push({ from: 'bot', text: 'Hola, ¿cómo puedo ayudarte?' });
   }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    } catch (err) {}
+  }
+
 
   msg = '';
   list_msg: { from: 'user' | 'bot', text: string }[] = [];

@@ -9,7 +9,6 @@ import { CategoriaService } from 'src/app/servicios/categoria.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { CategoriaEditarComponent } from '../categoria-editar/categoria-editar.component';
 import Swal from 'sweetalert2';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-categoria',
