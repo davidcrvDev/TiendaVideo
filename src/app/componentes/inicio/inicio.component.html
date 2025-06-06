@@ -1,19 +1,26 @@
-<img id="fondo_ppal" src="/assets/imagenes/FondoGif.gif">
+<div class="fondo-container">
+  <img
+    id="fondo_ppal"
+    src="/assets/imagenes/FondoGif.gif"
+    alt="Fondo animado"
+  />
+</div>
 
 <style>
-    img {
-        margin: 0; /* Elimina el margen predeterminado del cuerpo */
-        padding: 0; /* Elimina el relleno predeterminado del cuerpo */
-        background-image: url('/assets/imagenes/FondoGif.gif'); /* Ruta de tu GIF */
-        background: black;
-        background-size: auto; /* Cubre todo el fondo */
-        background-position: center; /* Centra el fondo */
-        height: 888px; /* Establece la altura del cuerpo al 100% del viewport height */
-        font-weight: 200px;
-        display: grid;
-        align-items: center;
-        justify-content: center;
-        color: white; /* Cambia el color del texto para que sea legible en el fondo */
-        font-family: 'Arial', sans-serif; /* Cambia la fuente del texto */
-    }
+  .fondo-container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fondo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 </style>
