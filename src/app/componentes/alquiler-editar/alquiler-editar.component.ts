@@ -23,8 +23,9 @@ export interface DatosAlquiler {
 @Component({
   selector: 'app-alquiler-editar',
   templateUrl: './alquiler-editar.component.html',
-  styleUrls: ['./alquiler-editar.component.css'],
+  styleUrls: ['./alquiler-editar.component.css']
 })
+
 export class AlquilerEditarComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public datos: DatosAlquiler) {}
 
@@ -33,7 +34,7 @@ export class AlquilerEditarComponent {
   }
 
   alquiler: Alquiler = new Alquiler();
-
+  
   detalleTemporal: DetalleAlquiler = this.nuevoDetalleTemporal();
 
   editando: boolean = false;

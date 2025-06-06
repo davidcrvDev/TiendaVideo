@@ -18,7 +18,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./cliente.component.css']
 })
 export class ClienteComponent implements OnInit {
-
   public textoBusqueda: string = "";
   public clientes: Cliente[] = [];
   public tipoDocumentos: Tipodocumento[] = [];
@@ -27,15 +26,14 @@ export class ClienteComponent implements OnInit {
 
   public columnas = [
     { name: 'ID', prop: 'id' },
+    { name: 'Tipo Documento', prop: 'tipodocumento.tipo' },
     { name: 'Nombre', prop: 'nombre' },
     { name: 'Apellido', prop: 'apellido' },
-    { name: 'Tipo Documento', prop: 'tipoDocumento.tipo' },
     { name: 'Dirección', prop: 'direccion' },
     { name: 'Teléfono', prop: 'telefono' },
     { name: 'Correo', prop: 'correo' },
     { name: 'Móvil', prop: 'movil' },
     { name: 'Rol', prop: 'rol' },
-    { name: 'Moroso', prop: 'moroso' },
     { name: 'Activo', prop: 'activo' },
   ];
   public modoColumna = ColumnMode;
@@ -46,22 +44,19 @@ export class ClienteComponent implements OnInit {
     private tipoDocumentoService: TipodocumentoService,
     private router: Router,
     public dialog: MatDialog,
-  ){
-
-  }
+  ) {}
 
   ngOnInit(): void {
-      if (Globales.usuario != null){
-        this.listar();
-        this.listarTipoDocumentos();
-      }
-      else{
-        this.router.navigate(["inicio"]);
-      }
+    if (Globales.usuario != null) {
+      this.listar();
+      this.listarTipoDocumentos();
+    } else {
+      this.router.navigate(["inicio"]);
+    }
   }
 
-  public onActivate(event: any){
-    if (event.type == 'click'){
+  public onActivate(event: any) {
+    if (event.type == 'click') {
       this.clienteSeleccion = event.row;
     }
   }
@@ -78,6 +73,20 @@ export class ClienteComponent implements OnInit {
       error => {
         window.alert("Error al obtener los datos.");
       });
+  }
+  private actualizarCheckMoroso(cliente: Cliente, nuevoEstado: boolean) {
+    this.clienteService.actualizarMoroso(Number(cliente.id), nuevoEstado).subscribe(
+      () => {
+        cliente.moroso = nuevoEstado;
+      },
+      error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo actualizar el estado de moroso.',
+        });
+      }
+    );
   }
 
   public cambiarMoroso(cliente: Cliente, event: any) {
@@ -103,24 +112,9 @@ export class ClienteComponent implements OnInit {
     }
   }
 
-  private actualizarCheckMoroso(cliente: Cliente, nuevoEstado: boolean) {
-    this.clienteService.actualizarMoroso(Number(cliente.id), nuevoEstado).subscribe(
-      () => {
-        cliente.moroso = nuevoEstado;
-      },
-      error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo actualizar el estado de moroso.',
-        });
-      }
-    );
-  }
-
-  public listarTipoDocumentos(){
-    this.tipoDocumentoService.listar()
-     .subscribe(data => {
+  public listarTipoDocumentos() {
+    this.tipoDocumentoService.listar().subscribe(
+      data => {
         this.tipoDocumentos = data;
       },
       error => {
@@ -151,38 +145,35 @@ export class ClienteComponent implements OnInit {
     }
   }
 
-  public agregar(){
+  public agregar() {
     const dialogRef = this.dialog.open(ClienteEditarComponent, {
       width: '600px',
       height: '500px',
-      data: { 
+      data: {
         encabezado: "Agregando Nuevo Cliente:",
         cliente: new Cliente("", new Tipodocumento(0, "", ""), "", "", "", "", "", "", "12345", "", false, true),
         tipoDocumentos: this.tipoDocumentos,
       }
     });
 
-    dialogRef.afterClosed().subscribe((datos) => {
+    dialogRef.afterClosed().subscribe(datos => {
       this.guardar(datos.cliente);
-    },
-  err => {
-      window.alert(err.message)
-  });
+    });
   }
 
-  public modificar(){
-    if (this.clienteSeleccion!= undefined){
+  public modificar() {
+    if (this.clienteSeleccion) {
       const dialogRef = this.dialog.open(ClienteEditarComponent, {
         width: '600px',
         height: '500px',
-        data: { 
+        data: {
           encabezado: `Modificando Cliente: [${this.clienteSeleccion.nombre}] [${this.clienteSeleccion.apellido}]`,
           cliente: this.clienteSeleccion,
           tipoDocumentos: this.tipoDocumentos,
         }
       });
 
-      dialogRef.afterClosed().subscribe((datos) => {
+      dialogRef.afterClosed().subscribe(datos => {
         this.guardar(datos.cliente);
       });
     }
@@ -265,7 +256,7 @@ export class ClienteComponent implements OnInit {
 
   public eliminar(id: number){
     this.clienteService.eliminar(id).subscribe(response => {
-      if (response == true){
+      if (response == true) {
         this.listar();
         Swal.fire({
           icon: 'success',

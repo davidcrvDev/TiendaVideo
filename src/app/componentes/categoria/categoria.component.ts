@@ -6,9 +6,9 @@ import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { Categoria } from 'src/app/modelos/categoria';
 import { Globales } from 'src/app/modelos/globales';
 import { CategoriaService } from 'src/app/servicios/categoria.service';
-import { TecnologiaService } from 'src/app/servicios/tecnologia.service';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { CategoriaEditarComponent } from '../categoria-editar/categoria-editar.component';
+import Swal from 'sweetalert2';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -64,6 +64,7 @@ export class CategoriaComponent implements OnInit {
     );
   }
 
+
   public listarCategorias() {
     this.categoriaService.listar().subscribe(
       (data) => {
@@ -96,6 +97,7 @@ export class CategoriaComponent implements OnInit {
         this.categorias = resultados;
       }
     } else {
+      this.categorias = [...this.categoriasOriginales];
       this.categorias = [...this.categoriasOriginales];
     }
   }
@@ -139,6 +141,11 @@ export class CategoriaComponent implements OnInit {
         }
       );
     } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar una Categoría.',
+      });
       Swal.fire({
         icon: 'warning',
         title: 'Atención',
@@ -244,6 +251,11 @@ export class CategoriaComponent implements OnInit {
         title: 'Atención',
         text: 'Debe seleccionar una Categoría.',
       });
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Debe seleccionar una Categoría.',
+      });
     }
   }
 
@@ -257,7 +269,17 @@ export class CategoriaComponent implements OnInit {
             title: 'Éxito',
             text: 'Categoría eliminada correctamente.',
           });
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Categoría eliminada correctamente.',
+          });
         } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo eliminar la Categoría.',
+          });
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -266,6 +288,11 @@ export class CategoriaComponent implements OnInit {
         }
       },
       (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message,
+        });
         Swal.fire({
           icon: 'error',
           title: 'Error',

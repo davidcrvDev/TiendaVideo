@@ -30,10 +30,11 @@ export class ClienteService {
     return this.http.get<any[]>(urlT, this.obtenerHeader());
   }
 
+  // Ejemplo de método en ClienteService
   actualizarMoroso(id: number, moroso: boolean) {
     return this.http.patch(`${this.url}/${id}/moroso`, { moroso });
 }
-
+  
   public buscar(nombre: string): Observable<any> {
     let urlT = `${this.url}/buscar/${nombre}`;
     return this.http.get<any[]>(urlT, this.obtenerHeader());

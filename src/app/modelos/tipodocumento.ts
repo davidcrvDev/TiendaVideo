@@ -5,9 +5,9 @@ export class Tipodocumento {
     public sigla: string;
 
     constructor(
-        id: number = 0,
-        tipo: string = '',
-        sigla: string = ''
+        id: number,
+        tipo: string,
+        sigla: string
     ) {
         this.id = id;
         this.tipo = tipo;

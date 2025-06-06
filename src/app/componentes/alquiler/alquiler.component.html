@@ -1,5 +1,8 @@
-<mat-toolbar class="mat-primary mat-toolbar-single-row mat-elevatmat-z8 color-barra" color="background">
-    Alquileres
+<mat-toolbar
+  class="mat-primary mat-toolbar-single-row mat-elevatmat-z8 color-barra"
+  color="background"
+>
+  Alquileres
 </mat-toolbar>
 
 <div style="width: 100%; display: flex; justify-content: flex-end">
@@ -10,7 +13,7 @@
       style="width: 85%; padding-right: 40px; height: 35px; font-size: 1.1rem"
       placeholder="Alquiler por Cliente o Precio"
       [(ngModel)]="textoBusqueda"
-      (input)="buscar()"
+      (input)="buscarAlquiler()"
       aria-label="Buscar"
     />
     <span

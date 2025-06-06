@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -6,7 +7,6 @@ import { Globales } from 'src/app/modelos/globales';
 import { Titulo } from 'src/app/modelos/titulo';
 import { TituloService } from 'src/app/servicios/titulo.service';
 import { TituloEditarComponent } from '../titulo-editar/titulo-editar.component';
-import { HttpErrorResponse } from '@angular/common/http';
 import { DecidirComponent } from '../decidir/decidir.component';
 import { Categoria } from 'src/app/modelos/categoria';
 import { CategoriaService } from 'src/app/servicios/categoria.service';
@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-titulo',
-  templateUrl: './titulo.component.html',
+  templateUrl:'./titulo.component.html',
   styleUrls: ['./titulo.component.css'],
 })
 export class TituloComponent implements OnInit {
@@ -41,7 +41,7 @@ export class TituloComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (Globales.usuario != null) {
+    if (Globales.usuario) {
       this.listar();
       this.listarCategorias();
     } else {
@@ -66,10 +66,9 @@ export class TituloComponent implements OnInit {
           titulo.ano = titulo.ano;
         });
       },
-      (err) => {
-        window.alert('Error al obtener los datos.');
-      }
-    );
+      error => {
+        window.alert("Error al obtener los datos.");
+      });
   }
 
   public listarCategorias() {
@@ -136,12 +135,12 @@ export class TituloComponent implements OnInit {
   }
 
   public modificar() {
-    if (this.tituloSeleccion != null && this.tituloSeleccion.id >= 0) {
+    if (this.tituloSeleccion) {
       const dialogRef = this.dialog.open(TituloEditarComponent, {
         width: '600px',
         height: '500px',
         data: {
-          encabezado: `Editando a datos del título [${this.tituloSeleccion.nombre}]`,
+          encabezado: `Editando Título: ${this.tituloSeleccion.nombre}`,
           titulo: this.tituloSeleccion,
           categorias: this.categorias,
         },

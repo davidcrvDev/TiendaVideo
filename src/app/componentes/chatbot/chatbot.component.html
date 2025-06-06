@@ -1,0 +1,27 @@
+<div class="flex flex-col h-screen bg-white-100 text-white p-4">
+  <div class="flex-1 overflow-y-auto mb-4 bg-white rounded-lg shadow p-4">
+    <div *ngFor="let message of list_msg" class="mb-2">
+      <div
+        class="p-2 rounded-lg max-w-xs"
+        [ngClass]="{
+          'bg-blue-500 text-bg-white self-start': message.from === 'bot',
+          'bg-white-500 text-bg-grey self-end ml-auto': message.from === 'user'
+        }"
+      >
+        {{ message.text }}
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <textarea [(ngModel)]="msg"
+              placeholder="Escribe tu mensaje..."
+              class="p-2 rounded-lg border border-blue-800 bg-black text-white w-full"
+              rows="4"></textarea>
+
+    <button (click)="send_message()"
+            class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600 transition">
+      Enviar
+    </button>
+  </div>
+</div>

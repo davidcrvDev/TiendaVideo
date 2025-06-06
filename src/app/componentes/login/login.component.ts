@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UsuarioService } from 'src/app/servicios/usuario.service';
 
@@ -18,7 +18,12 @@ export class LoginComponent {
     clave: '',
   };
 
-  error: string = '';
+  datos: DatosLogin = {
+    usuario: '',
+    clave: ''
+  };
+
+  error: string = ''; // Para mostrar errores al usuario
 
   constructor(
     private usuarioService: UsuarioService,

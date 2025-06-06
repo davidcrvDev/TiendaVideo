@@ -86,7 +86,6 @@ export class AlquilerComponent implements OnInit {
     );
   }
 
-  //Lista inventarios cuando se crea una nuevo alquiler
   public listarTitulos() {
     this.tituloService.listar().subscribe(
       (data) => {
@@ -102,7 +101,6 @@ export class AlquilerComponent implements OnInit {
     );
   }
 
-  //Lista clientes cuando se crea una nuevo alquiler
   public listarClientes() {
     this.clienteService.listar().subscribe(
       (data) => {
@@ -185,7 +183,6 @@ export class AlquilerComponent implements OnInit {
           0,
           '',
           0,
-          []
         ),
         titulos: this.titulos,
         clientes: this.clientes,

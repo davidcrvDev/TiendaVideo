@@ -21,8 +21,9 @@ export class AppComponent {
     { titulo: "Categorias", url: "categoria", icono: "assets/iconos/Pais.png" },
     { titulo: "Tecnologias", url: "tecnologia", icono: "assets/iconos/Empresa.png" },
     { titulo: "Títulos", url: "titulo", icono: "assets/iconos/Titulo.png" },
-    { titulo: "Inventarios", url: "inventario", icono: "assets/iconos/Pais.png" },
-    { titulo: "Alquileres", url: "alquiler", icono: "assets/iconos/Titulo.png" },
+    { titulo: "Clientes", url: "cliente", icono: "assets/iconos/Cliente.png" },
+    { titulo: "Alquileres", url: "alquiler", icono: "assets/iconos/Alquiler.png" },
+    { titulo: "Chatbot", url: "chatbot", icono: "assets/iconos/Pais.png" },
   ]
 
   constructor(public dialog: MatDialog,

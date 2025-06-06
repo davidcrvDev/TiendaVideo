@@ -57,7 +57,7 @@
       (selectionChange)="validarFormulario()"
       required
     >
-      <mat-option *ngFor="let p of datos.tipoDocumentos" [value]="p">
+      <mat-option *ngFor="let p of datos.tipoDocumentos" [value]="p.id">
         {{ p.tipo }}
       </mat-option>
     </mat-select>

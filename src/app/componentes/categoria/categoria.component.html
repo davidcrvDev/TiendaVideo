@@ -3,8 +3,38 @@
   color="primary"
 >
   Categorias
+<mat-toolbar
+  class="mat-primary mat-toolbar-single-row mat-elevatmat-z8 color-barra"
+  color="primary"
+>
+  Categorias
 </mat-toolbar>
 
+<div style="width: 100%; display: flex; justify-content: flex-end">
+  <div style="width: 70%; max-width: 370px; position: relative">
+    <input
+      type="text"
+      class="form-control"
+      style="width: 85%; padding-right: 40px; height: 35px; font-size: 1.1rem"
+      placeholder="Categoria por Nombre o Clasificacion"
+      [(ngModel)]="textoBusqueda"
+      (input)="buscar()"
+      aria-label="Buscar"
+    />
+    <span
+      class="material-icons"
+      style="
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none;
+        font-size: 28px;
+      "
+      >search</span
+    >
+  </div>
 <div style="width: 100%; display: flex; justify-content: flex-end">
   <div style="width: 70%; max-width: 370px; position: relative">
     <input

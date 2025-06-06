@@ -1,11 +1,10 @@
-//import { Alquiler } from "./alquiler";
 import { Alquiler } from "./alquiler";
 import { Inventario } from "./inventario";
 
 export class DetalleAlquiler {
 
     public id: number;
-    public alquiler: Alquiler | number;
+    public alquiler: Alquiler;
     public inventario: Inventario;
     public cantidad: number;
     public precioUnitario: number;
@@ -13,7 +12,7 @@ export class DetalleAlquiler {
 
     constructor(
         id: number = 0,
-        alquiler: Alquiler | number = 0,
+        alquiler: Alquiler,
         inventario: Inventario,
         cantidad: number = 0,
         precioUnitario: number = 0,
