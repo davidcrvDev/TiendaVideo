@@ -25,36 +25,24 @@ export class AppComponent {
     { titulo: "Alquileres", url: "alquiler", icono: "assets/iconos/Titulo.png" },
   ]
 
-  constructor(public dialog: MatDialog,
-    private usuarioService: UsuarioService,
+  constructor(
+    private dialog: MatDialog,
     private router: Router
-  ) {
+  ) {}
 
-  }
-
-  login() {
+  login(): void {
     const dialogRef = this.dialog.open(LoginComponent, {
-      width: "400px",
-      height: "400px",
-      data: { usuario: "bypass", clave: "bypass" }
+      width: '400px',
+      height: '400px'
     });
 
-    // dialogRef.afterClosed().subscribe(data => {
-    //   this.usuarioService.login(data.usuario, data.clave).subscribe(response => {
-    //     this.usuarioActual = new usuario(response.usuario); //response.token
-    //     Globales.usuario = this.usuarioActual;
-    //   });
-    // });
-
-
-    dialogRef.afterClosed().subscribe(() => {
-      // Simular un usuario siempre autenticado
-      this.usuarioActual = new usuario("bypass-user");
-      Globales.usuario = this.usuarioActual;
-
-      // Opcionalmente, redirigir a una página predeterminada
-      this.router.navigate(["inicio"]); 
-  });
+    dialogRef.afterClosed().subscribe((resultado) => {
+      if (resultado && resultado.usuario) {
+        this.usuarioActual = new usuario(resultado.usuario);
+        Globales.usuario = this.usuarioActual;
+        this.router.navigate(['inicio']);
+      }
+    });
   }
 
   cerrar() {

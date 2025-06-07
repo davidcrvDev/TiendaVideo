@@ -7,9 +7,11 @@ import { TecnologiaComponent } from './componentes/tecnologia/tecnologia.compone
 import { CategoriaComponent } from './componentes/categoria/categoria.component';
 import { InventarioComponent } from './componentes/inventario/inventario.component';
 import { ClienteComponent } from './componentes/cliente/cliente.component';
+import { CambiarClaveComponent } from './componentes/cambiar-clave/cambiar-clave.component';
 
 const routes: Routes = [
   { path: "inicio", component: InicioComponent },
+  { path: "cambiar-clave", component: CambiarClaveComponent },
   { path: "tecnologia", component: TecnologiaComponent },
   { path: "categoria", component: CategoriaComponent },
   { path: "inventario", component: InventarioComponent },

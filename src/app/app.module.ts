@@ -32,6 +32,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { CambiarClaveComponent } from './componentes/cambiar-clave/cambiar-clave.component';
+import { RecuperarClaveComponent } from './componentes/recuperar-clave/recuperar-clave.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -52,6 +55,8 @@ import { MatButtonModule } from '@angular/material/button';
     AlquilerEditarComponent,
     DetalleAlquilerComponent,
     DetallealquilerEditarComponent,
+    CambiarClaveComponent,
+    RecuperarClaveComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +75,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatButtonModule,
     ReactiveFormsModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

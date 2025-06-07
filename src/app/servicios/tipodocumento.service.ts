@@ -24,26 +24,26 @@ export class TipodocumentoService {
 
     public listar(): Observable<any> {
         let urlT = `${this.url}/listar`;
-        return this.http.get<any[]>(urlT, this.obtenerHeader());
+        return this.http.get<any[]>(urlT);
     }
 
     public buscar(tipo: string): Observable<any> {
         let urlT = `${this.url}/buscar/${tipo}`;
-        return this.http.get<any[]>(urlT, this.obtenerHeader());
+        return this.http.get<any[]>(urlT);
     }
 
     public agregar(tipodocumento: Tipodocumento): Observable<any> {
         let urlT = this.url + "/agregar";
-        return this.http.post<any>(urlT, tipodocumento, this.obtenerHeader());
+        return this.http.post<any>(urlT, tipodocumento);
     }
 
     public actualizar(tipodocumento: Tipodocumento): Observable<any> {
         let urlT = this.url + "/modificar";
-        return this.http.put<any>(urlT, tipodocumento, this.obtenerHeader());
+        return this.http.put<any>(urlT, tipodocumento);
     }
 
     public eliminar(id: number): Observable<any> {
         let urlT = `${this.url}/eliminar/${id}`;
-        return this.http.delete<any>(urlT, this.obtenerHeader());
+        return this.http.delete<any>(urlT);
     }
 }

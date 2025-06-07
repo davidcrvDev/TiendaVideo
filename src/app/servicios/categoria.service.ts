@@ -24,32 +24,32 @@ export class CategoriaService {
 
     public listar(): Observable<any> {
         let urlT = `${this.url}/listar`;
-        return this.http.get<any[]>(urlT, this.obtenerHeader());
+        return this.http.get<any[]>(urlT);
     }
 
     public buscar(nombre: string): Observable<any> {
         let urlT = `${this.url}/buscar/${nombre}`;
-        return this.http.get<any[]>(urlT, this.obtenerHeader());
+        return this.http.get<any[]>(urlT);
     }
 
     public agregar(categoria: Categoria): Observable<any> {
         let urlT = this.url + "/agregar";
-        return this.http.post<any>(urlT, categoria, this.obtenerHeader());
+        return this.http.post<any>(urlT, categoria);
     }
 
     public actualizar(categoria: Categoria): Observable<any> {
         let urlT = this.url + "/modificar";
-        return this.http.put<any>(urlT, categoria, this.obtenerHeader());
+        return this.http.put<any>(urlT, categoria);
     }
 
     public eliminar(id: number): Observable<any> {
         let urlT = `${this.url}/eliminar/${id}`;
-        return this.http.delete<any>(urlT, this.obtenerHeader());
+        return this.http.delete<any>(urlT);
     }
 
     public existeCategoria(nombre: string): Observable<boolean> {
         let urlT = `${this.url}/existe/${encodeURIComponent(nombre.trim().toLowerCase())}`;
-        return this.http.get<boolean>(urlT, this.obtenerHeader());
+        return this.http.get<boolean>(urlT);
     }
     
 }

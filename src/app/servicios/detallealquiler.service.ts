@@ -26,26 +26,26 @@ export class DetalleAlquilerService {
 
     public listar(): Observable<any> {
         let urlT = `${this.url}/listar`;
-        return this.http.get<any[]>(urlT, this.obtenerHeader());
+        return this.http.get<any[]>(urlT);
     }
     
     public buscar(id: number): Observable<any> {
         let urlT = `${this.url}/buscar/${id}`;
-        return this.http.get<any[]>(urlT, this.obtenerHeader());
+        return this.http.get<any[]>(urlT);
     }
 
     public agregar(detallealquiler: DetalleAlquiler): Observable<any> {
         let urlT = this.url + "/agregar";
-        return this.http.post<any>(urlT, detallealquiler, this.obtenerHeader());
+        return this.http.post<any>(urlT, detallealquiler);
     }
 
     public actualizar(detallealquiler: DetalleAlquiler): Observable<any> {
         let urlT = this.url + "/modificar";
-        return this.http.put<any>(urlT, detallealquiler, this.obtenerHeader());
+        return this.http.put<any>(urlT, detallealquiler);
     }
 
     public eliminar(id: number): Observable<any> {
         let urlT = `${this.url}/eliminar/${id}`;
-        return this.http.delete<any>(urlT, this.obtenerHeader());
+        return this.http.delete<any>(urlT);
     }
 }

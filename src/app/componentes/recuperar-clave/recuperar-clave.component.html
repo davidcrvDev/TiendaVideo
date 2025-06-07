@@ -1,0 +1,14 @@
+<h2>Recuperar contraseña</h2>
+
+<form (ngSubmit)="enviarCorreo()">
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Correo electrónico</mat-label>
+    <input matInput [(ngModel)]="correo" name="correo" required>
+  </mat-form-field>
+
+  <div *ngIf="mensaje" class="mensaje-ok">{{ mensaje }}</div>
+  <div *ngIf="error" class="mensaje-error">{{ error }}</div>
+
+  <button mat-raised-button color="primary" type="submit">Enviar</button>
+  <button mat-button type="button" (click)="cerrar()">Cancelar</button>
+</form>
