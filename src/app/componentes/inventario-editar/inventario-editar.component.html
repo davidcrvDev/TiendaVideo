@@ -8,7 +8,7 @@
       (selectionChange)="validarFormulario()"
       required
     >
-      <mat-option *ngFor="let p of datos.titulos" [value]="p">
+      <mat-option *ngFor="let p of datos.titulos" [value]="p.id">
         {{ p.id }} -
         {{ p.nombre }}
       </mat-option>

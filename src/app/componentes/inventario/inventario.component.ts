@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -49,7 +49,7 @@ export class InventarioComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (Globales.usuario) {
+    if (Globales.usuario != null) {
       this.listar();
       this.listarTitulos();
       this.listarTecnologias();
@@ -76,6 +76,7 @@ export class InventarioComponent implements OnInit {
       }
     );
   }
+
   public listarTitulos() {
     this.tituloService.listar().subscribe(
       (data) => {
@@ -293,4 +294,3 @@ export class InventarioComponent implements OnInit {
     this.inventarioService.descargarReporteInventarios();
   }
 }
-

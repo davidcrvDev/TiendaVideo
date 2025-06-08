@@ -28,7 +28,7 @@ export class InventarioService {
 
   public listar(): Observable<any> {
     let urlT = `${this.url}/listar`;
-    return this.http.get<any[]>(urlT).pipe(
+    return this.http.get<any[]>(urlT, this.obtenerHeader()).pipe(
       map(inventarios => 
         inventarios.map(inv => ({
           ...inv,
@@ -49,22 +49,22 @@ export class InventarioService {
 
   public buscar(nombre: string): Observable<any> {
     let urlT = `${this.url}/buscar/${nombre}`;
-    return this.http.get<any[]>(urlT);
+    return this.http.get<any[]>(urlT, this.obtenerHeader());
   }
 
   public agregar(inventario: Inventario): Observable<any> {
     let urlT = this.url + "/agregar";
-    return this.http.post<any>(urlT, inventario);
+    return this.http.post<any>(urlT, inventario, this.obtenerHeader());
   }
 
   public actualizar(inventario: Inventario): Observable<any> {
     let urlT = this.url + "/modificar";
-    return this.http.put<any>(urlT, inventario);
+    return this.http.put<any>(urlT, inventario, this.obtenerHeader());
   }
 
   public eliminar(id: number): Observable<any> {
     let urlT = `${this.url}/eliminar/${id}`;
-    return this.http.delete<any>(urlT);
+    return this.http.delete<any>(urlT, this.obtenerHeader());
   }
 
   public descargarReporteInventarios() {
