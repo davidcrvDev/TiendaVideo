@@ -31,6 +31,7 @@ export class AlquilerEditarComponent {
 
   ngOnInit() {
     console.log('Inventarios disponibles:', this.datos.inventarios);
+    console.log(this.datos.alquiler.detalles);
   }
 
   alquiler: Alquiler = new Alquiler();

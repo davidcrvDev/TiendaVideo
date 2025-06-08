@@ -1,17 +1,42 @@
-<h1 mat-dialog-title>Login</h1>
-<div mat-dialog-content>
-    <p>Credenciales de acceso</p>
-    <mat-form-field>
-        <mat-label>Usuario</mat-label>
-        <input matInput [(ngModel)]="datos.usuario">
-    </mat-form-field>
-    <mat-form-field>
-        <mat-label>Clave</mat-label>
-        <input type="password" matInput [(ngModel)]="datos.clave">
-    </mat-form-field>
-    <p *ngIf="error" style="color:red;">{{ error }}</p>
+<!-- Título y botón cerrar en la parte superior -->
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h1 mat-dialog-title style="margin: 0;">Login</h1>
+  <button mat-icon-button (click)="cerrar()" aria-label="Cerrar">
+    <mat-icon>close</mat-icon>
+  </button>
 </div>
 
-<div mat-dialog-actions>
-    <button mat-raised-button color="primary" (click)="ingresar()" cdkFocusInitial>Ingresar</button>
+<!-- Cuerpo del diálogo -->
+<div mat-dialog-content>
+  <p>Credenciales de acceso</p>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Usuario</mat-label>
+    <input matInput [(ngModel)]="datos.usuario" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Clave</mat-label>
+    <input type="password" matInput [(ngModel)]="datos.clave" required>
+  </mat-form-field>
+
+  <p *ngIf="error" style="color: red; margin-top: 8px;">
+    {{ error }}
+  </p>
 </div>
+
+<!-- Botones de acción -->
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="cerrar()">Cancelar</button>
+  <button mat-raised-button color="primary"
+          (click)="ingresar()"
+          [disabled]="!datos.usuario || !datos.clave"
+          cdkFocusInitial>
+    Ingresar
+  </button>
+</div>
+
+<div style="text-align: right; margin-top: 10px;">
+  <button mat-button (click)="abrirRecuperacion()">¿Olvidaste tu contraseña?</button>
+</div>
+

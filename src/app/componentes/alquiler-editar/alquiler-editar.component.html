@@ -116,7 +116,7 @@
 
     <ng-container matColumnDef="precioUnitario">
       <th mat-header-cell *matHeaderCellDef>Precio Unitario</th>
-      <td mat-cell *matCellDef="let detalle">{{ detalle.precioUnitario | currency }}</td>
+      <td mat-cell *matCellDef="let detalle">{{ detalle.inventario.precio | currency }}</td>
     </ng-container>
 
     <ng-container matColumnDef="subtotal">

@@ -1,6 +1,8 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, Input } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsuarioService } from 'src/app/servicios/usuario.service';
+import { RecuperarClaveComponent } from '../recuperar-clave/recuperar-clave.component';
 
 export interface DatosLogin {
   usuario: string;
@@ -23,24 +25,37 @@ export class LoginComponent {
   constructor(
     private usuarioService: UsuarioService,
     public dialogRef: MatDialogRef<LoginComponent>,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar, // <-- NUEVO
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    // Inicializar con datos simulados
-    // this.datos.usuario = "bypass";
-    // this.datos.clave = "bypass";
+  ) {}
+
+  ingresar() {
+    this.usuarioService.login(this.datos.usuario, this.datos.clave).subscribe({
+      next: (response) => {
+        const usuario = response.usuario;
+        if (usuario) {
+          localStorage.setItem('usuarioActual', JSON.stringify(usuario));
+          this.snackBar.open('Inicio de sesión exitoso', 'Cerrar', {
+            duration: 3000
+          });
+          this.dialogRef.close({ usuario });
+        }
+      },
+      error: () => {
+        this.error = 'Credenciales incorrectas';
+        this.snackBar.open('Credenciales incorrectas', 'Cerrar', {
+          duration: 3000
+        });
+      }
+    });
   }
 
-  ingresar(): void {
-    this.error = ''; // Limpia errores anteriores
-    this.usuarioService.login(this.datos.usuario, this.datos.clave).subscribe({
-      next: (respuesta: any) => {
-        // Login exitoso: cierra el diálogo y devuelve los datos del usuario
-        this.dialogRef.close(respuesta);
-      },
-      error: (error: any) => {
-        // Error: muestra mensaje
-        this.error = error.error || 'Credenciales incorrectas';
-      },
-    });
+  cerrar(): void {
+    this.dialogRef.close(null);
+  }
+
+  abrirRecuperacion() {
+    this.dialog.open(RecuperarClaveComponent);
   }
 }

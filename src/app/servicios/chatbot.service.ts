@@ -7,7 +7,7 @@ import { lastValueFrom } from "rxjs";
 })
 export class ChatbotService {
   private http = inject(HttpClient);
-  private url = 'https://fab1th13.app.n8n.cloud/webhook-test/b277eab8-c30d-4cd0-bdc5-7ed88f9a1b87';
+  private url = 'https://fab1th13.app.n8n.cloud/webhook/b277eab8-c30d-4cd0-bdc5-7ed88f9a1b87';
 
   constructor() { }
 

@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReferenciasMaterialModule } from './referencias-material.module';
 import { LoginComponent } from './componentes/login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { TituloComponent } from './componentes/titulo/titulo.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -26,7 +26,16 @@ import { ClienteEditarComponent } from './componentes/cliente-editar/cliente-edi
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { CambiarClaveComponent } from './componentes/cambiar-clave/cambiar-clave.component';
+import { RecuperarClaveComponent } from './componentes/recuperar-clave/recuperar-clave.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ChatbotComponent } from './componentes/chatbot/chatbot.component';
+import { DetalleAlquilerComponent } from './componentes/detallealquiler/detallealquiler.component';
+import { DetallealquilerEditarComponent } from './componentes/detallealquiler-editar/detallealquiler-editar.component';
 
 @NgModule({
   declarations: [
@@ -45,8 +54,12 @@ import { ChatbotComponent } from './componentes/chatbot/chatbot.component';
     DecidirComponent,
     AlquilerComponent,
     AlquilerEditarComponent,
-    ChatbotComponent,
-    ],
+    DetalleAlquilerComponent,
+    DetallealquilerEditarComponent,
+    CambiarClaveComponent,
+    RecuperarClaveComponent,
+    ChatbotComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -59,6 +72,12 @@ import { ChatbotComponent } from './componentes/chatbot/chatbot.component';
     MatInputModule,
     MatSlideToggleModule,
     MatCheckboxModule,
+    MatTableModule,
+    MatSelectModule,
+    MatIconModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
