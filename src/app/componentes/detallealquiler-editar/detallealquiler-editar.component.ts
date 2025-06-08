@@ -35,3 +35,4 @@ export class DetallealquilerEditarComponent {
     this.detalleGuardado.emit({ ...this.datos.detalleAlquiler });
   }
 }
+// git para fabith
