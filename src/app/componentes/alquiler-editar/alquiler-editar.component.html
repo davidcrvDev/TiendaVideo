@@ -14,7 +14,17 @@
   <div class="row">
     <mat-form-field appearance="fill" class="half-width">
       <mat-label>Fecha préstamo</mat-label>
-      <input matInput type="date" [(ngModel)]="datos.alquiler.fechaPrestamo" />
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [(ngModel)]="datos.alquiler.fechaPrestamo"
+        required
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="half-width">

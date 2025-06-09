@@ -132,14 +132,15 @@
   <br />
   <mat-form-field appearance="fill">
     <mat-label>Rol</mat-label>
-    <input
-      matInput
+    <mat-select
       [(ngModel)]="datos.cliente.rol"
-      type="text"
-      (input)="validarFormulario()"
+      (selectionChange)="validarFormulario()"
       required
-      (keypress)="soloLetras($event)"
-    />
+      name="rol"
+    >
+      <mat-option value="Administrador">Administrador</mat-option>
+      <mat-option value="Usuario">Usuario</mat-option>
+    </mat-select>
     <mat-error *ngIf="!datos.cliente.rol || datos.cliente.rol.trim() === ''">
       El rol es obligatorio.
     </mat-error>

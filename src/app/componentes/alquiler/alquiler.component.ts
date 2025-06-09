@@ -179,7 +179,7 @@ export class AlquilerComponent implements OnInit {
             false,
             true
           ),
-          '',
+          new Date,
           0,
           '',
           0,
@@ -214,18 +214,7 @@ export class AlquilerComponent implements OnInit {
 
   public modificar() {
     if (this.alquilerSeleccion != null && this.alquilerSeleccion.id >= 0) {
-      // ✅ Convertir los detalles a instancias de DetalleAlquiler
-      this.alquilerSeleccion.detalles = this.alquilerSeleccion.detalles.map(
-        (d: any) =>
-          new DetalleAlquiler(
-            d.id,
-            d.alquiler,
-            d.inventario,
-            d.cantidad,
-            d.precioUnitario,
-            d.subtotal
-          )
-      );
+      
 
       const dialogRef = this.dialog.open(AlquilerEditarComponent, {
         width: '600px',
@@ -265,7 +254,7 @@ export class AlquilerComponent implements OnInit {
 
   private guardar(alquiler: Alquiler) {
     debugger;
-    if (alquiler.id == 0) {
+    if (alquiler.id == 0 ) {
       this.alquilerService.agregar(alquiler).subscribe(
         (alquilerActualizado) => {
           this.listar();
