@@ -110,9 +110,10 @@ export class InventarioComponent implements OnInit {
   public buscar() {
     const texto = this.textoBusqueda.trim().toLowerCase();
     if (texto.length > 0) {
-      const resultados = this.inventariosOriginales.filter((inventarios) =>
-        inventarios.titulo.nombre.toLowerCase().includes(texto) ||
-        inventarios.tecnologia.nombre.toLowerCase().includes(texto)
+      const resultados = this.inventariosOriginales.filter(
+        (inventarios) =>
+          inventarios.titulo.nombre.toLowerCase().includes(texto) ||
+          inventarios.tecnologia.nombre.toLowerCase().includes(texto)
       );
       if (resultados.length === 0) {
         Swal.fire({
@@ -198,22 +199,34 @@ export class InventarioComponent implements OnInit {
   }
 
   private guardar(inventario: Inventario) {
-    if (inventario.id == 0) {
+    const existe = this.inventarios.some(
+      (inv) =>
+        inv.titulo.id === inventario.titulo.id &&
+        inv.tecnologia.id === inventario.tecnologia.id
+    );
+
+    if (inventario.id === 0 && existe) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Duplicado',
+        text: 'Ya existe un inventario con este Título y Tecnología.',
+      });
+      return;
+    }
+
+    // CONTINÚA CON GUARDADO NORMAL
+    if (inventario.id === 0) {
       this.inventarioService.agregar(inventario).subscribe(
-        (inventarioActualizado) => {
+        (nuevo) => {
           this.listar();
-          Swal.fire({
-          icon: 'success',
-          title: 'Éxito',
-          text: 'Inventario agregado correctamente.',
-          });
+          Swal.fire('Éxito', 'Inventario agregado correctamente.', 'success');
         },
-        (err: HttpErrorResponse) => {
-          Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo agregar el inventario, intente nuevamente.',
-          });
+        (error: HttpErrorResponse) => {
+          if (error.status === 409) {
+            Swal.fire('Error', 'Este inventario ya existe.', 'error');
+          } else {
+            Swal.fire('Error', 'No se pudo agregar el inventario.', 'error');
+          }
         }
       );
     } else {
@@ -221,24 +234,27 @@ export class InventarioComponent implements OnInit {
         (inventarioActualizado) => {
           this.listar();
           Swal.fire({
-          icon: 'success',
-          title: 'Éxito',
-          text: 'Inventario modificado correctamente.',
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Inventario modificado correctamente.',
           });
         },
         (err: HttpErrorResponse) => {
           Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo modificar el inventario, intente nuevamente.',
-        });
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo modificar el inventario, intente nuevamente.',
+          });
         }
       );
     }
   }
 
   public verificarEliminar() {
-    if (this.inventarioSeleccion != null && Number(this.inventarioSeleccion.id) > 0) {
+    if (
+      this.inventarioSeleccion != null &&
+      Number(this.inventarioSeleccion.id) > 0
+    ) {
       Swal.fire({
         title: `¿Está seguro que desea eliminar el Inventario [${this.inventarioSeleccion.id}]?`,
         text: 'Esta acción no se puede deshacer.',
@@ -268,24 +284,24 @@ export class InventarioComponent implements OnInit {
         if (response == true) {
           this.listar();
           Swal.fire({
-          icon: 'success',
-          title: 'Éxito',
-          text: 'Inventario eliminado correctamente.',
-        });
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Inventario eliminado correctamente.',
+          });
         } else {
           Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo eliminar el inventario, intente nuevamente.',
-        });
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo eliminar el inventario, intente nuevamente.',
+          });
         }
       },
       (error) => {
         Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Ocurrió un problema al intentar eliminar el inventario, intente nuevamente.',
-      });
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un problema al intentar eliminar el inventario, intente nuevamente.',
+        });
       }
     );
   }

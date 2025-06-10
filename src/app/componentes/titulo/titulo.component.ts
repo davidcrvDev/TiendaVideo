@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-titulo',
-  templateUrl:'./titulo.component.html',
+  templateUrl: './titulo.component.html',
   styleUrls: ['./titulo.component.css'],
 })
 export class TituloComponent implements OnInit {
@@ -66,9 +66,10 @@ export class TituloComponent implements OnInit {
           titulo.ano = titulo.ano;
         });
       },
-      error => {
-        window.alert("Error al obtener los datos.");
-      });
+      (error) => {
+        window.alert('Error al obtener los datos.');
+      }
+    );
   }
 
   public listarCategorias() {
@@ -181,7 +182,17 @@ export class TituloComponent implements OnInit {
 
     this.tituloService.existeTitulo(nombreNormalizado).subscribe(
       (existe) => {
-        if (existe) {
+        const esNuevo = titulo.id === 0;
+        const tituloYaExiste = existe;
+
+        const tituloIgualAlSeleccionado =
+          !esNuevo &&
+          this.tituloSeleccion &&
+          this.tituloSeleccion.nombre.trim().toLowerCase() ===
+            nombreNormalizado;
+
+        // Si el título ya existe y no es el mismo que estoy editando, es error
+        if (tituloYaExiste && !tituloIgualAlSeleccionado) {
           Swal.fire({
             icon: 'warning',
             title: 'Atención',
@@ -190,8 +201,7 @@ export class TituloComponent implements OnInit {
           return;
         }
 
-        titulo.ano = titulo.ano;
-        if (titulo.id == 0) {
+        if (esNuevo) {
           this.tituloService.agregar(titulo).subscribe(
             (tituloActualizado) => {
               this.listar();

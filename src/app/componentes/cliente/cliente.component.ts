@@ -151,7 +151,7 @@ export class ClienteComponent implements OnInit {
       height: '500px',
       data: {
         encabezado: "Agregando Nuevo Cliente:",
-        cliente: new Cliente("", new Tipodocumento(0, "", ""), "", "", "", "", "", "", "12345", "", false, true),
+        cliente: new Cliente("", new Tipodocumento(0, "", ""), "", "", "", "", "", "", this.clienteSeleccion?.id, "", false, true),
         tipoDocumentos: this.tipoDocumentos,
       }
     });
