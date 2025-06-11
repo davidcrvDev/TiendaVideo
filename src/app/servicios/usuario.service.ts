@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 //import { environment } from '../../environments/environment';
@@ -28,7 +28,11 @@ export class UsuarioService {
     };
     const urlT = `${environment.apiUrl}auth/login`; // Ajusta si tu backend usa otro path
 
-    return this.http.post(urlT, loginPayload);
+    const headers = new HttpHeaders({
+      'Content-Type': 'aplication/json'
+    })
+
+    return this.http.post(urlT, loginPayload, {headers});
     //});
   }
 
