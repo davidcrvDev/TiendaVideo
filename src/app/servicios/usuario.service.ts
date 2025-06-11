@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+//import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class UsuarioService {
   url: string;
 
   constructor(private http: HttpClient) {
-    this.url = `${environment.urlBase}usuarios`;
+    this.url = `${environment.apiUrl}usuarios`;
   }
 
   public login(usuario: string, clave: string): Observable<any> {
@@ -25,7 +26,7 @@ export class UsuarioService {
       correo: usuario,
       clave: clave,
     };
-    const urlT = `${environment.urlBase}auth/login`; // Ajusta si tu backend usa otro path
+    const urlT = `${environment.apiUrl}auth/login`; // Ajusta si tu backend usa otro path
 
     return this.http.post(urlT, loginPayload);
     //});
@@ -41,7 +42,7 @@ export class UsuarioService {
       claveActual,
       nuevaClave,
     };
-    const url = `${environment.urlBase}clientes/cambiar-clave`;
+    const url = `${environment.apiUrl}clientes/cambiar-clave`;
     return this.http.put(url, payload);
   }
 
@@ -51,6 +52,6 @@ export class UsuarioService {
   }
 
   enviarClavePorCorreo(correo: string) {
-    return this.http.post(`${environment.urlBase}auth/enviar-clave`, { correo });
+    return this.http.post(`${environment.apiUrl}auth/enviar-clave`, { correo });
   }
 }
