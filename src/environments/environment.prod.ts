@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://https://apitiendavideojava-jc1t.onrender.com'
+  apiUrl: 'https://apitiendavideojava-jc1t.onrender.com'
 };
