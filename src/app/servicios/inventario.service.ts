@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 import { Globales } from '../modelos/globales';
 import { Observable } from 'rxjs';
 import { Inventario } from '../modelos/inventario';
@@ -16,7 +16,7 @@ export class InventarioService {
   constructor(
     private http: HttpClient
   ) { 
-    this.url = `${environment.urlBase}inventarios`;
+    this.url = `${environment.apiUrl}inventarios`;
   }
 
   public obtenerHeader() {
@@ -68,7 +68,7 @@ export class InventarioService {
   }
 
   public descargarReporteInventarios() {
-    this.http.get('http://localhost:8080/inventarios/reporte', { responseType: 'blob' })
+    this.http.get(`${this.url}/reporte`, { responseType: 'blob' })
       .subscribe(blob => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
