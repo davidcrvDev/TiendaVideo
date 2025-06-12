@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 import { Globales } from '../modelos/globales';
 import { Titulo } from '../modelos/titulo';
 
@@ -15,7 +15,7 @@ export class TituloService {
   constructor(
     private http: HttpClient
   ) {
-    this.url = `${environment.urlBase}titulos`;
+    this.url = `${environment.apiUrl}titulos`;
   }
 
   public obtenerHeader(){
@@ -56,7 +56,7 @@ export class TituloService {
   }
 
   public descargarReporteTitulos() {
-    this.http.get('http://localhost:8080/titulos/reporte', { responseType: 'blob' })
+    this.http.get(`${this.url}/titulos/reporte`, { responseType: 'blob' })
       .subscribe(blob => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
