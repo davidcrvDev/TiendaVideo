@@ -56,7 +56,7 @@ export class TituloService {
   }
 
   public descargarReporteTitulos() {
-    this.http.get(`${this.url}/titulos/reporte`, { responseType: 'blob' })
+    this.http.get(`${this.url}/reporte`, { responseType: 'blob' })
       .subscribe(blob => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
